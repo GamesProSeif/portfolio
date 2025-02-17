@@ -1,0 +1,54 @@
+{
+	"name": "Seif Mansour",
+	"jobTitles": ["Data-Driven Software Engineer"],
+	"moto": "Bridging data and design to build intelligent, seamless, and impactful digital solutions.",
+	"github": "https://github.com/GamesProSeif",
+	"linkedin": "https://www.linkedin.com/in/seif-mans",
+	"mail": "seifmansour2014@outlook.com",
+	"location": "Egypt, Alexandria",
+	"seo": {
+		"title": "Seif Mansour",
+		"description": "Bridging data and design to build intelligent, seamless, and impactful digital solutions.",
+		"keywords": [
+			"Full Stack Developer",
+			"Data Scientist",
+			"Web Development",
+			"Machine Learning",
+			"Next.js",
+			"React",
+			"TypeScript",
+			"Tailwind CSS",
+			"AI",
+			"Portfolio"
+		],
+		"authors": [
+			{
+				"name": "Seif Mansour",
+				"url": "https://seifmansour.com"
+			}
+		],
+		"openGraph": {
+			"title": "Seif | Data-Driven Software Engineer",
+			"description": "Bridging data and design to build intelligent, seamless, and impactful digital solutions.",
+			"url": "https://seifmansour.com",
+			"siteName": "Seif Mansour Portfolio",
+			"images": [
+				{
+					"url": "https://seifmansour.com/card-image.jpg",
+					"width": 1200,
+					"height": 630,
+					"alt": "Seif Mansour Portfolio"
+				}
+			],
+			"locale": "en_US",
+			"type": "website"
+		},
+		"twitter": {
+			"card": "summary_large_image",
+			"title": "Seif | Data-Driven Software Engineer",
+			"description": "Bridging data and design to build intelligent, seamless, and impactful digital solutions.",
+			"images": ["https://seifmansour.com/card-image.jpg"],
+			"creator": "@gamesproseif"
+		}
+	}
+}
