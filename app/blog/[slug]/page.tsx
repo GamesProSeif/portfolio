@@ -7,7 +7,15 @@ import rehypeHighlight from "rehype-highlight";
 export async function generateMetadata(
 	{ params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
-	const post = getPostBySlug((await params).slug);
+	let post: ReturnType<typeof getPostBySlug>;
+	try {
+		post = getPostBySlug((await params).slug);
+	} catch {
+		notFound();
+	}
+
+	if (!post)
+		notFound();
 
 	return {
 		title: post.title,
