@@ -1,6 +1,7 @@
 import siteConfig from "@/site-config.json";
 import type { Metadata } from "next";
 import { Montserrat, Fira_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -42,6 +43,7 @@ export default function RootLayout({
 					<Footer />
 				</ThemeProvider>
 			</body>
+			<GoogleAnalytics gaId={siteConfig.googleAnalyticsID} />
 		</html>
 	);
 }
