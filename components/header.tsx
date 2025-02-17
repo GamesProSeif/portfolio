@@ -18,7 +18,8 @@ export default function Header() {
 		},
 		{
 			href: "/#projects",
-			text: "Projects"
+			text: "Projects",
+			hideOnMobile: true
 		},
 		{
 			href: "/blog",
@@ -26,7 +27,8 @@ export default function Header() {
 		},
 		{
 			href: "/#contact",
-			text: "Contact"
+			text: "Contact",
+			hideOnMobile: true
 		},
 	];
 
@@ -39,7 +41,7 @@ export default function Header() {
 							<Link
 								key={i}
 								href={link.href}
-								className="transition-colors hover:text-foreground/70 text-foreground/80"
+								className={"transition-colors hover:text-foreground/70 text-foreground/80" + (link.hideOnMobile === true ? " hidden sm:block" : "")}
 							>{ link.text }</Link>
 						))}
 					</nav>
