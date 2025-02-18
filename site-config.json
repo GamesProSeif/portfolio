@@ -35,7 +35,7 @@
 			"siteName": "Seif Mansour Portfolio",
 			"images": [
 				{
-					"url": "https://seifmansour.com/card-image.jpg",
+					"url": "https://seifmansour.com/card-image.png",
 					"width": 1200,
 					"height": 630,
 					"alt": "Seif Mansour Portfolio"
@@ -48,7 +48,7 @@
 			"card": "summary_large_image",
 			"title": "Seif | Data-Driven Software Engineer",
 			"description": "Bridging data and design to build intelligent, seamless, and impactful digital solutions.",
-			"images": ["https://seifmansour.com/card-image.jpg"],
+			"images": ["https://seifmansour.com/card-image.png"],
 			"creator": "@gamesproseif"
 		}
 	}
