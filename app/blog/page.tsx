@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import { HeartCrack } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Blog"
+}
 
 export default function Blog() {
 	const posts = getAllPosts();
