@@ -3,6 +3,11 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeSlug from "rehype-slug";
+
+import "highlight.js/styles/github-dark.css";
 
 export async function generateMetadata(
 	{ params }: { params: Promise<{ slug: string }> }
@@ -47,7 +52,12 @@ export default async function BlogPost(
 			<p className="text-gray-500">{post.date}</p>
 			<hr className="my-6" />
 			<article className="max-w-none markdown">
-				<ReactMarkdown rehypePlugins={[rehypeHighlight]}>{post.content}</ReactMarkdown>
+				<ReactMarkdown
+					remarkPlugins={[remarkGfm, remarkRehype]}
+					rehypePlugins={[
+						rehypeHighlight, rehypeSlug,
+					]}
+				>{post.content}</ReactMarkdown>
 			</article>
 		</div>
 	);
