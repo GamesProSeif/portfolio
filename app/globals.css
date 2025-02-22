@@ -203,7 +203,7 @@ body {
 
 	/* Code Blocks */
 	.markdown pre {
-		@apply text-sm md:text-base bg-muted/20 p-4 my-4 rounded-lg border border-muted-foreground overflow-x-auto;
+		@apply text-sm md:text-base bg-neutral-900 dark:bg-muted/20 p-4 my-4 rounded-lg border border-muted-foreground overflow-x-auto text-white;
 	}
 
 	/* Inline Code */
