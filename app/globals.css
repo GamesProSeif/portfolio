@@ -194,11 +194,11 @@ body {
 
 	/* Lists */
 	.markdown ul {
-		@apply list-disc pl-5 text-sm md:text-base leading-relaxed text-muted-foreground my-4;
+		@apply list-disc pl-10 text-sm md:text-base leading-relaxed text-muted-foreground my-4;
 	}
 
 	.markdown ol {
-		@apply list-decimal pl-5 text-sm md:text-base leading-relaxed text-muted-foreground my-4;
+		@apply list-decimal pl-10 text-sm md:text-base leading-relaxed text-muted-foreground my-4;
 	}
 
 	/* Code Blocks */
