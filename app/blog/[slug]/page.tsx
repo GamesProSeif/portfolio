@@ -47,11 +47,11 @@ export default async function BlogPost(
 		notFound();
 
 	return (
-		<div className="container mx-auto py-12 px-4">
+		<div className="container mx-auto py-12 px-4 max-w-4xl">
 			<h1 className="text-3xl font-bold">{post.title}</h1>
 			<p className="text-gray-500">{post.date}</p>
 			<hr className="my-6" />
-			<article className="max-w-none markdown">
+			<article className="markdown">
 				<ReactMarkdown
 					remarkPlugins={[remarkGfm, remarkRehype]}
 					rehypePlugins={[
