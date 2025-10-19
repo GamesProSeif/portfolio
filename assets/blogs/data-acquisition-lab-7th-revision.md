@@ -113,7 +113,7 @@ analogWrite(pin, value);
 
 **Example:**
 
-```
+```cpp
 analogWrite(9, 128);  // 50% duty cycle (approx 2.5V average)
 ```
 
