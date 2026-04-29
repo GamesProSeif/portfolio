@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 12 — Input Validation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 12</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Input Validation</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 6 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Explain why server-side validation is mandatory, regardless of what the frontend does</li>
+          <li>Validate request data using built-in <code class="inline">DataAnnotations</code> attributes</li>
+          <li>Write richer, testable validation rules using <code class="inline">FluentValidation</code></li>
+          <li>Return consistent validation error responses in the <code class="inline">ProblemDetails</code> format</li>
+          <li>Understand what sanitization is, when it applies, and how it differs from validation</li>
+          <li>Prevent over-posting and mass assignment vulnerabilities in request DTOs</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Why validation belongs on the server</td><td>Theory</td><td>10 min</td></tr>
+            <tr><td>0:10</td><td>DataAnnotations — the basics</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>0:30</td><td>FluentValidation — richer rules</td><td>Demo</td><td>30 min</td></tr>
+            <tr><td>1:00</td><td>Sanitization &amp; dangerous inputs</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>1:15</td><td>Lab — validate the task creation endpoint</td><td>Lab</td><td>35 min</td></tr>
+            <tr><td>1:50</td><td>Wrap-up</td><td>Discussion</td><td>10 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Why Server-Side Validation        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Why Validation Belongs on the Server</div>
+          <div class="section-desc">Frontend validation improves the user experience. Server-side validation enforces the contract. A motivated attacker will bypass every browser check using a raw HTTP request — the server is the only place that cannot be bypassed.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The client-server trust boundary</li>
+            <li>What happens without server validation</li>
+            <li>The principle: never trust the client</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — The Client-Server Trust Boundary (Layout 3)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Client-Server Trust Boundary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Frontend validation is UX</strong> — it catches mistakes early and gives instant feedback, reducing round trips and frustration</li>
+          <li><strong>Server-side validation is security</strong> — it is the only check that cannot be bypassed by a client, a proxy, or a script</li>
+          <li><strong>Bypassing frontend validation is trivial</strong> — Postman, curl, and browser developer tools all allow sending arbitrary HTTP requests with no React code involved</li>
+          <li><strong>The backend cannot know who the caller is</strong> — it might be your React app, a mobile app, a third-party integration, or a malicious actor; all look identical at the HTTP level</li>
+          <li><strong>Invalid data that reaches the database is expensive to fix</strong> — constraint violations crash requests; corrupt data silently degrades the application for all users</li>
+        </ul>
+        <div class="callout error" style="margin-top:1rem;">
+          <div class="callout-label">Rule</div>
+          Every field that a client can supply must be validated on the server before it is used, stored, or passed to any downstream system — regardless of what the frontend already validated.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Never Trust the Client (Layout 4)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What "Never Trust the Client" Means in Practice</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">These are real scenarios that happen in production when server validation is missing:</p>
+            <ul style="font-size:0.93rem;">
+              <li>A title field with no length limit is exploited to store 10 MB of text, degrading database performance for all users</li>
+              <li>A past due date is accepted and causes broken business logic in scheduling queries</li>
+              <li>A negative price value is stored, creating a billing error that issues refunds instead of charges</li>
+              <li>An HTML payload in a text field is rendered unescaped and executes in another user's browser</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="callout warning" style="margin-top:0;">
+              <div class="callout-label">From the React developer's perspective</div>
+              You have used APIs where a bad request returned a clear error message telling you exactly which field was wrong and why. That response came from server-side validation. Without it, bad data would silently enter the system and cause unpredictable failures later.
+            </div>
+            <div class="callout info" style="margin-top:0.9rem;">
+              <div class="callout-label">ASP.NET Core makes this easy</div>
+              The <code class="inline">[ApiController]</code> attribute, DataAnnotations, and FluentValidation together make server validation declarative — you describe the rules, the framework enforces them automatically before your action code runs.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Key Principle (Layout 6)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Principle</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "Frontend validation is UX.<br>Server-side validation is security."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
+          A client can be replaced, modified, or bypassed entirely. The server is the single source of truth for what data is acceptable. Every rule that matters for correctness or safety must be enforced there — the frontend is a courtesy, not a contract.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Section Divider: DataAnnotations                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">DataAnnotations</div>
+          <div class="section-desc">DataAnnotations are attributes from the <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">System.ComponentModel.DataAnnotations</code> namespace that you place directly on your DTO properties. When combined with <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">[ApiController]</code>, ASP.NET Core validates the model automatically and returns 400 before your action code runs.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Common built-in annotation attributes</li>
+            <li>Annotating a request DTO</li>
+            <li>How [ApiController] triggers automatic validation</li>
+            <li>The validation error response shape</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Common DataAnnotation Attributes (Layout 3)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Common DataAnnotation Attributes</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>What it validates</th>
+              <th>ErrorMessage parameter</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code class="inline">[Required]</code></td><td>Value is not null or empty</td><td>Yes</td></tr>
+            <tr><td><code class="inline">[MaxLength(n)]</code></td><td>String length does not exceed n</td><td>Yes</td></tr>
+            <tr><td><code class="inline">[MinLength(n)]</code></td><td>String length is at least n</td><td>Yes</td></tr>
+            <tr><td><code class="inline">[Range(min, max)]</code></td><td>Numeric value within bounds</td><td>Yes</td></tr>
+            <tr><td><code class="inline">[EmailAddress]</code></td><td>Basic email format check</td><td>Yes</td></tr>
+            <tr><td><code class="inline">[RegularExpression]</code></td><td>Value matches a regex pattern</td><td>Yes</td></tr>
+            <tr><td><code class="inline">[StringLength(max)]</code></td><td>Max and optional min length</td><td>Yes</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Custom attributes</div>
+          You can create custom validation attributes by subclassing <code class="inline">ValidationAttribute</code> and overriding <code class="inline">IsValid</code>. This keeps the annotation style but allows arbitrary logic — useful for rules like "date must be in the future."
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Annotating a Request DTO (Layout 5)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Annotating a Request DTO</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/CreateTaskRequest.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="3-4,7-8,11-13">using System.ComponentModel.DataAnnotations;
+
+public class CreateTaskRequest
+{
+    [Required(ErrorMessage = "Title is required.")]
+    [MaxLength(200, ErrorMessage = "Title cannot exceed 200 characters.")]
+    public string Title { get; set; } = "";
+
+    [MaxLength(2000, ErrorMessage = "Description cannot exceed 2000 characters.")]
+    public string? Description { get; set; }
+
+    [Range(1, 5, ErrorMessage = "Priority must be between 1 and 5.")]
+    public int Priority { get; set; } = 1;
+
+    public DateTime? DueDate { get; set; }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Attributes stack — a property can carry multiple annotations. Each rule is checked independently. All violations are collected and returned together in the 400 response body, not one at a time.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — How [ApiController] Validates Automatically (Layout 4) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">How [ApiController] Triggers Automatic Validation</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Without <code class="inline">[ApiController]</code>, you would check <code class="inline">ModelState.IsValid</code> manually in every action. With it, ASP.NET Core intercepts the request before the action runs:</p>
+            <ul style="font-size:0.93rem;">
+              <li>If model state is valid, the action executes normally</li>
+              <li>If model state is invalid, the framework returns <strong>400 Bad Request</strong> immediately — your action code never runs</li>
+              <li>The response body is a <code class="inline">ValidationProblemDetails</code> object containing all errors, grouped by field name</li>
+              <li>No manual <code class="inline">if (!ModelState.IsValid)</code> guard needed in any action</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Controllers/TasksController.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">[ApiController]
+[Route("api/tasks")]
+public class TasksController : ControllerBase
+{
+    [HttpPost]
+    public IActionResult Create(
+        [FromBody] CreateTaskRequest req)
+    {
+        // Reaching here means req is valid.
+        // [ApiController] already returned 400
+        // if any annotation rule was violated.
+        var task = _service.Create(req);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = task.Id },
+            task);
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Validation Error Response Shape (Layout 4)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Validation Error Response Shape</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">ASP.NET Core returns a <code class="inline">ValidationProblemDetails</code> object — an extension of the RFC 7807 <code class="inline">ProblemDetails</code> format with an added <code class="inline">errors</code> dictionary:</p>
+            <ul style="font-size:0.93rem;">
+              <li><code class="inline">type</code> — a URI identifying the error class</li>
+              <li><code class="inline">title</code> — human-readable summary</li>
+              <li><code class="inline">status</code> — 400</li>
+              <li><code class="inline">errors</code> — dictionary keyed by field name, each value is an array of error messages for that field</li>
+            </ul>
+            <div class="callout success" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Consistent with Session 05</div>
+              This is the same ProblemDetails envelope established in Session 05, so all error responses — validation or otherwise — share the same top-level shape.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">HTTP 400 Response Body</div>
+            <pre><code class="language-json" style="font-size:0.88rem;">{
+  "type": "https://tools.ietf.org/html/rfc7807",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "errors": {
+    "Title": [
+      "Title is required."
+    ],
+    "Priority": [
+      "Priority must be between 1 and 5."
+    ]
+  }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Section Divider: FluentValidation                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">FluentValidation</div>
+          <div class="section-desc">DataAnnotations work well for simple constraints but become unwieldy for conditional rules, cross-property checks, and async database lookups. FluentValidation expresses rules as code, keeps validators in dedicated classes, and is straightforward to unit-test.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Why FluentValidation over DataAnnotations</li>
+            <li>Installing the package</li>
+            <li>Writing a validator class</li>
+            <li>Registering validators in the DI container</li>
+            <li>Conditional rules and custom predicates</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Why FluentValidation (Layout 3)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why FluentValidation Over DataAnnotations</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Complex rules are readable</strong> — conditional logic (<code class="inline">.When</code>), cross-property checks, and chained predicates read like English sentences rather than attribute soup on a model class</li>
+          <li><strong>Validators are testable in isolation</strong> — a <code class="inline">CreateTaskRequestValidator</code> is a plain class; you can write unit tests against it without an HTTP request or a controller</li>
+          <li><strong>Rules live in one place</strong> — validation logic is not scattered across DTO properties, controller actions, and service methods</li>
+          <li><strong>Rich built-in rules</strong> — <code class="inline">NotEmpty</code>, <code class="inline">MaximumLength</code>, <code class="inline">GreaterThan</code>, <code class="inline">Matches</code> (regex), <code class="inline">Must</code> (custom predicate), and async variants for database checks</li>
+          <li><strong>Error messages are centralized</strong> — <code class="inline">.WithMessage()</code> at the rule level; no need to repeat error strings in attribute constructors across multiple DTOs</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Installing FluentValidation (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Installing FluentValidation</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">One NuGet package adds FluentValidation with built-in ASP.NET Core integration:</p>
+            <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package FluentValidation.AspNetCore</code></pre>
+            <p style="font-size:0.9rem; margin-top:0.9rem; color:var(--color-text-muted);">The <code class="inline">FluentValidation.AspNetCore</code> package includes:</p>
+            <ul style="font-size:0.9rem;">
+              <li><code class="inline">FluentValidation</code> — the core library with all rule builders</li>
+              <li>ASP.NET Core integration — hooks validators into the model binding pipeline so validation errors appear in <code class="inline">ModelState</code> automatically</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Register all validators from the current assembly in <code class="inline">Program.cs</code>:</p>
+            <div class="file-path-label">Program.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">using FluentValidation;
+using FluentValidation.AspNetCore;
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining&lt;
+    CreateTaskRequestValidator&gt;();</code></pre>
+            <div class="callout info" style="margin-top:0.9rem;">
+              <div class="callout-label">AddValidatorsFromAssemblyContaining</div>
+              This scans the assembly for every class that inherits from <code class="inline">AbstractValidator&lt;T&gt;</code> and registers them all with the DI container. You do not need to register each validator individually.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Writing a Validator Class (Layout 5)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Writing a Validator Class</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Validators/CreateTaskRequestValidator.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,3,6-8,10-14">using FluentValidation;
+
+public class CreateTaskRequestValidator : AbstractValidator&lt;CreateTaskRequest&gt;
+{
+    public CreateTaskRequestValidator()
+    {
+        RuleFor(x =&gt; x.Title)
+            .NotEmpty().WithMessage("Title is required.")
+            .MaximumLength(200).WithMessage("Title cannot exceed 200 characters.");
+
+        RuleFor(x =&gt; x.Priority)
+            .InclusiveBetween(1, 5)
+            .WithMessage("Priority must be between 1 and 5.");
+
+        RuleFor(x =&gt; x.DueDate)
+            .GreaterThan(DateTime.UtcNow)
+            .When(x =&gt; x.DueDate.HasValue)
+            .WithMessage("Due date must be in the future.");
+    }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Each <code class="inline">RuleFor</code> call targets one property. Rules chain with <code class="inline">.</code> — all chained rules apply to the same property in order. <code class="inline">.When()</code> makes the preceding rule conditional.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Conditional Rules and Must (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Conditional Rules and Custom Predicates</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Two mechanisms handle rules that cannot be expressed with built-in methods:</p>
+            <ul style="font-size:0.93rem;">
+              <li><code class="inline">.When(predicate)</code> — applies the preceding rule only when the predicate is true. Useful for optional fields that have constraints when present</li>
+              <li><code class="inline">.Must(predicate)</code> — runs a custom boolean function against the value. Receives the entire model as a second parameter if you need cross-property logic</li>
+              <li><code class="inline">.MustAsync(predicate)</code> — the async variant, for rules that query the database (e.g., checking uniqueness)</li>
+            </ul>
+            <div class="callout warning" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Keep validators focused</div>
+              Async database queries in validators are powerful but add latency. Use them only when a rule genuinely requires a round trip — uniqueness checks, for instance.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Validators/CreateTaskRequestValidator.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="3-5,8-9">// Conditional: only validate if the field has a value
+RuleFor(x =&gt; x.Description)
+    .MaximumLength(2000)
+    .WithMessage("Description cannot exceed 2000 characters.")
+    .When(x =&gt; x.Description is not null);
+
+// Custom predicate: reject HTML in the title
+RuleFor(x =&gt; x.Title)
+    .Must(title =&gt; !title.Contains('&lt;'))
+    .WithMessage("Title must not contain HTML tags.");
+
+// Cross-property rule: end date after start date
+RuleFor(x =&gt; x.EndDate)
+    .GreaterThan(x =&gt; x.StartDate)
+    .When(x =&gt; x.EndDate.HasValue &amp;&amp; x.StartDate.HasValue)
+    .WithMessage("End date must be after start date.");</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — UpdateTaskRequest Validator (Layout 5)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Validator for the Update Request</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Validators/UpdateTaskRequestValidator.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="1,3,6-8,10-12,14-17">using FluentValidation;
+
+public class UpdateTaskRequestValidator : AbstractValidator&lt;UpdateTaskRequest&gt;
+{
+    public UpdateTaskRequestValidator()
+    {
+        RuleFor(x =&gt; x.Title)
+            .NotEmpty().WithMessage("Title is required.")
+            .MaximumLength(200).WithMessage("Title cannot exceed 200 characters.")
+            .Must(t =&gt; !t.Contains('&lt;')).WithMessage("Title must not contain HTML tags.");
+
+        RuleFor(x =&gt; x.Description)
+            .MaximumLength(2000)
+            .WithMessage("Description cannot exceed 2000 characters.")
+            .When(x =&gt; x.Description is not null);
+
+        RuleFor(x =&gt; x.DueDate)
+            .GreaterThan(DateTime.UtcNow)
+            .When(x =&gt; x.DueDate.HasValue)
+            .WithMessage("Due date must be in the future.");
+    }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Each request DTO gets its own validator class. This keeps rules separate and makes unit-testing each set of rules straightforward without coupling them to the controller.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Section Divider: Sanitization & Dangerous Inputs  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Sanitization &amp; Dangerous Inputs</div>
+          <div class="section-desc">Validation rejects inputs that break your rules. Sanitization cleans inputs that could become dangerous when used in a different context — rendered as HTML, interpolated into a query, or passed to an operating system command. Both are necessary, but they serve different purposes.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Validation vs. sanitization — definitions and when each applies</li>
+            <li>HTML encoding and XSS prevention</li>
+            <li>SQL injection and EF Core's built-in protection</li>
+            <li>Over-posting and mass assignment vulnerabilities</li>
+            <li>File upload validation</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Validation vs Sanitization (Layout 3)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Validation vs. Sanitization — Definitions</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Validation</strong> — decide whether an input is acceptable. If not, <strong>reject it</strong> and return an error. The input never enters the system. Example: a title longer than 200 characters is rejected with a 400 response</li>
+          <li><strong>Sanitization</strong> — transform an input so it is safe to use in a specific context. The input is accepted but <strong>cleaned</strong> before storage or rendering. Example: HTML-encode <code class="inline">&lt;script&gt;</code> before saving user-provided description text</li>
+          <li><strong>The strategies are complementary</strong> — validate first to reject obviously bad inputs, then sanitize the accepted inputs before using them in a context where they could cause harm</li>
+          <li><strong>Context matters</strong> — the same string that is safe in a JSON response might be dangerous when rendered in HTML, inserted into a SQL query, or passed to a shell command</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Principle of least surprise</div>
+          Prefer rejecting bad input over silently transforming it. Sanitization is appropriate when you genuinely need to accept rich content — such as a description field that allows formatting. For simple scalar fields, rejection is always cleaner.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — HTML Encoding and XSS (Layout 4)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">HTML Encoding and XSS Prevention</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><strong>Cross-Site Scripting (XSS)</strong> occurs when user-supplied text containing HTML or JavaScript is rendered unescaped in a browser. The script runs with the privileges of the page.</p>
+            <ul style="font-size:0.93rem;">
+              <li><strong>Prevention strategy 1 — reject</strong>: use a FluentValidation <code class="inline">.Must()</code> rule to reject any input containing <code class="inline">&lt;</code> or <code class="inline">&gt;</code> characters when HTML is not expected</li>
+              <li><strong>Prevention strategy 2 — encode</strong>: when a field genuinely accepts HTML (e.g., a rich-text description), HTML-encode it before storing or returning it</li>
+              <li>JSON responses are safe by default — <code class="inline">System.Text.Json</code> escapes special characters automatically</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Services/TaskService.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">using System.Text.Encodings.Web;
+
+public TaskItemDto Create(CreateTaskRequest req)
+{
+    var task = new TaskItem
+    {
+        Title = req.Title,
+        // Encode any HTML in the description
+        // before persisting to the database.
+        Description = req.Description is null
+            ? null
+            : HtmlEncoder.Default.Encode(
+                req.Description)
+    };
+
+    _context.Tasks.Add(task);
+    _context.SaveChanges();
+    return _mapper.Map&lt;TaskItemDto&gt;(task);
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — SQL Injection and EF Core (Layout 4)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">SQL Injection and EF Core's Built-In Protection</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><strong>SQL injection</strong> occurs when user input is concatenated directly into a SQL query string. The input can change the meaning of the query — reading, deleting, or modifying data the caller should not access.</p>
+            <ul style="font-size:0.93rem;">
+              <li><strong>EF Core LINQ queries are safe</strong> — all parameters are sent as SQL parameters, never interpolated into the query text</li>
+              <li><strong>Raw SQL requires care</strong> — when you must use raw SQL, use <code class="inline">FromSqlInterpolated</code> (parameterized) rather than <code class="inline">FromSqlRaw</code> with string concatenation</li>
+              <li><strong>Never concatenate</strong> user input into a SQL string — this applies to any database access, not just EF Core</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="2,8">// Safe: EF Core parameterizes this automatically
+var tasks = await _context.Tasks
+    .Where(t =&gt; t.Title.Contains(searchTerm))
+    .ToListAsync();
+
+// Safe: FromSqlInterpolated uses SQL parameters
+var tasks = await _context.Tasks
+    .FromSqlInterpolated(
+        $"SELECT * FROM Tasks WHERE Title LIKE {search}")
+    .ToListAsync();
+
+// UNSAFE: string concatenation — never do this
+var sql = "SELECT * FROM Tasks WHERE Title LIKE '%"
+    + searchTerm + "%'";
+var tasks = await _context.Tasks
+    .FromSqlRaw(sql)   // vulnerable to injection
+    .ToListAsync();</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Over-Posting and Mass Assignment (Layout 3)       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Over-Posting and Mass Assignment</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Over-posting</strong> occurs when a client sends more fields than the endpoint expects. If the server maps the entire request body directly to an entity, the extra fields silently overwrite properties that should not be settable from the outside</li>
+          <li><strong>Classic example</strong> — a <code class="inline">CreateUserRequest</code> has only <code class="inline">Name</code> and <code class="inline">Email</code>, but a client sends an extra <code class="inline">"IsAdmin": true</code> field that maps onto the entity and elevates their own privileges</li>
+          <li><strong>The fix is to use dedicated request DTOs</strong> — never bind directly to an entity class in a controller action. The DTO defines exactly which fields the client is allowed to supply</li>
+          <li><strong>Request DTOs are the validation boundary</strong> — only properties on the DTO exist as far as model binding is concerned; any extra fields in the JSON are ignored</li>
+        </ul>
+        <div class="callout error" style="margin-top:1rem;">
+          <div class="callout-label">Never bind directly to entity classes</div>
+          Accepting <code class="inline">[FromBody] TaskItem task</code> in a controller action exposes every property on the entity — including ones like <code class="inline">CreatedAt</code>, <code class="inline">OwnerId</code>, or <code class="inline">IsDeleted</code> — to overwriting. Always use a purpose-built request DTO.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — File Upload Validation (Layout 3)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Validating File Uploads</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Validate the extension</strong> — maintain an allowlist of permitted extensions (e.g., <code class="inline">.jpg</code>, <code class="inline">.png</code>, <code class="inline">.pdf</code>) and reject anything else. Never use a blocklist — attackers enumerate extensions you forgot to block</li>
+          <li><strong>Validate the MIME type</strong> — read the <code class="inline">Content-Type</code> header and compare it against the extension. A file named <code class="inline">photo.jpg</code> with <code class="inline">Content-Type: application/x-executable</code> is not a photo</li>
+          <li><strong>Validate the file size</strong> — set <code class="inline">MaxRequestBodySize</code> in Kestrel to prevent multi-GB uploads from exhausting server memory before your action code can reject them</li>
+          <li><strong>Never trust the filename</strong> — normalize the filename with <code class="inline">Path.GetFileName</code> to strip directory traversal sequences before using it in a file path</li>
+          <li><strong>Store outside the web root</strong> — uploaded files should not be directly accessible by URL; serve them through a controller action that enforces authorization</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Lab (numbered steps)                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Validate the Task Creation Endpoint</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Add FluentValidation to the Task API and verify that the error response shape matches the ProblemDetails format from Session 05.</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Install <code class="inline">FluentValidation.AspNetCore</code> and register <code class="inline">AddFluentValidationAutoValidation</code> and <code class="inline">AddValidatorsFromAssemblyContaining</code> in <code class="inline">Program.cs</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Create <code class="inline">CreateTaskRequestValidator</code>: title not empty, max 200 characters, no HTML tags; due date must be in the future if provided</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Create <code class="inline">UpdateTaskRequestValidator</code> with the same title and due date rules applied to the update DTO</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">Verify the error response shape in Postman: the <code class="inline">errors</code> dictionary should be keyed by field name and the <code class="inline">status</code> should be 400</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Test edge cases: empty title, title longer than 200 characters, a past due date, and a title containing <code class="inline">&lt;script&gt;</code> tags</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Server-side validation is mandatory</strong> — the frontend can be bypassed; the server cannot. Every field the client supplies must be validated before it is used or stored</li>
+          <li><strong>DataAnnotations handle simple rules declaratively</strong> — attributes on DTO properties are enforced automatically by <code class="inline">[ApiController]</code>, which returns 400 before the action runs</li>
+          <li><strong>FluentValidation handles complex rules as code</strong> — conditional rules, cross-property checks, and custom predicates live in dedicated, unit-testable validator classes</li>
+          <li><strong>Validation rejects; sanitization cleans</strong> — encode HTML before rendering, use EF Core parameterized queries to prevent SQL injection, and use dedicated DTOs to prevent over-posting</li>
+          <li><strong>Error responses follow the ProblemDetails format</strong> — the <code class="inline">errors</code> dictionary groups messages by field name, keeping the API consistent with the error handling established in Session 05</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 27 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 13 — Authentication Theory &amp; JWT</strong></p>
+        <ul>
+          <li>Sessions 9–12 built a fully persisted, shaped, and validated data layer — the API now enforces what data it accepts. Session 13 introduces <strong>authentication</strong>: enforcing who is allowed to make requests at all</li>
+          <li>You will learn how stateless authentication works with <strong>JSON Web Tokens (JWT)</strong> — what they contain, how they are signed, and how the server verifies them without a session store</li>
+          <li>The Task API will gain a <code class="inline">/auth/login</code> endpoint that issues a signed JWT, and all task endpoints will be protected with <code class="inline">[Authorize]</code></li>
+          <li>The validators you wrote today become the first line of defence on the login endpoint — rejecting malformed credentials before any authentication logic runs</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the assignment and make sure all five lab edge cases produce the expected error responses in Postman. You will build on this validated request shape in Session 13 when the login DTO is introduced.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 28 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Add full FluentValidation coverage to the Task Manager API and verify consistent error responses.</strong>
+        </p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
+        <ul style="font-size:0.92rem;">
+          <li>Write <code class="inline">CreateTaskRequestValidator</code> and <code class="inline">UpdateTaskRequestValidator</code> covering: non-empty title, max 200 characters, no HTML tags in title, and due date in the future when provided</li>
+          <li>Register both validators and <code class="inline">AddFluentValidationAutoValidation</code> in <code class="inline">Program.cs</code> — remove any overlapping DataAnnotation attributes from the DTOs to avoid duplicate error messages</li>
+          <li>Confirm the task creation and update endpoints return a 400 with a well-formed <code class="inline">ValidationProblemDetails</code> body when any rule is violated</li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-top:0.2rem;">
+          <li>Sending an empty title to <code class="inline">POST /api/tasks</code> returns 400 with <code class="inline">errors.Title</code> containing the expected message</li>
+          <li>Sending a title of 201 characters returns 400 with a max-length message</li>
+          <li>Sending a title containing <code class="inline">&lt;script&gt;</code> returns 400 with the no-HTML-tags message</li>
+          <li>Sending a past due date returns 400 with the future-date message</li>
+          <li>Sending a valid request returns 201 with the created task — no validation errors</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.7rem;">
+          <div class="callout-label">Bonus</div>
+          Write unit tests for both validator classes using xUnit. Each test should instantiate the validator directly, call <code class="inline">validator.Validate(request)</code>, and assert on <code class="inline">result.IsValid</code> and the specific error messages — no HTTP request or controller required.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 29 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 12 — Input Validation</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

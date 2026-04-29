@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 01 — Introduction to Backend Development</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+
+    /* Slide number — rendered in footer center, not by Reveal.js */
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── Framework comparison cards ── */
+    .framework-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .framework-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+    .framework-card.highlight {
+      border-color: var(--color-brand);
+      background: var(--color-brand-light);
+    }
+    .framework-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--color-navy);
+      margin-bottom: 0.4rem;
+    }
+    .framework-card.highlight .framework-name {
+      color: var(--color-brand-dark);
+    }
+    .framework-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── SVG diagram text ── */
+    .diagram-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      fill: var(--color-text);
+    }
+    .diagram-sublabel {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      fill: #6B5248;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 01</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Introduction to<br>Backend Development</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 1 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Explain the difference between frontend and backend responsibilities</li>
+          <li>Describe the client-server model and how HTTP connects them</li>
+          <li>Identify the key API paradigms — REST, GraphQL, gRPC — and explain why REST is the right starting point</li>
+          <li>Understand where .NET and ASP.NET Core sit in the backend ecosystem</li>
+          <li>Have a clear picture of the Task Management API you will build throughout the course</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>What is a backend?</td><td>Theory</td><td>20 min</td></tr>
+            <tr><td>0:20</td><td>Client-server model &amp; HTTP overview</td><td>Theory</td><td>20 min</td></tr>
+            <tr><td>0:40</td><td>REST vs other paradigms</td><td>Theory + Discussion</td><td>20 min</td></tr>
+            <tr><td>1:00</td><td>Where .NET fits in</td><td>Demo</td><td>15 min</td></tr>
+            <tr><td>1:15</td><td>Course project introduction</td><td>Discussion</td><td>20 min</td></tr>
+            <tr><td>1:35</td><td>Q&amp;A and wrap-up</td><td>Discussion</td><td>25 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: What is a Backend? (Layout 2)    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">What is a Backend?</div>
+          <div class="section-desc">Everything the user never sees — and why it matters most</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The role of the backend</li>
+            <li>Frontend vs backend responsibilities</li>
+            <li>Why the backend cannot be bypassed</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — The Backend's Role (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Backend's Role</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Everything the user <strong>never sees</strong>: business logic, data storage, authentication, inter-service communication</li>
+              <li>You already know the frontend — React renders UI and makes HTTP calls</li>
+              <li>The backend is <strong>what answers those calls</strong></li>
+              <li>The backend enforces rules the frontend cannot be trusted to enforce</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <svg viewBox="0 0 450 178" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:auto;">
+              <defs>
+                <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#B8694E"/>
+                </marker>
+                <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L8,3 z" fill="#2E6B4F"/>
+                </marker>
+              </defs>
+
+              <!-- Browser box -->
+              <rect x="10" y="42" width="96" height="72" rx="6" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+              <rect x="10" y="42" width="96" height="16" rx="6" fill="#E0D5CF"/>
+              <rect x="10" y="52" width="96" height="6" fill="#E0D5CF"/>
+              <circle cx="22" cy="50" r="3" fill="#B8694E" opacity="0.55"/>
+              <circle cx="32" cy="50" r="3" fill="#B8694E" opacity="0.38"/>
+              <circle cx="42" cy="50" r="3" fill="#B8694E" opacity="0.22"/>
+              <text x="58" y="84" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#2A1F1A">Browser</text>
+              <text x="58" y="99" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">/ Mobile / Postman</text>
+
+              <!-- HTTP Request label (above arrow) + arrow -->
+              <text x="148" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">HTTP Request</text>
+              <line x1="109" y1="76" x2="183" y2="76" stroke="#B8694E" stroke-width="2" marker-end="url(#arr-red)"/>
+
+              <!-- Server box -->
+              <rect x="186" y="38" width="95" height="80" rx="6" fill="#1B2A3B"/>
+              <text x="233" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="white">ASP.NET</text>
+              <text x="233" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="white">Core</text>
+              <text x="233" y="108" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="rgba(255,255,255,0.55)">Server</text>
+
+              <!-- Query label (above arrow) + arrow -->
+              <text x="319" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Query</text>
+              <line x1="284" y1="76" x2="356" y2="76" stroke="#B8694E" stroke-width="2" marker-end="url(#arr-red)"/>
+
+              <!-- DB cylinder: rect first, then ellipses on top so they cover the horizontal rect borders -->
+              <rect x="365" y="57" width="54" height="42" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+              <ellipse cx="392" cy="99" rx="27" ry="9" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+              <ellipse cx="392" cy="57" rx="27" ry="9" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+              <text x="392" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Database</text>
+
+              <!-- HTTP Response arc -->
+              <path d="M233,122 Q233,154 145,154 Q58,154 58,117" stroke="#2E6B4F" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arr-green)"/>
+              <text x="145" y="168" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">HTTP Response</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Backend Responsibilities (Layout 3)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Backend Responsibilities</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Handle incoming requests</strong> — routing, parsing, authentication checks</li>
+          <li><strong>Validate data</strong> — enforce constraints the frontend cannot guarantee</li>
+          <li><strong>Execute business logic</strong> — rules, calculations, workflows</li>
+          <li><strong>Query and persist data</strong> — read and write to a database</li>
+          <li><strong>Return structured responses</strong> — JSON, status codes, headers</li>
+          <li><strong>Communicate with other services</strong> — email providers, payment APIs, message queues</li>
+        </ul>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">Think about this</div>
+          Every <code class="inline">fetch()</code> call you wrote in React assumed something was running on the other end. That something is the backend.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Key Concept (Layout 6)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">"The backend is the enforcer of rules — the frontend can be bypassed; the backend cannot afford to be."</div>
+        <div class="callout-slide-attribution">— Session 01</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Section Divider: Client-Server & HTTP (Layout 2)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Client-Server Model &amp; HTTP</div>
+          <div class="section-desc">The fundamental protocol powering every web application</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The request-response cycle</li>
+            <li>HTTP methods</li>
+            <li>Status codes</li>
+            <li>Headers and body</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Request-Response Cycle (Layout 3)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Request-Response Cycle</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Every web interaction is a <strong>request-response cycle</strong></li>
+          <li>The <strong>client</strong> (browser, mobile app, Postman) sends an HTTP request to a server URL</li>
+          <li>The <strong>server</strong> processes it and returns an HTTP response</li>
+          <li>HTTP is <strong>stateless</strong> — each request is independent; the server does not remember the previous one</li>
+          <li>The client must include all necessary context in every request (tokens, parameters, body)</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Note</div>
+          Statelessness is a constraint, not a limitation — it is what makes HTTP servers straightforward to scale horizontally.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — HTTP Methods (Layout 3 + table)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">HTTP Methods</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr><th>Method</th><th>Purpose</th><th>Example in our API</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code class="inline">GET</code></td><td>Retrieve a resource</td><td>Fetch a task by ID</td></tr>
+            <tr><td><code class="inline">POST</code></td><td>Create a new resource</td><td>Create a new task</td></tr>
+            <tr><td><code class="inline">PUT</code></td><td>Replace a resource entirely</td><td>Update a task's full data</td></tr>
+            <tr><td><code class="inline">PATCH</code></td><td>Partially update a resource</td><td>Mark a task as complete</td></tr>
+            <tr><td><code class="inline">DELETE</code></td><td>Remove a resource</td><td>Delete a task</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Coming up</div>
+          Session 04 covers HTTP methods and status codes in full depth with hands-on exercises.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Status Codes (Layout 4)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">HTTP Status Codes</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <table>
+              <thead>
+                <tr><th>Code</th><th>Meaning</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code class="inline">200</code></td><td>OK</td></tr>
+                <tr><td><code class="inline">201</code></td><td>Created</td></tr>
+                <tr><td><code class="inline">400</code></td><td>Bad Request</td></tr>
+                <tr><td><code class="inline">401</code></td><td>Unauthorized</td></tr>
+                <tr><td><code class="inline">404</code></td><td>Not Found</td></tr>
+                <tr><td><code class="inline">500</code></td><td>Internal Server Error</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.95rem; margin-bottom:0.8rem;">Grouped by first digit:</p>
+            <ul style="font-size:0.95rem;">
+              <li><strong>2xx</strong> — Success</li>
+              <li><strong>3xx</strong> — Redirection</li>
+              <li><strong>4xx</strong> — Client error (caller's fault)</li>
+              <li><strong>5xx</strong> — Server error (our fault)</li>
+            </ul>
+            <div class="callout warning" style="margin-top:1rem; font-size:0.85rem;">
+              <div class="callout-label">Common mistake</div>
+              Never return <code class="inline">200 OK</code> with an error message inside the body. Use the correct status code.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Section Divider: REST vs Paradigms (Layout 2)    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">REST vs Other Paradigms</div>
+          <div class="section-desc">Why REST is the right starting point — and what else is out there</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>REST and its constraints</li>
+            <li>GraphQL, gRPC, WebSockets</li>
+            <li>Choosing the right paradigm</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — What is REST? (Layout 3)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What is REST?</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:1rem;">Representational State Transfer — an architectural style, not a protocol</p>
+        <ul>
+          <li><strong>Stateless</strong> — every request contains all information needed to process it</li>
+          <li><strong>Resource-oriented</strong> — everything is a resource, identified by a URI: <code class="inline">/tasks/42</code></li>
+          <li><strong>Uses HTTP natively</strong> — methods map to operations (GET = read, POST = create, DELETE = remove)</li>
+          <li><strong>Uniform interface</strong> — consistent structure and conventions across all endpoints</li>
+          <li><strong>Client-server separation</strong> — frontend and backend are independently deployable</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — API Paradigms Compared (Layout 3 + table)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">API Paradigms Compared</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr><th>Paradigm</th><th>Style</th><th>Best for</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>REST</strong></td>
+              <td>Resource-based, HTTP verbs</td>
+              <td>General-purpose APIs, most web and mobile apps</td>
+            </tr>
+            <tr>
+              <td><strong>GraphQL</strong></td>
+              <td>Query-based, single endpoint</td>
+              <td>Complex UIs with flexible, nested data needs</td>
+            </tr>
+            <tr>
+              <td><strong>gRPC</strong></td>
+              <td>Binary, contract-first (protobuf)</td>
+              <td>High-performance microservice-to-microservice calls</td>
+            </tr>
+            <tr>
+              <td><strong>WebSockets</strong></td>
+              <td>Persistent bidirectional connection</td>
+              <td>Real-time: chat, live dashboards, multiplayer</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">Why REST first</div>
+          REST maps directly onto HTTP, dominates the job market, and its principles transfer to every other paradigm.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Section Divider: Where .NET fits (Layout 2)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Where .NET Fits In</div>
+          <div class="section-desc">A cross-platform, strongly typed, enterprise-grade backend platform</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>.NET runtime overview</li>
+            <li>ASP.NET Core</li>
+            <li>Comparison with other frameworks</li>
+            <li>.NET strengths</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — .NET & ASP.NET Core (Layout 3)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">.NET &amp; ASP.NET Core</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>.NET</strong> is a free, cross-platform runtime from Microsoft — runs on Windows, Linux, and macOS</li>
+          <li>Not Windows-only: that was the old .NET Framework. Since .NET Core (2016), it runs everywhere</li>
+          <li><strong>ASP.NET Core</strong> is the web framework on top of .NET — handles routing, middleware, and dependency injection</li>
+          <li>Current LTS version: <code class="inline">.NET 8</code> (what we use in this course)</li>
+          <li><strong>C#</strong> is the language — statically typed, modern, and expressive</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Terminology</div>
+          ".NET" = the runtime. "ASP.NET Core" = the web layer. "C#" = the language. All three are used together.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Framework Comparison (Layout 3 + cards)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Backend Frameworks at a Glance</div>
+        <div class="slide-rule"></div>
+        <div class="framework-grid">
+          <div class="framework-card">
+            <div class="framework-name">Node.js / Express</div>
+            <div class="framework-desc">JavaScript, lightweight, non-blocking I/O. Fast to start but weak typing at scale.</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-name">Django (Python)</div>
+            <div class="framework-desc">Batteries-included, rapid development, strong ORM. Less control over the stack.</div>
+          </div>
+          <div class="framework-card">
+            <div class="framework-name">Spring (Java)</div>
+            <div class="framework-desc">Enterprise-grade, very mature. Verbose configuration and steep learning curve.</div>
+          </div>
+          <div class="framework-card highlight">
+            <div class="framework-name">ASP.NET Core (.NET)</div>
+            <div class="framework-desc">Strong typing, top-tier performance, excellent tooling, massive enterprise adoption. Our choice.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — .NET Strengths (Layout 3)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">.NET Strengths</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Strong typing</strong> — catch errors at compile time, not in production</li>
+          <li><strong>Excellent tooling</strong> — Visual Studio, VS Code, JetBrains Rider; powerful debugger and IntelliSense</li>
+          <li><strong>Top-tier performance</strong> — ASP.NET Core consistently ranks among the fastest web frameworks in TechEmpower benchmarks</li>
+          <li><strong>Large enterprise adoption</strong> — banks, healthcare systems, government, and Microsoft itself</li>
+          <li><strong>First-class dependency injection</strong> — built in, no extra libraries needed</li>
+          <li><strong>Great for teams</strong> — interfaces and strong conventions make large codebases navigable</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Section Divider: Course Project (Layout 2)       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 5 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Course Project</div>
+          <div class="section-desc">The Task Management API you will build session by session</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">What you will build</div>
+          <p style="color:var(--color-text); font-size:0.95rem; line-height:1.6;">A production-style RESTful API with authentication, filtering, versioning, and integration tests — built incrementally across all 20 sessions.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Task Management API (Layout 3)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Task Management API — Session by Session</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Sessions 3–4:</strong> Basic CRUD endpoints — create, read, update, delete tasks</li>
+          <li><strong>Session 5:</strong> Proper error handling and clean structured error responses</li>
+          <li><strong>Session 6:</strong> API versioning</li>
+          <li><strong>Session 7:</strong> Pagination, filtering, and sorting</li>
+          <li><strong>Sessions 9–10:</strong> Database persistence with Entity Framework Core</li>
+          <li><strong>Sessions 13–15:</strong> JWT authentication and role-based authorization</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Task Management API final features (Layout 3)    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Task Management API — Final State</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By Session 20, your API will have:</p>
+        <ul>
+          <li>JWT authentication and role-based access control</li>
+          <li>Full CRUD with filtering, sorting, and pagination</li>
+          <li>API versioning with backward compatibility</li>
+          <li>Structured error responses</li>
+          <li>Integration tests with a real database</li>
+          <li>Deployment configuration for production environments</li>
+        </ul>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">Goal</div>
+          Every session adds one real feature. By Week 10 you have a portfolio-ready API.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>The backend handles everything after the HTTP request leaves the browser — validation, logic, data, and responses</li>
+          <li>HTTP is stateless; each request must carry all context it needs</li>
+          <li>REST is resource-oriented and maps naturally onto HTTP verbs and status codes</li>
+          <li>GraphQL, gRPC, and WebSockets serve specific use cases — REST is the right foundation first</li>
+          <li>.NET and ASP.NET Core provide a strongly typed, high-performance, enterprise-grade backend platform</li>
+          <li>You will build a Task Management API incrementally — one real feature per session</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:1rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Session 02 — Environment Setup &amp; Git</p>
+        <ul style="margin-bottom:1.5rem;">
+          <li>Install the .NET 8 SDK and configure your development environment</li>
+          <li>Set up Git and connect to a remote repository</li>
+          <li>Create your first .NET solution and project structure</li>
+        </ul>
+        <p style="font-size:0.95rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Before next session:</p>
+        <ul>
+          <li>Install the .NET 8 SDK — instructions covered in Session 02</li>
+          <li>Read "What is REST?" at <code class="inline">restfulapi.net</code> — first two sections only</li>
+          <li>Optional: explore <code class="inline">httpbin.org</code> — a live API that echoes back your requests</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 01 — Introduction to Backend Development</div>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- Persistent Footer (hidden on title slide via JS) -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

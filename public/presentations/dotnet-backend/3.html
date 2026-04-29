@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 03 — First .NET Web API &amp; Project Architecture</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Lifetime cards ── */
+    .lifetime-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .lifetime-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1.1rem;
+    }
+    .lifetime-card.highlight {
+      background: var(--color-brand-light);
+      border-color: var(--color-brand);
+    }
+    .lifetime-card-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 1rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .lifetime-card.highlight .lifetime-card-name {
+      color: var(--color-brand-dark);
+      border-bottom-color: var(--color-brand);
+    }
+    .lifetime-card-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      line-height: 1.55;
+    }
+    .lifetime-card.highlight .lifetime-card-desc {
+      color: var(--color-brand-dark);
+    }
+    .lifetime-tag {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--color-brand);
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Endpoint cards ── */
+    .endpoint-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    .endpoint-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .endpoint-method {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #FFFFFF;
+      background: var(--color-navy-mid);
+      border-radius: 3px;
+      padding: 2px 8px;
+      flex-shrink: 0;
+    }
+    .endpoint-path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--color-brand-dark);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .endpoint-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Placeholder ── */
+    .placeholder {
+      border: 2px dashed var(--color-brand);
+      background: var(--color-brand-light);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-brand-dark);
+    }
+    .placeholder-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 03</div>
+          <div class="title-rule"></div>
+          <div class="title-main">First .NET Web API<br>&amp; Project Architecture</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 2 &nbsp;&middot;&nbsp; 2.5 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Create and run a .NET Web API project from scratch using the CLI</li>
+          <li>Navigate and explain every file produced by <code class="inline">dotnet new webapi</code></li>
+          <li>Describe the layered architecture — Controllers, Services, and Repositories — and explain why each layer exists</li>
+          <li>Understand what dependency injection is, how .NET's container works, and the three service lifetimes</li>
+          <li>Write a working <code class="inline">TasksController</code> with GET and POST endpoints using in-memory data</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Tour of the generated project</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>0:20</td><td>Middleware pipeline explained</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:35</td><td>Layered architecture — the why</td><td>Theory</td><td>20 min</td></tr>
+            <tr><td>0:55</td><td>Dependency injection in .NET</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>1:20</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:30</td><td>Build the first TasksController</td><td>Lab</td><td>40 min</td></tr>
+            <tr><td>2:10</td><td>Code review &amp; discussion</td><td>Discussion</td><td>20 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Tour (Layout 2)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Tour of the Generated Project</div>
+          <div class="section-desc">Walk through every file that <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; color:rgba(255,255,255,0.9);">dotnet new webapi</code> creates and understand what each one does before writing a single line of your own code</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The project file structure</li>
+            <li><code class="inline">Program.cs</code> — the entry point</li>
+            <li><code class="inline">appsettings.json</code> and <code class="inline">launchSettings.json</code></li>
+            <li>The sample controller to delete</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Project File Structure (Layout 5)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Generated File Structure</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">dotnet new webapi -n TaskManagerApi.Api</div>
+        <pre><code class="language-bash" style="font-size:0.88rem;">TaskManagerApi.Api/
+├── Controllers/
+│   └── WeatherForecastController.cs   # delete this — sample only
+├── Properties/
+│   └── launchSettings.json            # controls how the app starts locally
+├── appsettings.json                   # configuration values
+├── appsettings.Development.json       # dev overrides (gitignored by default)
+├── Program.cs                         # entry point — services + pipeline wired here
+└── TaskManagerApi.Api.csproj          # project file, NuGet package references</code></pre>
+        <div class="callout warning" style="margin-top:0.9rem;">
+          <div class="callout-label">First thing to do</div>
+          Delete <code class="inline">WeatherForecastController.cs</code> and its model. It is a scaffold sample with no relation to your project.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Program.cs Walkthrough (Layout 4)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Program.cs — The Entry Point</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li><strong>Builder phase</strong> — register all services into the DI container before the app starts</li>
+              <li><strong>Pipeline phase</strong> — add middleware in the exact order requests should flow through</li>
+              <li><code class="inline">app.MapControllers()</code> — connects incoming URLs to controller action methods</li>
+              <li><code class="inline">app.Run()</code> — starts the HTTP server and blocks until the process exits</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Minimal hosting model</div>
+              .NET 6+ uses a top-level <code class="inline">Program.cs</code> with no <code class="inline">Startup</code> class. Everything is in one file.
+            </div>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="3-5,15-17">var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Section Divider: Middleware (Layout 2)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Middleware Pipeline</div>
+          <div class="section-desc">Every incoming HTTP request travels through a chain of middleware components before reaching your controller. Understanding this chain is essential for adding auth, logging, and error handling.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What middleware is</li>
+            <li>The request / response pipeline</li>
+            <li>Short-circuiting the pipeline</li>
+            <li>Order matters</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Middleware Pipeline Diagram (Layout 3 + SVG)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Middleware Pipeline</div>
+        <div class="slide-rule"></div>
+
+        <!-- Inline SVG pipeline diagram -->
+        <svg viewBox="0 0 820 142" style="width:100%; height:auto; max-height:128px; margin-bottom:1rem;">
+          <!-- Request pill -->
+          <rect x="0" y="43" width="80" height="36" rx="18" fill="#E0D5CF" stroke="#B8694E" stroke-width="1.5"/>
+          <text x="40" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#2A1F1A">Request</text>
+          <!-- Arrow 1 -->
+          <line x1="80" y1="61" x2="97" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="97,57 106,61 97,65" fill="#B8694E"/>
+          <!-- HTTPS box -->
+          <rect x="106" y="36" width="126" height="50" rx="4" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+          <text x="169" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">HTTPS</text>
+          <text x="169" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Redirection</text>
+          <!-- Arrow 2 -->
+          <line x1="232" y1="61" x2="249" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="249,57 258,61 249,65" fill="#B8694E"/>
+          <!-- Authorization box (warning-tinted) -->
+          <rect x="258" y="36" width="126" height="50" rx="4" fill="#FBF4E3" stroke="#8A5C00" stroke-width="1.5"/>
+          <text x="321" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Authorization</text>
+          <text x="321" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8A5C00">may return 401</text>
+          <!-- Short-circuit arrow down from Auth -->
+          <line x1="321" y1="86" x2="321" y2="108" stroke="#8A5C00" stroke-width="1.2" stroke-dasharray="3,3"/>
+          <polygon points="317,108 321,116 325,108" fill="#8A5C00"/>
+          <text x="321" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8A5C00">short-circuit</text>
+          <!-- Arrow 3 -->
+          <line x1="384" y1="61" x2="401" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="401,57 410,61 401,65" fill="#B8694E"/>
+          <!-- Routing box -->
+          <rect x="410" y="36" width="108" height="50" rx="4" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+          <text x="464" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Routing</text>
+          <!-- Arrow 4 -->
+          <line x1="518" y1="61" x2="535" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="535,57 544,61 535,65" fill="#B8694E"/>
+          <!-- Controller box (brand-highlighted) -->
+          <rect x="544" y="31" width="136" height="60" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="2"/>
+          <text x="612" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#8F4A34">Controller</text>
+          <text x="612" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#8F4A34">your code runs here</text>
+          <!-- Arrow 5 (success green) -->
+          <line x1="680" y1="61" x2="697" y2="61" stroke="#2E6B4F" stroke-width="1.5"/>
+          <polygon points="697,57 706,61 697,65" fill="#2E6B4F"/>
+          <!-- Response pill (green) -->
+          <rect x="706" y="43" width="90" height="36" rx="18" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
+          <text x="751" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#2E6B4F">Response</text>
+        </svg>
+
+        <ul style="font-size:0.95rem;">
+          <li>Middleware is code that runs on <strong>every request</strong> in a defined order</li>
+          <li>Each component can inspect, modify, or <strong>short-circuit</strong> the pipeline — returning a response before reaching the next step</li>
+          <li>The order you call <code class="inline">app.UseXxx()</code> in <code class="inline">Program.cs</code> is the order they execute</li>
+          <li>You will add custom middleware in Session 05 (error handling) and Session 16 (rate limiting, CORS)</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Section Divider: Layered Architecture (Layout 2)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Layered Architecture</div>
+          <div class="section-desc">All projects in this course follow a three-layer structure. Learning it now pays off in every session from Session 09 onwards.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Controllers, Services, Repositories</li>
+            <li>Responsibility of each layer</li>
+            <li>Why separation matters</li>
+            <li>The folder structure to adopt now</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Three Layers (Layout 4 + SVG)                    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Controllers &rarr; Services &rarr; Repositories</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.97rem;">
+              <li><strong>Controllers</strong> — handle HTTP in and out. Receive a request, call a service, return a response. No business logic lives here.</li>
+              <li><strong>Services</strong> — all business logic. No knowledge of HTTP, no knowledge of the database. Pure decision-making.</li>
+              <li><strong>Repositories</strong> — data access only. Issue queries, return entities. No business rules live here.</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">React analogy</div>
+              This mirrors separating your components (Controllers), hooks (Services), and API calls (Repositories) in a React app.
+            </div>
+          </div>
+          <div class="col-right">
+            <svg viewBox="0 0 280 234" style="width:100%; height:auto; max-height:230px;">
+              <!-- Controllers layer -->
+              <rect x="10" y="0" width="260" height="58" rx="5" fill="#F2E0D8" stroke="#B8694E" stroke-width="2"/>
+              <text x="140" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#8F4A34">Controllers</text>
+              <text x="140" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#8F4A34">HTTP in / out &middot; no business logic</text>
+              <!-- Arrow 1 -->
+              <line x1="140" y1="58" x2="140" y2="78" stroke="#B8694E" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <polygon points="135,78 140,87 145,78" fill="#B8694E"/>
+              <!-- Services layer -->
+              <rect x="10" y="87" width="260" height="58" rx="5" fill="#2E4057" stroke="#2E4057" stroke-width="2"/>
+              <text x="140" y="111" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Services</text>
+              <text x="140" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Business logic &middot; no HTTP knowledge</text>
+              <!-- Arrow 2 -->
+              <line x1="140" y1="145" x2="140" y2="165" stroke="#B8694E" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <polygon points="135,165 140,174 145,165" fill="#B8694E"/>
+              <!-- Repositories layer -->
+              <rect x="10" y="174" width="260" height="58" rx="5" fill="#1B2A3B" stroke="#1B2A3B" stroke-width="2"/>
+              <text x="140" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Repositories</text>
+              <text x="140" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Data access only &middot; no business rules</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Why Layered Architecture? (Layout 3)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Separate the Layers?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Testability</strong> — you can unit-test a <code class="inline">TaskService</code> without an HTTP server or a database. This is covered fully in Session 17.</li>
+          <li><strong>Replaceability</strong> — swap the database (e.g. SQL Server for PostgreSQL) by rewriting only the Repository layer. The Service layer never changes.</li>
+          <li><strong>Readability</strong> — a controller that is 20 lines long and only delegates is easy to understand. A controller with SQL queries buried in it is not.</li>
+          <li><strong>Team scaling</strong> — developers can own different layers independently without stepping on each other.</li>
+        </ul>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">Rule of thumb</div>
+          If you can answer "what does this class do?" in one sentence using only one of the words <em>receive</em>, <em>decide</em>, or <em>query</em>, the layer is correct.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Recommended Folder Structure (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Adopt This Folder Structure Now</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">TaskManagerApi.Api/</div>
+        <pre><code class="language-bash" style="font-size:0.88rem;">TaskManagerApi.Api/
+├── Controllers/            # HTTP layer — one file per resource
+├── Services/
+│   └── Interfaces/         # ITaskService.cs lives here
+├── Repositories/
+│   └── Interfaces/         # ITaskRepository.cs lives here
+├── Models/
+│   ├── Entities/           # TaskItem.cs — the database model
+│   └── DTOs/               # request / response shapes (introduced in Session 11)
+└── Program.cs</code></pre>
+        <div class="callout info" style="margin-top:0.9rem;">
+          <div class="callout-label">Create the DTOs folder now</div>
+          You will not use it until Session 11, but establishing the structure early avoids a larger reorganisation mid-course.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Section Divider: Dependency Injection (Layout 2) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Dependency Injection in .NET</div>
+          <div class="section-desc">DI is the mechanism that connects your three layers together. .NET has a first-class DI container built in — no third-party library required.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What dependency injection is</li>
+            <li>The three service lifetimes</li>
+            <li>Registering services in <code class="inline">Program.cs</code></li>
+            <li>Constructor injection in a controller</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — What is DI? (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What is Dependency Injection?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>The problem without DI:</strong> a class creates its own dependencies with <code class="inline">new TaskService()</code> — it is tightly coupled, impossible to swap, and impossible to test in isolation</li>
+          <li><strong>DI inverts this:</strong> objects declare what they need (via constructor parameters) and a container provides it — the class never calls <code class="inline">new</code></li>
+          <li><strong>The container</strong> is <code class="inline">IServiceCollection</code> — you describe every service once in <code class="inline">Program.cs</code>, then the framework resolves them automatically</li>
+          <li><strong>Why interfaces?</strong> Depending on <code class="inline">ITaskService</code> rather than <code class="inline">TaskService</code> means you can substitute a different implementation (e.g. a test double) without touching the controller</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Service Lifetimes (Layout 3 + cards)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Service Lifetimes</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:0;">How long does the container keep an instance alive?</p>
+        <div class="lifetime-grid">
+          <div class="lifetime-card highlight">
+            <div class="lifetime-tag">Your default</div>
+            <div class="lifetime-card-name">Scoped</div>
+            <div class="lifetime-card-desc">One instance per HTTP request. Created at the start of a request, disposed at the end. Use this for services and repositories.</div>
+          </div>
+          <div class="lifetime-card">
+            <div class="lifetime-card-name">Singleton</div>
+            <div class="lifetime-card-desc">One instance for the entire application lifetime. Use for stateless utilities — a cache wrapper, a logger adapter. Never inject a Scoped into a Singleton.</div>
+          </div>
+          <div class="lifetime-card">
+            <div class="lifetime-card-name">Transient</div>
+            <div class="lifetime-card-desc">New instance every time the container resolves it. Rarely needed. Use only for very lightweight, stateless operations.</div>
+          </div>
+        </div>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Captive dependency trap</div>
+          Never inject a shorter-lived service into a longer-lived one (e.g. a Scoped into a Singleton). The container will warn you at startup.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Registering Services (Layout 5)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering Services in Program.cs</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="4-5">var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddScoped&lt;ITaskService, TaskService&gt;();
+builder.Services.AddScoped&lt;ITaskRepository, TaskRepository&gt;();
+
+var app = builder.Build();
+// ... pipeline config below</code></pre>
+        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.95rem; color:var(--color-brand-dark); margin-top:0.9rem;">
+          The pattern is always: <code class="inline">AddScoped&lt;IInterface, ConcreteClass&gt;()</code>. The container maps the interface to the implementation — callers only ever see the interface.
+        </p>
+        <div class="callout info" style="margin-top:0.7rem;">
+          <div class="callout-label">Registration order</div>
+          Register services before calling <code class="inline">builder.Build()</code>. After that the container is sealed and no further registrations are possible.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Constructor Injection (Layout 5)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Constructor Injection</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/TasksController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="3,5-8">public class TasksController : ControllerBase
+{
+    private readonly ITaskService _taskService;
+
+    public TasksController(ITaskService taskService)
+    {
+        _taskService = taskService;
+    }
+}</code></pre>
+        <ul style="font-size:0.93rem; margin-top:0.9rem;">
+          <li>Declare the dependency as a <strong>private readonly field</strong> typed to the interface</li>
+          <li>Accept it as a <strong>constructor parameter</strong> — the container injects the concrete instance automatically</li>
+          <li>The controller never calls <code class="inline">new TaskService()</code> — it does not know the concrete type exists</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Section Divider: Lab (Layout 2)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 5 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Lab — First TasksController</div>
+          <div class="section-desc">Build a <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; color:rgba(255,255,255,0.9);">TasksController</code> with in-memory data. No database yet — that arrives in Session 09.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">What you will build</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>A <code class="inline">TaskItem</code> entity</li>
+            <li><code class="inline">GET /api/tasks</code> — return all tasks</li>
+            <li><code class="inline">GET /api/tasks/{id}</code> — 404 if not found</li>
+            <li><code class="inline">POST /api/tasks</code> — 201 with Location header</li>
+            <li>Verified end-to-end in Postman</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — TaskItem Entity (Layout 5)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The TaskItem Entity</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/Entities/TaskItem.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.95rem;">public class TaskItem
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public bool IsCompleted { get; set; }
+    public DateTime CreatedAt { get; set; }
+}</code></pre>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">In-memory storage for now</div>
+          Store instances in a <code class="inline">static List&lt;TaskItem&gt;</code> inside your service for this session. This is replaced by Entity Framework Core and a real database in Session 09.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Endpoints to Build (Layout 3 + cards)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Endpoints to Implement</div>
+        <div class="slide-rule"></div>
+        <div class="endpoint-list">
+          <div class="endpoint-card">
+            <span class="endpoint-method">GET</span>
+            <span class="endpoint-path">/api/tasks</span>
+            <span class="endpoint-desc">Return all tasks as a JSON array &mdash; respond 200 OK</span>
+          </div>
+          <div class="endpoint-card">
+            <span class="endpoint-method">GET</span>
+            <span class="endpoint-path">/api/tasks/{id}</span>
+            <span class="endpoint-desc">Return a single task by id &mdash; respond 200 OK or 404 Not Found</span>
+          </div>
+          <div class="endpoint-card">
+            <span class="endpoint-method">POST</span>
+            <span class="endpoint-path">/api/tasks</span>
+            <span class="endpoint-desc">Create a new task from the request body &mdash; respond 201 Created with a <code class="inline">Location</code> header pointing to the new resource</span>
+          </div>
+        </div>
+        <div class="callout success" style="margin-top:0.9rem;">
+          <div class="callout-label">Acceptance criteria</div>
+          All three endpoints tested in Postman &nbsp;&middot;&nbsp; 404 returns for a missing id &nbsp;&middot;&nbsp; POST returns <code class="inline">201</code> with <code class="inline">Location: /api/tasks/{newId}</code>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Status Code Helpers (Layout 5)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Returning Correct HTTP Status Codes</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/TasksController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="4-5,7-8,10-11">// 200 OK — body serialised to JSON automatically
+return Ok(tasks);
+
+// 201 Created — sets Location header to /api/tasks/{id}
+return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
+
+// 404 Not Found — empty body
+return NotFound();
+
+// 400 Bad Request — empty body or custom message
+return BadRequest();</code></pre>
+        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.93rem; color:var(--color-brand-dark); margin-top:0.9rem;">
+          All these helper methods live on <code class="inline">ControllerBase</code> — your controller inherits them automatically.
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Route & Action Attributes (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Controller &amp; Route Attributes</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.95rem;">
+              <li><code class="inline">[ApiController]</code> — enables automatic model validation, binding, and problem-detail error responses</li>
+              <li><code class="inline">[Route("api/[controller]")]</code> — sets the base URL; <code class="inline">[controller]</code> resolves to the class name minus the <em>Controller</em> suffix</li>
+              <li><code class="inline">[HttpGet]</code> / <code class="inline">[HttpPost]</code> — bind an action to an HTTP method</li>
+              <li><code class="inline">"{id}"</code> in the route template maps to the <code class="inline">int id</code> parameter by name</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1-2,7-8,11-12,15-16">[ApiController]
+[Route("api/[controller]")]
+public class TasksController : ControllerBase
+{
+    // GET /api/tasks
+    [HttpGet]
+    public IActionResult GetAll() { ... }
+
+    // GET /api/tasks/42
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id) { ... }
+
+    // POST /api/tasks
+    [HttpPost]
+    public IActionResult Create([FromBody] TaskItem task) { ... }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Section Divider: Code Review (Layout 2)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 6 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Code Review &amp; Discussion</div>
+          <div class="section-desc">Step back from the code. Think about the decisions made and challenge assumptions before they become habits.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">Prompts</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What breaks if you put database code in the controller?</li>
+            <li>Why depend on an interface rather than the concrete class?</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Discussion Prompts (Layout 3)                    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Discussion Prompts</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li style="margin-bottom:1.2rem;">
+            <strong>"What would break if you put database code directly in your controller?"</strong>
+            <br><span style="font-size:0.92rem; color:var(--color-text-muted);">Think about testing, readability, and what happens when you need to change the query.</span>
+          </li>
+          <li style="margin-bottom:1.2rem;">
+            <strong>"Why would you want an interface (<code class="inline">ITaskService</code>) rather than depending directly on <code class="inline">TaskService</code>?"</strong>
+            <br><span style="font-size:0.92rem; color:var(--color-text-muted);">Think about what happens in tests, and what happens if you need a second implementation later.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Session Summary (Layout 3)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><code class="inline">dotnet new webapi</code> scaffolds a working project — <code class="inline">Program.cs</code> is the single entry point where services are registered and the middleware pipeline is configured</li>
+          <li>Every HTTP request passes through the middleware pipeline in the exact order the middleware was registered</li>
+          <li>Layered architecture (Controllers &rarr; Services &rarr; Repositories) separates HTTP handling, business logic, and data access into distinct, testable units</li>
+          <li>Dependency injection lets classes declare their dependencies as constructor parameters; the DI container resolves and provides them automatically</li>
+          <li>Use <strong>Scoped</strong> lifetime for services and repositories unless you have a specific reason for Singleton or Transient</li>
+          <li><code class="inline">Ok()</code>, <code class="inline">NotFound()</code>, <code class="inline">CreatedAtAction()</code> are helper methods on <code class="inline">ControllerBase</code> that produce semantically correct HTTP responses</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next: Session 04</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>HTTP Methods &amp; Status Codes</strong></p>
+        <ul>
+          <li>A full tour of GET, POST, PUT, PATCH, and DELETE — when to use each and why</li>
+          <li>The complete HTTP status code vocabulary: 2xx, 3xx, 4xx, 5xx</li>
+          <li>Idempotency and safety — properties that constrain how clients and proxies may behave</li>
+          <li>Expanding the <code class="inline">TasksController</code> with PUT, PATCH, and DELETE endpoints</li>
+        </ul>
+        <div class="callout info" style="margin-top:1.2rem;">
+          <div class="callout-label">Before next session</div>
+          Complete today's assignment. Make sure your <code class="inline">TasksController</code> GET and POST endpoints pass all acceptance criteria before Session 04.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 27 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Take-Home Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.97rem; margin-bottom:0.9rem;">Create a new .NET Web API project called <code class="inline">BooksApi</code> that applies the layered architecture and dependency injection patterns from this session.</p>
+        <ul style="font-size:0.93rem;">
+          <li>Project follows the four-folder structure: <code class="inline">Controllers/</code>, <code class="inline">Services/Interfaces/</code>, <code class="inline">Repositories/Interfaces/</code>, <code class="inline">Models/Entities/</code></li>
+          <li>A <code class="inline">Book</code> entity with <code class="inline">Id</code> (int), <code class="inline">Title</code> (string), <code class="inline">Author</code> (string), and <code class="inline">Year</code> (int)</li>
+          <li>An <code class="inline">IBooksService</code> interface with <code class="inline">GetAll()</code> and <code class="inline">GetById(int id)</code>, and a concrete in-memory <code class="inline">BooksService</code> implementation</li>
+          <li>A <code class="inline">BooksController</code> with <code class="inline">GET /api/books</code> and <code class="inline">GET /api/books/{id}</code> (404 if not found)</li>
+          <li><code class="inline">BooksService</code> registered as Scoped in <code class="inline">Program.cs</code> and injected into the controller via constructor</li>
+        </ul>
+        <div class="callout success" style="margin-top:0.8rem;">
+          <div class="callout-label">Bonus</div>
+          Add a <code class="inline">POST /api/books</code> endpoint that creates a new book and returns <code class="inline">201 Created</code> with a <code class="inline">Location</code> header pointing to the new resource.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 28 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 03 &nbsp;&middot;&nbsp; First .NET Web API &amp; Project Architecture</div>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

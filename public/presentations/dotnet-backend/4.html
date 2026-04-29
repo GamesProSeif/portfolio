@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 04 — HTTP Methods &amp; Status Codes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── HTTP Method Badges ── */
+    .method-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #FFFFFF;
+      border-radius: 3px;
+      padding: 2px 8px;
+      letter-spacing: 0.04em;
+    }
+    .method-badge.get    { background: var(--color-success); }
+    .method-badge.post   { background: var(--color-info); }
+    .method-badge.put    { background: var(--color-navy-mid); }
+    .method-badge.patch  { background: var(--color-warning); }
+    .method-badge.delete { background: var(--color-error); }
+
+    /* ── Check / Cross icons ── */
+    .check { color: var(--color-success); font-weight: 600; }
+    .cross  { color: var(--color-error);   font-weight: 600; }
+
+    /* ── Status code family grid ── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .status-card {
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem;
+      border-left: 5px solid;
+    }
+    .status-card.s2xx {
+      background: #E5F3EC;
+      border-color: var(--color-success);
+    }
+    .status-card.s3xx {
+      background: #EBF3FA;
+      border-color: var(--color-info);
+    }
+    .status-card.s4xx {
+      background: #FBF4E3;
+      border-color: var(--color-warning);
+    }
+    .status-card.s5xx {
+      background: #FAE8E8;
+      border-color: var(--color-error);
+    }
+    .status-card-range {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+    .status-card.s2xx .status-card-range { color: var(--color-success); }
+    .status-card.s3xx .status-card-range { color: var(--color-info); }
+    .status-card.s4xx .status-card-range { color: var(--color-warning); }
+    .status-card.s5xx .status-card-range { color: var(--color-error); }
+    .status-card-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .status-card-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Decision steps ── */
+    .decision-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin-top: 0.5rem;
+    }
+    .decision-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.7rem 1rem;
+    }
+    .decision-condition {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-text);
+      flex: 1;
+    }
+    .decision-arrow {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── Lab issue list ── */
+    .issue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .issue-item {
+      background: #FAE8E8;
+      border: 1px solid #e8b0b0;
+      border-radius: 6px;
+      padding: 0.65rem 1rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: baseline;
+    }
+    .issue-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--color-error);
+      flex-shrink: 0;
+    }
+    .issue-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--color-error);
+      line-height: 1.5;
+    }
+
+    /* ── Placeholder ── */
+    .placeholder {
+      border: 2px dashed var(--color-brand);
+      background: var(--color-brand-light);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-brand-dark);
+    }
+    .placeholder-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 04</div>
+          <div class="title-rule"></div>
+          <div class="title-main">HTTP Methods<br>&amp; Status Codes</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 2 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Choose the correct HTTP method for any given operation</li>
+          <li>Return the correct status code for every possible outcome</li>
+          <li>Explain idempotency and safety — and why clients depend on them</li>
+          <li>Identify and fix common HTTP misuse patterns found in real-world APIs</li>
+          <li>Test all method and status code scenarios confidently in Postman</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>HTTP methods — the full picture</td><td>Theory</td><td>30 min</td></tr>
+            <tr><td>0:30</td><td>Idempotency &amp; safety explained</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:45</td><td>HTTP status codes — by family</td><td>Theory</td><td>25 min</td></tr>
+            <tr><td>1:10</td><td>Live demo — wrong codes in the wild</td><td>Demo</td><td>15 min</td></tr>
+            <tr><td>1:25</td><td>Lab — fix the broken API</td><td>Lab</td><td>25 min</td></tr>
+            <tr><td>1:50</td><td>Wrap-up</td><td>Discussion</td><td>10 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: HTTP Methods (Layout 2)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">HTTP Methods</div>
+          <div class="section-desc">Every request you make to an API starts with a method. Picking the right one is not style — it is a contract between your API and every client, browser, proxy, and CDN that talks to it.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The five methods you will use daily</li>
+            <li>Decision guide — how to choose</li>
+            <li>Common mistakes to avoid</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — HTTP Methods Table (Layout 3 + table)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Five Core HTTP Methods</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Use case</th>
+              <th>Request body?</th>
+              <th>Idempotent?</th>
+              <th>Safe?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="method-badge get">GET</span></td>
+              <td>Retrieve a resource</td>
+              <td><span class="cross">No</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="check">Yes</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge post">POST</span></td>
+              <td>Create a new resource</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge put">PUT</span></td>
+              <td>Replace a resource entirely</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge patch">PATCH</span></td>
+              <td>Partially update a resource</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge delete">DELETE</span></td>
+              <td>Remove a resource</td>
+              <td><span class="cross">No</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:0.9rem;">
+          <div class="callout-label">Safe vs Idempotent</div>
+          Safe means no side effects. Idempotent means calling it multiple times gives the same result. These are covered fully in the next section.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Decision Guide (Layout 3)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Which Method to Use?</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Ask yourself what the operation is doing, not what it sounds like.</p>
+        <div class="decision-list">
+          <div class="decision-item">
+            <span class="decision-condition">Reading data — nothing changes on the server</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge get">GET</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Creating a new resource — server assigns the ID</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge post">POST</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Replacing the entire object — client sends the full representation</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge put">PUT</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Updating only a few fields — partial change, rest stays as-is</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge patch">PATCH</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Removing a resource permanently</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge delete">DELETE</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Common Mistakes (Layout 3)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Common Method Mistakes</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>
+            <strong>The RPC trap</strong> — using <code class="inline">POST</code> for everything because it is easy.
+            <code class="inline">POST /tasks/complete/5</code> should be <code class="inline">PATCH /tasks/5</code> with a body.
+          </li>
+          <li>
+            <strong>GET with a body</strong> — using a body on <code class="inline">GET</code> to pass filters is non-standard and breaks many HTTP clients and proxies. Use query parameters instead: <code class="inline">GET /tasks?status=open</code>.
+          </li>
+          <li>
+            <strong>Confusing PUT and PATCH</strong> — <code class="inline">PUT</code> requires the full object. If you only send the fields you want to change, the missing fields get set to null or default. Use <code class="inline">PATCH</code> for partial updates.
+          </li>
+          <li>
+            <strong>Ignoring idempotency on PUT</strong> — if your <code class="inline">PUT</code> handler creates the resource when it does not exist, make sure it does not create a second copy on retry.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Section Divider: Idempotency & Safety (Layout 2)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Idempotency &amp; Safety</div>
+          <div class="section-desc">Networks fail. Clients retry. Whether your API handles a retry gracefully or silently creates duplicate data depends entirely on whether you chose the right method.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Safe operations defined</li>
+            <li>Idempotent operations defined</li>
+            <li>Why clients depend on both</li>
+            <li>The POST retry problem</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Safe vs Idempotent (Layout 4 + table)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Safe vs Idempotent — Defined</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.97rem;">
+              <li>
+                <strong>Safe</strong> — the operation produces no side effects on the server. Calling it once or a hundred times leaves the state unchanged. Only <code class="inline">GET</code>, <code class="inline">HEAD</code>, and <code class="inline">OPTIONS</code> are safe.
+              </li>
+              <li style="margin-top:0.8rem;">
+                <strong>Idempotent</strong> — calling the operation multiple times with the same input produces the same result as calling it once. <code class="inline">GET</code>, <code class="inline">PUT</code>, and <code class="inline">DELETE</code> are idempotent.
+              </li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Key distinction</div>
+              Safe implies idempotent. Idempotent does not imply safe. <code class="inline">DELETE</code> is idempotent (second call still returns success) but it is not safe — the first call changed the server state.
+            </div>
+          </div>
+          <div class="col-right">
+            <table style="font-size:0.85rem;">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th style="text-align:center;">Safe</th>
+                  <th style="text-align:center;">Idempotent</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="method-badge get">GET</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge post">POST</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge put">PUT</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge patch">PATCH</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge delete">DELETE</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Why It Matters (Layout 4 + SVG)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Clients Depend on This</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.97rem;">
+              <li>HTTP clients (Axios, fetch, .NET HttpClient) automatically retry requests on network timeout — but only if the method is idempotent.</li>
+              <li>A retried <code class="inline">POST</code> that creates a new record each time will produce <strong>duplicate data</strong> with no error.</li>
+              <li>A retried <code class="inline">PUT</code> simply sets the same value again — harmless.</li>
+              <li>CDNs and load balancers also use these properties to decide whether to cache or replay requests.</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <!-- SVG: POST retry problem vs PUT retry safety -->
+            <svg viewBox="0 0 300 240" style="width:100%; height:auto; max-height:230px;">
+              <!-- POST label -->
+              <text x="10" y="18" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#8B1A1A">POST — not idempotent</text>
+              <!-- Client -->
+              <rect x="10" y="26" width="60" height="30" rx="4" fill="#FAE8E8" stroke="#8B1A1A" stroke-width="1.5"/>
+              <text x="40" y="45" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8B1A1A">Client</text>
+              <!-- Request 1 arrow -->
+              <line x1="70" y1="41" x2="140" y2="41" stroke="#8B1A1A" stroke-width="1.3"/>
+              <polygon points="140,37 148,41 140,45" fill="#8B1A1A"/>
+              <text x="107" y="36" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A5C00">timeout</text>
+              <!-- Server -->
+              <rect x="148" y="26" width="60" height="30" rx="4" fill="#FAE8E8" stroke="#8B1A1A" stroke-width="1.5"/>
+              <text x="178" y="45" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8B1A1A">Server</text>
+              <!-- Retry arrow (dashed) -->
+              <line x1="70" y1="67" x2="140" y2="67" stroke="#8B1A1A" stroke-width="1.3" stroke-dasharray="4,3"/>
+              <polygon points="140,63 148,67 140,71" fill="#8B1A1A"/>
+              <text x="107" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8B1A1A">retry</text>
+              <!-- Result -->
+              <rect x="10" y="82" width="198" height="22" rx="3" fill="#FAE8E8" stroke="#8B1A1A" stroke-width="1"/>
+              <text x="109" y="97" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8B1A1A">Result: 2 records created</text>
+
+              <!-- Divider -->
+              <line x1="10" y1="118" x2="290" y2="118" stroke="#E0D5CF" stroke-width="1"/>
+
+              <!-- PUT label -->
+              <text x="10" y="136" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#2E6B4F">PUT — idempotent</text>
+              <!-- Client -->
+              <rect x="10" y="144" width="60" height="30" rx="4" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
+              <text x="40" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">Client</text>
+              <!-- Request 1 arrow -->
+              <line x1="70" y1="159" x2="140" y2="159" stroke="#2E6B4F" stroke-width="1.3"/>
+              <polygon points="140,155 148,159 140,163" fill="#2E6B4F"/>
+              <text x="107" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A5C00">timeout</text>
+              <!-- Server -->
+              <rect x="148" y="144" width="60" height="30" rx="4" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
+              <text x="178" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">Server</text>
+              <!-- Retry arrow (dashed) -->
+              <line x1="70" y1="185" x2="140" y2="185" stroke="#2E6B4F" stroke-width="1.3" stroke-dasharray="4,3"/>
+              <polygon points="140,181 148,185 140,189" fill="#2E6B4F"/>
+              <text x="107" y="180" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#2E6B4F">retry</text>
+              <!-- Result -->
+              <rect x="10" y="200" width="198" height="22" rx="3" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1"/>
+              <text x="109" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">Result: same state — safe to retry</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Section Divider: Status Codes (Layout 2)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">HTTP Status Codes</div>
+          <div class="section-desc">The three-digit number in every response is a machine-readable signal. Browsers, monitoring tools, load balancers, and frontend frameworks all read it before your body is even parsed.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The four code families</li>
+            <li>2xx — success codes</li>
+            <li>4xx — client error codes</li>
+            <li>3xx &amp; 5xx — briefly</li>
+            <li>The 401 vs 403 distinction</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Status Code Families Overview (Layout 3)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Status Code Families</div>
+        <div class="slide-rule"></div>
+        <div class="status-grid">
+          <div class="status-card s2xx">
+            <div class="status-card-range">2xx</div>
+            <div class="status-card-name">Success</div>
+            <div class="status-card-desc">The request was received, understood, and accepted. Always return one of these when things go right.</div>
+          </div>
+          <div class="status-card s3xx">
+            <div class="status-card-range">3xx</div>
+            <div class="status-card-name">Redirection</div>
+            <div class="status-card-desc">Further action is needed. The resource has moved or the client should use a cached version.</div>
+          </div>
+          <div class="status-card s4xx">
+            <div class="status-card-range">4xx</div>
+            <div class="status-card-name">Client Error</div>
+            <div class="status-card-desc">The request is wrong. The client sent bad data, is not authenticated, or is not allowed. The client must fix the request.</div>
+          </div>
+          <div class="status-card s5xx">
+            <div class="status-card-range">5xx</div>
+            <div class="status-card-name">Server Error</div>
+            <div class="status-card-desc">The server failed. The request may have been valid but something broke on the server side. The client can try again later.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — 2xx Success Codes (Layout 3 + table)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">2xx — Success Codes</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>When to return it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">200</code></td>
+              <td>OK</td>
+              <td>The default success response — use for GET, PUT, and PATCH when returning a body</td>
+            </tr>
+            <tr>
+              <td><code class="inline">201</code></td>
+              <td>Created</td>
+              <td>A POST that created a new resource. Include a <code class="inline">Location</code> header pointing to the new resource URL</td>
+            </tr>
+            <tr>
+              <td><code class="inline">204</code></td>
+              <td>No Content</td>
+              <td>Success with no response body — use for DELETE, or PATCH when nothing is returned</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">In ASP.NET Core</div>
+          Return <code class="inline">Ok(resource)</code> for 200, <code class="inline">Created(location, resource)</code> for 201, <code class="inline">NoContent()</code> for 204.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — 4xx Client Errors (Layout 3 + table)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">4xx — Client Error Codes</div>
+        <div class="slide-rule"></div>
+        <table style="font-size:0.84rem;">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>When to return it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">400</code></td>
+              <td>Bad Request</td>
+              <td>Malformed request body, missing required fields, failed model validation</td>
+            </tr>
+            <tr>
+              <td><code class="inline">401</code></td>
+              <td>Unauthorized</td>
+              <td>No token provided, or the token is invalid / expired</td>
+            </tr>
+            <tr>
+              <td><code class="inline">403</code></td>
+              <td>Forbidden</td>
+              <td>Valid token, but the user does not have permission for this action</td>
+            </tr>
+            <tr>
+              <td><code class="inline">404</code></td>
+              <td>Not Found</td>
+              <td>The requested resource does not exist — wrong ID, deleted record</td>
+            </tr>
+            <tr>
+              <td><code class="inline">409</code></td>
+              <td>Conflict</td>
+              <td>State conflict — duplicate email on registration, concurrent edit collision</td>
+            </tr>
+            <tr>
+              <td><code class="inline">422</code></td>
+              <td>Unprocessable Entity</td>
+              <td>Request is well-formed but fails a business rule (e.g. closing a task that is already closed)</td>
+            </tr>
+            <tr>
+              <td><code class="inline">429</code></td>
+              <td>Too Many Requests</td>
+              <td>Rate limit exceeded — covered in Session 16</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — 3xx & 5xx (Layout 3)                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">3xx &amp; 5xx — Briefly</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">3xx — Redirection</p>
+        <table style="font-size:0.87rem; margin-bottom:1.2rem;">
+          <thead>
+            <tr><th>Code</th><th>Name</th><th>When to use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">301</code></td>
+              <td>Moved Permanently</td>
+              <td>A URL has changed permanently — tell clients to update their bookmarks</td>
+            </tr>
+            <tr>
+              <td><code class="inline">304</code></td>
+              <td>Not Modified</td>
+              <td>Response has not changed since the client's cached version (ETag / conditional requests)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.9rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">5xx — Server Error</p>
+        <table style="font-size:0.87rem;">
+          <thead>
+            <tr><th>Code</th><th>Name</th><th>When to use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">500</code></td>
+              <td>Internal Server Error</td>
+              <td>Unhandled exception — let the middleware produce this; never return it manually</td>
+            </tr>
+            <tr>
+              <td><code class="inline">503</code></td>
+              <td>Service Unavailable</td>
+              <td>Overloaded or down — typically produced by the load balancer, not your code</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — 401 vs 403 (Layout 6 callout slide)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Distinction — Memorise This</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          401 = "I don't know who you are."<br>
+          403 = "I know exactly who you are — and the answer is no."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:600px; text-align:center; color:rgba(255,255,255,0.85);">
+          401 means no token or an invalid token. 403 means the token is valid but the user lacks the required role or permission.
+          Returning 401 when you mean 403 tells the client to re-authenticate — which will not help, because the token is fine.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Section Divider: Demo & Lab (Layout 2)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Demo &amp; Lab</div>
+          <div class="section-desc">Theory lands differently when you see broken code in the wild. First we look at real examples of wrong status codes, then you fix a pre-written controller that has five deliberate errors.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Live demo — wrong codes in real APIs</li>
+            <li>Why wrong codes break clients</li>
+            <li>Lab — five bugs to find and fix</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Live Demo (Layout 3)                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Wrong Codes in the Wild</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Real APIs get this wrong more often than you would expect. Here is what to look for in Postman:</p>
+        <ul>
+          <li>
+            <strong>200 with an error body</strong> — response is <code class="inline">200 OK</code> but the JSON reads <code class="inline">&#123;"error": "user not found"&#125;</code>.
+            Frontend error handlers never fire; the error is silently ignored.
+          </li>
+          <li>
+            <strong>200 on failed login</strong> — <code class="inline">&#123;"success": false, "message": "wrong password"&#125;</code> with status 200.
+            Monitoring tools report 100% uptime even during an outage.
+          </li>
+          <li>
+            <strong>200 on a create</strong> — a POST that creates a resource returns 200 instead of 201.
+            The client has no <code class="inline">Location</code> header to follow; the UI must do an extra GET to find the new resource's ID.
+          </li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.9rem;">
+          <div class="callout-label">Why this matters</div>
+          Monitoring, alerting, load balancers, browser caching, and every HTTP client library all key off the status code — not the body. A wrong code silently breaks all of them.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Lab: Fix the Broken API (Layout 4 + code)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Fix the Broken API</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.7rem;">Find and fix these five bugs in the provided controller:</p>
+            <div class="issue-list">
+              <div class="issue-item">
+                <span class="issue-num">Bug 1</span>
+                <span class="issue-desc">A <span class="method-badge get" style="font-size:0.72rem;">GET</span> endpoint that modifies data on the server</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 2</span>
+                <span class="issue-desc">A <span class="method-badge post" style="font-size:0.72rem;">POST</span> returning <code class="inline" style="color:var(--color-error);">200</code> instead of <code class="inline" style="color:var(--color-error);">201</code></span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 3</span>
+                <span class="issue-desc">A <span class="method-badge delete" style="font-size:0.72rem;">DELETE</span> returning <code class="inline" style="color:var(--color-error);">200</code> with a body instead of <code class="inline" style="color:var(--color-error);">204</code></span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 4</span>
+                <span class="issue-desc">A <span class="method-badge get" style="font-size:0.72rem;">GET</span> by ID that returns <code class="inline" style="color:var(--color-error);">null</code> instead of <code class="inline" style="color:var(--color-error);">404</code></span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 5</span>
+                <span class="issue-desc">A validation failure returning <code class="inline" style="color:var(--color-error);">500</code> manually — should be <code class="inline" style="color:var(--color-error);">400</code></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Controllers/TasksController.cs (broken)</div>
+            <pre><code class="language-csharp" style="font-size:0.78rem;" data-line-numbers="6,15,24,32,40">// Bug 1: GET that modifies data
+[HttpGet("complete/{id}")]
+public IActionResult MarkComplete(int id)
+{
+    var task = _tasks.First(t => t.Id == id);
+    task.IsComplete = true;          // side effect!
+    return Ok(task);
+}
+
+// Bug 2: POST returning 200
+[HttpPost]
+public IActionResult Create(TaskItem task)
+{
+    _tasks.Add(task);
+    return Ok(task);                 // should be Created(...)
+}
+
+// Bug 3: DELETE returning body
+[HttpDelete("{id}")]
+public IActionResult Delete(int id)
+{
+    var task = _tasks.First(t => t.Id == id);
+    _tasks.Remove(task);
+    return Ok(task);                 // should be NoContent()
+}
+
+// Bug 4: Missing 404
+[HttpGet("{id}")]
+public IActionResult GetById(int id)
+{
+    var task = _tasks.FirstOrDefault(t => t.Id == id);
+    return Ok(task);                 // null if not found!
+}
+
+// Bug 5: Manual 500 for validation
+[HttpPut("{id}")]
+public IActionResult Update(int id, TaskItem task)
+{
+    if (string.IsNullOrEmpty(task.Title))
+        return StatusCode(500, "Title required"); // should be 400
+    return Ok(task);
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>GET never modifies data</strong> — if your operation has a side effect, use a different method</li>
+          <li><strong>POST returns 201</strong> with a <code class="inline">Location</code> header pointing to the created resource</li>
+          <li><strong>DELETE returns 204</strong> — no body, no exception for an already-deleted resource on a second call</li>
+          <li><strong>401 = who are you?</strong> / <strong>403 = I know you, but no</strong> — never confuse them</li>
+          <li><strong>Never return 200 with an error in the body</strong> — the status code is the signal; the body is the detail</li>
+          <li>Idempotency is a <strong>client contract</strong> — HTTP clients use it to decide whether to retry automatically</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 05 — Error Handling &amp; Clean Error Responses</strong></p>
+        <ul>
+          <li>Now that you know which status code to return, Session 05 covers how to return a <strong>consistent, structured error body</strong> alongside it</li>
+          <li>We will build a global exception handler using ASP.NET Core middleware so your controllers never need a try-catch block</li>
+          <li>You will implement the <strong>RFC 7807 Problem Details</strong> standard — the same format used by .NET's built-in <code class="inline">ValidationProblemDetails</code></li>
+          <li>After Session 05 you will be able to combine what you learned today (correct codes) with a clean, predictable error response body that frontend developers can rely on</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete today's assignment. When you return 404, what should the response body look like? Think about it — Session 05 answers that question.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Build a <code class="inline">ProductsController</code></strong> with in-memory storage and full HTTP method + status code compliance.
+        </p>
+        <ul style="font-size:0.93rem;">
+          <li><span class="method-badge get" style="font-size:0.72rem;">GET</span> <code class="inline">/api/products</code> returns <code class="inline">200</code> with the full list</li>
+          <li><span class="method-badge get" style="font-size:0.72rem;">GET</span> <code class="inline">/api/products/{id}</code> returns <code class="inline">200</code> with the product or <code class="inline">404</code> if not found</li>
+          <li><span class="method-badge post" style="font-size:0.72rem;">POST</span> <code class="inline">/api/products</code> creates the product and returns <code class="inline">201</code> with the new resource in the body</li>
+          <li><span class="method-badge put" style="font-size:0.72rem;">PUT</span> <code class="inline">/api/products/{id}</code> replaces the full product and returns <code class="inline">200</code>, or <code class="inline">404</code> if it does not exist</li>
+          <li><span class="method-badge delete" style="font-size:0.72rem;">DELETE</span> <code class="inline">/api/products/{id}</code> removes the product and returns <code class="inline">204</code> with no body</li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-top:0.2rem;">
+          <li>No endpoint ever returns <code class="inline">200</code> when an error occurred</li>
+          <li>The POST response body includes the newly created product with its assigned ID</li>
+          <li>Test all endpoints in Postman and verify the status code on each response</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Bonus</div>
+          Add a <span class="method-badge patch" style="font-size:0.72rem;">PATCH</span> endpoint that updates only the <code class="inline">Name</code> field. Return <code class="inline">400</code> if <code class="inline">Name</code> is empty or missing from the request body.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 04 — HTTP Methods &amp; Status Codes</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

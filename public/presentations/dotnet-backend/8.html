@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 08 — API Documentation &amp; Swagger</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 08</div>
+          <div class="title-rule"></div>
+          <div class="title-main">API Documentation<br>&amp; Swagger</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 4 &nbsp;&middot;&nbsp; 2.5 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Set up Swagger/OpenAPI in a .NET Web API using Swashbuckle</li>
+          <li>Document endpoints with XML doc comments and <code class="inline">[ProducesResponseType]</code> decorators</li>
+          <li>Show versioned API groups as separate tabs in Swagger UI</li>
+          <li>Generate a typed TypeScript client for a React frontend from the OpenAPI spec</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Why documentation matters</td><td>Discussion</td><td>10 min</td></tr>
+            <tr><td>0:10</td><td>OpenAPI spec overview</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:25</td><td>Swashbuckle setup</td><td>Demo</td><td>25 min</td></tr>
+            <tr><td>0:50</td><td>XML comments &amp; decorators</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>1:10</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:20</td><td>Versioned Swagger UI</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>1:40</td><td>Lab — document the Task API</td><td>Lab</td><td>35 min</td></tr>
+            <tr><td>2:15</td><td>Generating a typed client</td><td>Demo</td><td>15 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Why Documentation Matters        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Why Documentation Matters</div>
+          <div class="section-desc">An API without documentation is a contract nobody can read. Every caller — whether a teammate, a React developer, or your future self — must read the source code to understand how to use it. Documentation is not optional; it is part of the API surface.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The hidden cost of undocumented APIs</li>
+            <li>What API consumers actually need</li>
+            <li>Why Swagger is the industry standard</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — The Hidden Cost of Undocumented APIs (Layout 3)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Hidden Cost of Undocumented APIs</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Integration time multiplies</strong> — every consumer must read and reverse-engineer source code instead of reading a clear contract</li>
+          <li><strong>Mistakes become invisible</strong> — callers guess at optional parameters, omit required fields, and only discover errors at runtime</li>
+          <li><strong>Breaking changes go unnoticed</strong> — without a spec, renaming a field or changing a response shape has no visible warning for consumers</li>
+          <li><strong>Testing is harder</strong> — without documented request and response schemas, writing accurate tests requires digging through controllers and services</li>
+          <li><strong>Frontend becomes tightly coupled to implementation</strong> — React developers end up hard-coding request shapes discovered by trial and error</li>
+        </ul>
+        <div class="callout error" style="margin-top:1rem;">
+          <div class="callout-label">Rule</div>
+          If a consumer of your API cannot understand how to use an endpoint without reading the implementation, the API is incomplete — regardless of whether the code works.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — What Consumers Need (Layout 4)                    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What API Consumers Actually Need</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.9rem;">Every caller of your API needs to know — without reading source code:</p>
+            <ul style="font-size:0.93rem;">
+              <li>The HTTP method and URL for each endpoint</li>
+              <li>Which parameters are required vs optional, and their types</li>
+              <li>The exact shape of the request body, if any</li>
+              <li>Every possible response code and the shape of each response body</li>
+              <li>Authentication requirements for the endpoint</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="callout success" style="margin-top:0;">
+              <div class="callout-label">Swagger gives all of this</div>
+              Swagger UI generates an interactive web page from your API's OpenAPI spec. Consumers can read parameter descriptions, see response schemas, and test endpoints directly in the browser — without touching your code.
+            </div>
+            <div class="callout info" style="margin-top:0.9rem;">
+              <div class="callout-label">Relevant to you</div>
+              As React developers, you have consumed third-party APIs with good documentation. Swagger gives your own API that same professional, self-service interface.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Section Divider: OpenAPI & Swashbuckle            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">OpenAPI &amp; Swashbuckle</div>
+          <div class="section-desc">OpenAPI is the specification. Swagger is the tooling built on top of it. Swashbuckle is the .NET library that generates an OpenAPI document from your controllers at runtime — with no manual file maintenance required.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What OpenAPI is and what it describes</li>
+            <li>The structure of an OpenAPI document</li>
+            <li>Installing and configuring Swashbuckle</li>
+            <li>What Swagger UI gives you in the browser</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — What is OpenAPI? (Layout 3)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What is OpenAPI?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>OpenAPI (formerly Swagger Spec)</strong> is a language-agnostic standard for describing REST APIs as a structured JSON or YAML document</li>
+          <li>The spec describes <strong>endpoints, HTTP methods, parameters, request bodies, response schemas, and authentication</strong> in a machine-readable format</li>
+          <li><strong>Tools consume the spec</strong> — Swagger UI renders it as an interactive page; Postman imports it; code generators produce typed clients from it</li>
+          <li>In .NET, <strong>Swashbuckle</strong> inspects your controllers using reflection and generates the OpenAPI document at runtime — no manual editing required</li>
+          <li>The generated spec is served at <code class="inline">/swagger/v1/swagger.json</code> and Swagger UI reads it to build the visual interface</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Terminology note</div>
+          "OpenAPI" is the specification standard. "Swagger" originally referred to the spec itself before it was donated to the OpenAPI Initiative — now "Swagger" refers to the suite of tools (Swagger UI, Swagger Editor, Swashbuckle). In .NET projects you will see both names used interchangeably.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Inside an OpenAPI Document (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Inside an OpenAPI Document</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;">An OpenAPI document is a JSON file with three key sections:</p>
+            <ul style="font-size:0.92rem;">
+              <li><code class="inline">info</code> — title, version, and description of the API</li>
+              <li><code class="inline">paths</code> — every endpoint, its HTTP methods, parameters, request bodies, and all possible responses</li>
+              <li><code class="inline">components</code> — reusable schema definitions (your DTOs) referenced throughout <code class="inline">paths</code></li>
+            </ul>
+            <p style="font-size:0.88rem; margin-top:0.9rem; color:var(--color-text-muted);">Swashbuckle generates this entire document automatically from your controllers. You only annotate your actions — the serialization is handled for you.</p>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">GET /swagger/v1/swagger.json</div>
+            <pre><code class="language-json" style="font-size:0.82rem;">{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Task Manager API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/tasks/{id}": {
+      "get": {
+        "summary": "Returns a single task by ID.",
+        "parameters": [
+          { "name": "id", "in": "path", "required": true }
+        ],
+        "responses": {
+          "200": { "description": "Task found." },
+          "404": { "description": "Task not found." }
+        }
+      }
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Installing Swashbuckle (Layout 4)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Installing Swashbuckle</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">One NuGet package brings in everything needed:</p>
+            <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package Swashbuckle.AspNetCore</code></pre>
+            <p style="font-size:0.9rem; margin-top:0.9rem; color:var(--color-text-muted);">This installs three sub-packages:</p>
+            <ul style="font-size:0.9rem;">
+              <li><code class="inline">Swashbuckle.AspNetCore.Swagger</code> — serializes the spec to JSON</li>
+              <li><code class="inline">Swashbuckle.AspNetCore.SwaggerGen</code> — reflects over controllers to build the spec</li>
+              <li><code class="inline">Swashbuckle.AspNetCore.SwaggerUI</code> — serves the interactive web interface</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Enable XML documentation output so comments appear in the spec:</p>
+            <div class="file-path-label">TaskManagerApi.csproj</div>
+            <pre><code class="language-xml" style="font-size:0.95rem;">&lt;PropertyGroup&gt;
+  &lt;GenerateDocumentationFile&gt;true&lt;/GenerateDocumentationFile&gt;
+  &lt;NoWarn&gt;$(NoWarn);1591&lt;/NoWarn&gt;
+&lt;/PropertyGroup&gt;</code></pre>
+            <div class="callout warning" style="margin-top:0.9rem;">
+              <div class="callout-label">Warning 1591</div>
+              This warning fires on every public member that has no XML comment. Suppressing it lets you add documentation incrementally without the build flooding with warnings on undocumented members.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Registering Swagger Services (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering Swagger Services</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="7-12,14-16">using System.Reflection;
+using Microsoft.OpenApi.Models;
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title       = "Task Manager API",
+        Version     = "v1",
+        Description = "RESTful API for managing tasks"
+    });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;"><code class="inline">IncludeXmlComments</code> wires the XML documentation file into Swashbuckle so your <code class="inline">/// &lt;summary&gt;</code> and <code class="inline">/// &lt;response&gt;</code> tags appear in Swagger UI.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Wiring Swagger Middleware (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Wiring Swagger Middleware</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Two middleware calls activate Swagger — both gated to development only:</p>
+            <div class="file-path-label">Program.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.9rem;">if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint(
+            "/swagger/v1/swagger.json",
+            "Task Manager API v1");
+    });
+}</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.9rem; margin-bottom:0.7rem;">What this gives you in development:</p>
+            <ul style="font-size:0.9rem;">
+              <li><code class="inline">/swagger/v1/swagger.json</code> — the raw OpenAPI document</li>
+              <li><code class="inline">/swagger</code> — the Swagger UI web page</li>
+              <li>Every controller action listed with its method, path, and description</li>
+              <li>Interactive "Try it out" to call the API directly from the browser</li>
+              <li>Request and response schema panels generated from your DTOs</li>
+            </ul>
+            <div class="callout warning" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Production</div>
+              Never expose Swagger UI in production. The <code class="inline">IsDevelopment()</code> guard ensures it only runs locally. Leaking it in production exposes your full API surface to anyone who finds the URL.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Section Divider: XML Comments & Decorators        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">XML Comments &amp; Response Decorators</div>
+          <div class="section-desc">Swashbuckle infers the request shape from your models automatically. The parts it cannot infer — human-readable descriptions and which response codes each action can produce — must be supplied with XML doc comments and ProducesResponseType attributes.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>XML summary, param, and response tags</li>
+            <li>ProducesResponseType — linking codes to DTO types</li>
+            <li>Documenting a GET endpoint</li>
+            <li>Documenting a POST endpoint with multiple response codes</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — XML Documentation Comments (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">XML Documentation Comments</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Three XML tags matter for Swagger:</p>
+            <ul style="font-size:0.93rem;">
+              <li><code class="inline">&lt;summary&gt;</code> — one-line description shown as the endpoint title in Swagger UI</li>
+              <li><code class="inline">&lt;param name="x"&gt;</code> — description of a parameter, shown in the Parameters panel</li>
+              <li><code class="inline">&lt;response code="N"&gt;</code> — human-readable description of a specific HTTP response code</li>
+            </ul>
+            <div class="callout info" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Triple-slash</div>
+              XML doc comments begin with <code class="inline">///</code>. Visual Studio and Rider auto-generate the tag scaffolding when you type <code class="inline">///</code> directly above a method signature.
+            </div>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.88rem;">/// &lt;summary&gt;Returns a single task by ID.&lt;/summary&gt;
+/// &lt;param name="id"&gt;The task identifier.&lt;/param&gt;
+/// &lt;response code="200"&gt;Task found and returned.&lt;/response&gt;
+/// &lt;response code="404"&gt;No task with this ID exists.&lt;/response&gt;
+[HttpGet("{id}")]
+public IActionResult GetById(int id)
+    => Ok(_taskService.GetById(id));</code></pre>
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:0.7rem;">Without the XML comments, Swagger UI shows only the method and path. With them, it shows a description, parameter labels, and a response code table with meanings.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — ProducesResponseType (Layout 4)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">ProducesResponseType — Linking Codes to Schemas</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><code class="inline">[ProducesResponseType]</code> tells Swashbuckle which DTO type is returned for each response code. Without it, Swagger only knows the code exists — not the shape of the body.</p>
+            <ul style="font-size:0.93rem;">
+              <li>First argument: the DTO type that populates the response schema panel</li>
+              <li>Second argument: the <code class="inline">StatusCodes</code> constant for the HTTP code</li>
+              <li>Use <code class="inline">ProblemDetails</code> for error responses — it matches the RFC 7807 shape your API already returns from Session 05</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="6-7">/// &lt;summary&gt;Returns a single task by ID.&lt;/summary&gt;
+/// &lt;param name="id"&gt;The task identifier.&lt;/param&gt;
+/// &lt;response code="200"&gt;Task found and returned.&lt;/response&gt;
+/// &lt;response code="404"&gt;No task with this ID exists.&lt;/response&gt;
+[HttpGet("{id}")]
+[ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status200OK)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+public IActionResult GetById(int id)
+    => Ok(_taskService.GetById(id));</code></pre>
+            <div class="callout success" style="margin-top:0.8rem; font-size:0.85rem;">
+              <div class="callout-label">Result</div>
+              Swagger UI now renders the <code class="inline">TaskItemDto</code> schema in the 200 panel and the <code class="inline">ProblemDetails</code> schema in the 404 panel — consumers see the exact shape of both outcomes.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Documenting a POST Endpoint (Layout 5)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Documenting a POST Endpoint</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/TasksController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="7-9">/// &lt;summary&gt;Creates a new task.&lt;/summary&gt;
+/// &lt;param name="dto"&gt;The task data.&lt;/param&gt;
+/// &lt;response code="201"&gt;Task created successfully.&lt;/response&gt;
+/// &lt;response code="400"&gt;Validation failed — see errors in the response body.&lt;/response&gt;
+/// &lt;response code="409"&gt;A task with this title already exists.&lt;/response&gt;
+[HttpPost]
+[ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status201Created)]
+[ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+public IActionResult Create([FromBody] CreateTaskDto dto)
+{
+    var created = _taskService.Create(dto);
+    return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Use <code class="inline">ValidationProblemDetails</code> for 400 responses — it has the same shape as the validation errors ASP.NET Core returns automatically, so the schema in Swagger UI will be accurate.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Section Divider: Versioned Swagger & Typed Client -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Versioned Swagger UI &amp; Typed Clients</div>
+          <div class="section-desc">When an API has multiple versions, Swagger UI can show each version as its own tab with its own spec. After the session, a TypeScript client generated from that spec closes the loop back to your React frontend — turning your documented API into a typed library.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Registering multiple spec documents in SwaggerGen</li>
+            <li>Grouping controller versions with ApiExplorerSettings</li>
+            <li>Generating a TypeScript client with NSwag</li>
+            <li>Using the generated client in React</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Registering Multiple API Docs (Layout 5)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering Multiple API Docs</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="3-4,12-13">builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Manager API", Version = "v1" });
+    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Task Manager API", Version = "v2" });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    c.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+});</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Each <code class="inline">SwaggerDoc</code> call creates a separate tab in Swagger UI. The matching <code class="inline">SwaggerEndpoint</code> calls tell the UI where to load each spec. Both the name passed to <code class="inline">SwaggerDoc</code> and the JSON path must use the same version string.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Grouping Endpoints by Version (Layout 4)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Grouping Endpoints by Version</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Swashbuckle decides which spec document an action belongs to by reading its <code class="inline">ApiExplorerSettings.GroupName</code>. The value must match the document name passed to <code class="inline">SwaggerDoc</code>.</p>
+            <ul style="font-size:0.93rem;">
+              <li>Actions with no <code class="inline">GroupName</code> appear in all specs</li>
+              <li>Setting <code class="inline">GroupName = "v2"</code> restricts the action to the v2 tab only</li>
+              <li>This works alongside the API versioning from Session 06 — the route template, <code class="inline">[ApiVersion]</code>, and <code class="inline">GroupName</code> all use the same version identifier</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Controllers/TasksV2Controller.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/tasks")]
+[ApiExplorerSettings(GroupName = "v2")]
+public class TasksV2Controller : ControllerBase
+{
+    // Actions here appear only in the v2 tab
+}</code></pre>
+            <div class="callout info" style="margin-top:0.9rem; font-size:0.85rem;">
+              <div class="callout-label">Connects to Session 06</div>
+              The <code class="inline">AddApiVersioning</code> setup and route templates from Session 06 are the prerequisite. <code class="inline">GroupName</code> is a Swagger-only hint — it does not change how the router dispatches requests.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Generating a TypeScript Client (Layout 4)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Generating a Typed TypeScript Client</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.7rem;">NSwag reads your OpenAPI spec and generates a fully typed TypeScript client. Every endpoint becomes a method; every DTO becomes an interface.</p>
+            <pre><code class="language-bash" style="font-size:0.85rem;">dotnet tool install --global NSwag.ConsoleCore
+
+nswag openapi2tsclient \
+  /input:swagger.json \
+  /output:src/api/taskApiClient.ts</code></pre>
+            <p style="font-size:0.85rem; margin-top:0.7rem; color:var(--color-text-muted);">Download <code class="inline">swagger.json</code> from <code class="inline">/swagger/v1/swagger.json</code> while the API is running locally, then run NSwag against that file.</p>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">src/components/TaskList.tsx</div>
+            <pre><code class="language-javascript" style="font-size:0.85rem;">import { TasksClient } from '../api/taskApiClient';
+
+const client = new TasksClient("https://localhost:5001");
+
+// Autocomplete works for all parameters and return types
+const result = await client.getAll(
+    1,         // page
+    20,        // pageSize
+    "meeting"  // search
+);
+
+console.log(result.data);        // TaskItemDto[]
+console.log(result.totalCount);  // number</code></pre>
+          </div>
+        </div>
+        <div class="callout success" style="margin-top:0.8rem;">
+          <div class="callout-label">The payoff</div>
+          Rename a field in the API response, re-generate the client, and TypeScript immediately flags every call site in React that accessed the old name. The documentation and the type system enforce the contract together.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Lab: Document the Task API (Layout 3)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Document the Task API</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Add full Swagger documentation to the Task API built in previous sessions. Every action must have XML comments and response type decorators.</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Install <code class="inline">Swashbuckle.AspNetCore</code> and add <code class="inline">GenerateDocumentationFile</code> to the <code class="inline">.csproj</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Register <code class="inline">AddEndpointsApiExplorer</code>, <code class="inline">AddSwaggerGen</code> with <code class="inline">OpenApiInfo</code> and <code class="inline">IncludeXmlComments</code> in <code class="inline">Program.cs</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Wire <code class="inline">UseSwagger</code> and <code class="inline">UseSwaggerUI</code> inside the <code class="inline">IsDevelopment()</code> guard</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">Add <code class="inline">/// &lt;summary&gt;</code>, <code class="inline">/// &lt;param&gt;</code>, and <code class="inline">/// &lt;response&gt;</code> XML comments to every controller action</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Add <code class="inline">[ProducesResponseType]</code> for every possible response code, linking each to the correct DTO or <code class="inline">ProblemDetails</code> type</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">6</span>
+            <span class="step-desc">Navigate to <code class="inline">/swagger</code> and verify each endpoint shows its description, parameter labels, and response schemas</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">7</span>
+            <span class="step-desc">Use "Try it out" to call <code class="inline">GET /api/tasks?page=1&amp;pageSize=5</code> and confirm the paginated response matches the displayed schema</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Key Principle (Layout 6)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Principle</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "Documentation is not separate from the API —<br>it is part of the API contract."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:640px; text-align:center; color:rgba(255,255,255,0.85);">
+          XML comments, ProducesResponseType attributes, and the OpenAPI spec are not optional extras. They are the machine-readable contract that every consumer of your API depends on — the same discipline that makes breaking changes visible before they ship.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>OpenAPI is the standard</strong> — a language-agnostic, machine-readable description of your API's endpoints, parameters, and response shapes</li>
+          <li><strong>Swashbuckle generates the spec automatically</strong> — it reflects over your controllers at runtime; no manual file maintenance required</li>
+          <li><strong>XML doc comments</strong> supply what Swashbuckle cannot infer: human-readable summaries, parameter labels, and response code meanings</li>
+          <li><strong>ProducesResponseType links response codes to DTO types</strong> — Swagger UI uses this to render accurate schema panels for every possible outcome</li>
+          <li><strong>Multiple API versions appear as separate tabs</strong> — each <code class="inline">SwaggerDoc</code> call creates a named spec; <code class="inline">ApiExplorerSettings</code> routes actions into the correct one</li>
+          <li><strong>NSwag closes the loop to React</strong> — a typed TypeScript client generated from the spec enforces the API contract at compile time in the frontend</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 09 — Entity Framework Core Intro</strong></p>
+        <ul>
+          <li>Sessions 04–08 built a fully shaped, versioned, and documented HTTP API layer — but the data lives in in-memory lists. Session 09 introduces <strong>Entity Framework Core</strong> to persist it to a real database</li>
+          <li>You will install EF Core, configure a <code class="inline">DbContext</code>, define entity models, and issue your first migration to generate a database schema from C# code</li>
+          <li>The CRUD endpoints you have already built will be wired to real <code class="inline">DbSet</code> queries — replacing the in-memory collections entirely</li>
+          <li>After Session 09, the Task API will read and write from a persistent SQL database, and the Swagger UI you built today will be the primary tool for testing every EF Core operation live</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the assignment. Make sure Swagger UI is running and all endpoints are fully documented before Session 09 — you will use "Try it out" to verify each database operation as you wire it up.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Add complete Swagger/OpenAPI documentation to the Task Manager API.</strong>
+        </p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
+        <ul style="font-size:0.92rem;">
+          <li>Install Swashbuckle, enable XML documentation output, and register <code class="inline">AddSwaggerGen</code> and the Swagger middleware in <code class="inline">Program.cs</code></li>
+          <li>Add <code class="inline">/// &lt;summary&gt;</code>, <code class="inline">/// &lt;param&gt;</code>, and <code class="inline">/// &lt;response&gt;</code> XML doc comments to every controller action</li>
+          <li>Add <code class="inline">[ProducesResponseType]</code> decorators for all possible response codes, linking each to the correct DTO or <code class="inline">ProblemDetails</code> type</li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-top:0.2rem;">
+          <li>Swagger UI is accessible at <code class="inline">/swagger</code> in development and lists all Task API endpoints</li>
+          <li>Every endpoint has a human-readable summary and all parameters are labeled with descriptions</li>
+          <li>Every possible response code has a schema panel showing the DTO or error body shape</li>
+          <li>The raw spec at <code class="inline">/swagger/v1/swagger.json</code> is valid JSON with no missing schema references</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.7rem;">
+          <div class="callout-label">Bonus</div>
+          Add JWT Bearer authentication to Swagger UI using <code class="inline">AddSecurityDefinition</code> and <code class="inline">AddSecurityRequirement</code> so the "Authorize" button appears and bearer tokens can be passed to protected endpoints directly from the UI. You will use this in Session 14 when JWT auth is implemented.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 08 — API Documentation &amp; Swagger</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

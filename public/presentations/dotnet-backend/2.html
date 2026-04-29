@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 02 — Environment Setup &amp; Git/GitHub</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── IDE / tool comparison cards ── */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .tool-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1.2rem;
+    }
+    .tool-card.highlight {
+      border-color: var(--color-brand);
+      background: var(--color-brand-light);
+    }
+    .tool-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--color-navy);
+      margin-bottom: 0.4rem;
+    }
+    .tool-card.highlight .tool-name {
+      color: var(--color-brand-dark);
+    }
+    .tool-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+      line-height: 1.55;
+    }
+    .tool-tag {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--color-brand);
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── Merge vs Rebase comparison grid ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .compare-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1.2rem;
+    }
+    .compare-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--color-navy);
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .compare-card ul {
+      padding-left: 1rem;
+      margin: 0;
+    }
+    .compare-card ul li {
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.5;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 02</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Environment Setup<br>&amp; Git/GitHub</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 1 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will have:</p>
+        <ul>
+          <li>A fully working .NET 8 development environment installed and verified</li>
+          <li>Git configured and a GitHub account connected to your local machine</li>
+          <li>A clear understanding of .NET-appropriate Git practices and project layout</li>
+          <li>Your first project repository created, committed, and pushed to GitHub</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Install &amp; verify .NET SDK</td><td>Lab</td><td>20 min</td></tr>
+            <tr><td>0:20</td><td>IDE setup (VS Code or Rider)</td><td>Lab</td><td>15 min</td></tr>
+            <tr><td>0:35</td><td>Postman setup &amp; first request</td><td>Demo</td><td>15 min</td></tr>
+            <tr><td>0:50</td><td>Git essentials recap</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>1:05</td><td>.NET-specific Git practices</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>1:25</td><td>Create repo, first commit, push</td><td>Lab</td><td>25 min</td></tr>
+            <tr><td>1:50</td><td>Wrap-up</td><td>Discussion</td><td>10 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Dev Environment (Layout 2)       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Dev Environment Setup</div>
+          <div class="section-desc">Install .NET 8, choose your IDE, and verify everything works before writing a single line of code</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Download &amp; install the .NET 8 SDK</li>
+            <li>Install the <code class="inline">dotnet-ef</code> global tool</li>
+            <li>IDE options: VS Code vs Rider</li>
+            <li>VS Code extensions for .NET</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Installing .NET 8 SDK (Layout 4)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Installing .NET 8 SDK</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Download from <code class="inline">dot.net</code> — choose .NET 8 (LTS)</li>
+              <li>Run the installer for your OS (Windows, macOS, Linux)</li>
+              <li>After install, <strong>restart your terminal</strong> to refresh the PATH</li>
+              <li>Verify the installation with the two commands shown</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Why .NET 8?</div>
+              .NET 8 is the current Long-Term Support release, supported until November 2026.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-bash" style="font-size:0.95rem;">dotnet --version
+dotnet --list-sdks</code></pre>
+            </div>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.7rem;">
+              Expected: <code class="inline">8.x.x</code> or higher. If the command is not found after install, restart the terminal — the PATH is updated on launch.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Install dotnet-ef Tool (Layout 5)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Install the dotnet-ef Global Tool</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Terminal</div>
+        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet tool install --global dotnet-ef</code></pre>
+        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.95rem; color:var(--color-brand-dark); margin-top:0.8rem;">
+          You will use this in Session 09 when Entity Framework Core migrations are introduced.
+        </p>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">Tool not found after install?</div>
+          Add the tools directory to your PATH. On Windows: <code class="inline">%USERPROFILE%\.dotnet\tools</code> &nbsp;|&nbsp; macOS / Linux: <code class="inline">~/.dotnet/tools</code>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — IDE Options (Layout 3 + tool cards)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">IDE Options</div>
+        <div class="slide-rule"></div>
+        <div class="tool-grid">
+          <div class="tool-card highlight">
+            <div class="tool-tag">Recommended</div>
+            <div class="tool-name">VS Code</div>
+            <div class="tool-desc">Lightweight, free, cross-platform. Needs a few extensions for .NET (covered on the next slide). Great for learning the toolchain explicitly — nothing is hidden.</div>
+          </div>
+          <div class="tool-card">
+            <div class="tool-name">JetBrains Rider</div>
+            <div class="tool-desc">Full-featured .NET IDE, free for students. Better refactoring and integrated debugger than VS Code. Activate a free student license at jetbrains.com/student.</div>
+          </div>
+        </div>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Course convention</div>
+          Demos use VS Code. Both IDEs produce identical output — use whichever you prefer.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — VS Code Extensions (Layout 3)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">VS Code Extensions for .NET</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>C# Dev Kit</strong> <span style="color:var(--color-text-muted); font-size:0.9em;">(Microsoft)</span> — IntelliSense, solution explorer, run &amp; debug for C#. Installs the base C# extension automatically</li>
+          <li><strong>NuGet Gallery</strong> — browse and add NuGet packages without leaving the editor</li>
+          <li><strong>REST Client</strong> — send HTTP requests from <code class="inline">.http</code> files directly in the editor; lightweight alternative to Postman for quick endpoint tests</li>
+        </ul>
+        <div class="callout success" style="margin-top:1.2rem;">
+          <div class="callout-label">Install all three now</div>
+          Extensions panel &nbsp;<code class="inline">Ctrl+Shift+X</code>&nbsp; &rarr; search each name &rarr; Install. Takes under two minutes.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Section Divider: Postman (Layout 2)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Postman &amp; API Testing</div>
+          <div class="section-desc">The tool you will use to call and inspect your API from Session 03 onward</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Download &amp; create a workspace</li>
+            <li>Make your first GET request</li>
+            <li>Environments, variables, collections</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Postman Setup (Layout 3)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Postman Setup</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Download from <code class="inline">postman.com</code> or use the web version — both work for this course</li>
+          <li>Create a workspace named <strong>Backend with .NET</strong> — one collection per session</li>
+          <li>Make a first request: <code class="inline">GET https://httpbin.org/get</code> — inspect the status code, headers, and JSON body</li>
+          <li><strong>Environments</strong> — store variables such as <code class="inline">baseUrl</code> to switch between local and deployed without editing every request</li>
+          <li><strong>Collections</strong> — group related requests; you will build these heavily from Session 04 onward</li>
+        </ul>
+        <div class="callout info" style="margin-top:0.8rem;">
+          <div class="callout-label">httpbin.org</div>
+          A public echo API — it reflects your exact request back in the response body, which makes it ideal for learning HTTP.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Section Divider: Git Recap (Layout 2)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Git Essentials Recap</div>
+          <div class="section-desc">Commands you already know — and one distinction you may not</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Core workflow commands</li>
+            <li>Branching and pull requests</li>
+            <li>Merge vs Rebase</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Core Git Workflow (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Core Git Workflow</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">From your frontend course — quick recap:</p>
+            <ul style="font-size:0.95rem;">
+              <li><code class="inline">git init</code> / <code class="inline">git clone</code></li>
+              <li><code class="inline">git add</code> / <code class="inline">git commit</code></li>
+              <li><code class="inline">git push</code> / <code class="inline">git pull</code></li>
+              <li><code class="inline">git checkout -b feature/name</code></li>
+              <li>Opening a Pull Request on GitHub</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-bash" style="font-size:0.88rem;"># typical session workflow
+git checkout -b feature/session-03
+
+# ... make changes ...
+
+git add .
+git commit -m "feat: add task list endpoint"
+git push origin feature/session-03
+# open PR on GitHub → merge</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Merge vs Rebase (Layout 3 + compare grid)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Merge vs Rebase</div>
+        <div class="slide-rule"></div>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <div class="compare-card-title">git merge</div>
+            <ul>
+              <li>Creates a merge commit</li>
+              <li>Preserves the full history of both branches</li>
+              <li>Safe on shared or public branches</li>
+              <li><strong>Use for:</strong> integrating a feature branch into <code class="inline">main</code></li>
+            </ul>
+          </div>
+          <div class="compare-card">
+            <div class="compare-card-title">git rebase</div>
+            <ul>
+              <li>Replays your commits onto the new base</li>
+              <li>Produces a clean, linear history</li>
+              <li>Rewrites commit SHAs — risky if already pushed</li>
+              <li><strong>Use for:</strong> cleaning up a local feature branch before a PR</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">Rule of thumb</div>
+          Never rebase a branch that others have already pulled. On a solo project, rebasing your local feature branch before merging is safe and keeps history clean.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Section Divider: .NET Git Practices (Layout 2)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">.NET-Specific Git Practices</div>
+          <div class="section-desc">What you must configure before your first commit in a .NET project</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Why .gitignore matters in .NET</li>
+            <li>Generate it with <code class="inline">dotnet new gitignore</code></li>
+            <li>Secrets — never in source control</li>
+            <li>Branch strategy for the course</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Why .gitignore Matters (Layout 3)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why .gitignore Matters in .NET</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Every <code class="inline">dotnet build</code> generates <code class="inline">bin/</code> and <code class="inline">obj/</code> output folders</li>
+          <li>These contain <strong>thousands of compiled files</strong> that change on every build — committing them bloats the repo and causes merge conflicts</li>
+          <li>Without a <code class="inline">.gitignore</code>, running <code class="inline">git add .</code> stages all of them</li>
+          <li>The .NET SDK ships a generator: <code class="inline">dotnet new gitignore</code> creates the correct ignore rules for the current project type</li>
+        </ul>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">First commit rule</div>
+          Always run <code class="inline">dotnet new gitignore</code> <em>before</em> your first <code class="inline">git add .</code> — never after.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Generate the .gitignore (Layout 5)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Generate the .gitignore</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Terminal — run from the solution root</div>
+        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet new gitignore</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.9rem; margin-bottom:0.7rem;">Key entries generated for .NET projects:</p>
+        <ul style="font-size:0.95rem;">
+          <li><code class="inline">bin/</code> — compiled output; changes on every build</li>
+          <li><code class="inline">obj/</code> — intermediate build artifacts; never needed in version control</li>
+          <li><code class="inline">*.user</code> — per-developer IDE preference files</li>
+          <li><code class="inline">.vs/</code> — Visual Studio workspace state (Rider uses <code class="inline">.idea/</code> instead)</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Secrets (Layout 4)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Secrets — Never Commit</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.95rem;">
+              <li><code class="inline">appsettings.Development.json</code> is where connection strings and API keys typically live in .NET projects</li>
+              <li>The generated <code class="inline">.gitignore</code> does <strong>not</strong> include it — you must add it manually</li>
+              <li>If a secret is pushed: rotate it immediately, then remove it from history with <code class="inline">git filter-repo</code></li>
+              <li><code class="inline">dotnet user-secrets</code> is the proper local-secret store — covered in Session 19</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-bash" style="font-size:0.9rem;"># append to your .gitignore
+appsettings.Development.json
+
+# emergency: remove from tracking
+# (still need to rotate the secret)
+git rm --cached \
+  appsettings.Development.json</code></pre>
+            </div>
+            <div class="callout error" style="margin-top:0.8rem;">
+              <div class="callout-label">If it reaches GitHub</div>
+              Treat the secret as compromised — delete and regenerate it regardless of whether the repo is private.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Key Concept (Layout 6)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">"Set up the .gitignore before the first commit. A secret that reaches GitHub — even briefly — must be treated as compromised."</div>
+        <div class="callout-slide-attribution">— Session 02</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Branch Strategy (Layout 3)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Recommended Branch Strategy</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><code class="inline">main</code> — always working and deployable; never commit directly here</li>
+          <li><code class="inline">feature/session-XX</code> — one branch per session's work; merged via PR when complete</li>
+          <li>Even when working solo, open a Pull Request and merge it — this builds the habit and provides a clean audit trail</li>
+          <li>Use conventional commit prefixes: <code class="inline">feat:</code> &nbsp;<code class="inline">fix:</code> &nbsp;<code class="inline">docs:</code> &nbsp;<code class="inline">chore:</code></li>
+        </ul>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">Course convention</div>
+          After each session lab: merge your <code class="inline">feature/session-XX</code> branch into <code class="inline">main</code> via a PR. This is exactly how professional teams operate.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Section Divider: First Repository (Layout 2)     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 5 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Creating Your First Repository</div>
+          <div class="section-desc">Scaffold the project you will develop across all 20 sessions</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">What you will create</div>
+          <p style="color:var(--color-text); font-size:0.95rem; line-height:1.6;">A <code class="inline">TaskManagerApi</code> .NET solution with a Web API project, a <code class="inline">.gitignore</code>, an initial commit, and a remote on GitHub — ready to build upon from Session 03 onward.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Project Scaffold Walkthrough (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Project Scaffold — Step by Step</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Terminal</div>
+        <pre><code class="language-bash" style="font-size:0.85rem;">mkdir TaskManagerApi
+cd TaskManagerApi
+dotnet new sln
+dotnet new webapi -n TaskManagerApi.Api
+dotnet sln add TaskManagerApi.Api
+git init
+dotnet new gitignore
+git add .
+git commit -m "feat: initial project scaffold"
+git remote add origin https://github.com/&lt;username&gt;/task-manager-api.git
+git push -u origin main</code></pre>
+        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.7rem;">
+          1–2: create the directory &nbsp;&middot;&nbsp; 3–5: scaffold the .NET solution &nbsp;&middot;&nbsp; 6–8: initialise Git &nbsp;&middot;&nbsp; 9–11: first commit and push
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Common Issues (Layout 3)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Common Issues to Watch For</div>
+        <div class="slide-rule"></div>
+        <div class="callout warning" style="margin-bottom:0.8rem;">
+          <div class="callout-label">dotnet not found after install</div>
+          On Windows, restart the terminal after installing the SDK — the PATH is only updated for new processes.
+        </div>
+        <div class="callout warning" style="margin-bottom:0.8rem;">
+          <div class="callout-label">dotnet-ef not found</div>
+          Add <code class="inline">%USERPROFILE%\.dotnet\tools</code> (Windows) or <code class="inline">~/.dotnet/tools</code> (macOS/Linux) to your PATH, then restart the terminal.
+        </div>
+        <div class="callout error">
+          <div class="callout-label">appsettings.Development.json committed by mistake</div>
+          Run <code class="inline">git rm --cached appsettings.Development.json</code>, add it to <code class="inline">.gitignore</code>, commit the fix — and rotate any secrets that were exposed.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>The .NET 8 SDK is installed and verified — <code class="inline">dotnet --version</code> confirms it</li>
+          <li>VS Code with C# Dev Kit (or JetBrains Rider) provides full .NET development support</li>
+          <li>Always run <code class="inline">dotnet new gitignore</code> before the first commit to exclude <code class="inline">bin/</code>, <code class="inline">obj/</code>, and secrets</li>
+          <li>Merge is safe for integrating branches; rebase is for cleaning up local history — never rebase pushed branches</li>
+          <li>One feature branch per session merged via PR is the professional workflow, even solo</li>
+          <li>Your <code class="inline">TaskManagerApi</code> repository is live on GitHub and ready for Session 03</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:1rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Session 03 — First .NET Web API &amp; Project Architecture</p>
+        <ul style="margin-bottom:1.5rem;">
+          <li>Build your first <code class="inline">/tasks</code> endpoint and return data from it</li>
+          <li>Understand how ASP.NET Core processes a request end-to-end</li>
+          <li>Organise the project into a layered architecture</li>
+        </ul>
+        <p style="font-size:0.95rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Before next session:</p>
+        <ul>
+          <li>Push the initial scaffold to GitHub — the repository must be live before Session 03 starts</li>
+          <li>Read through the generated <code class="inline">.gitignore</code> file and understand each entry</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:0.9rem;">
+          <strong style="color:var(--color-navy);">Set Up Your Course Repository</strong> — complete independently after this session. You are done when all five criteria below are met.
+        </p>
+        <ul style="font-size:0.95rem; margin-bottom:1rem;">
+          <li>A <code class="inline">task-manager-api</code> GitHub repository exists and is publicly accessible (or shared with the instructor)</li>
+          <li>A <code class="inline">dotnet new gitignore</code>-generated <code class="inline">.gitignore</code> is committed to the repository</li>
+          <li><code class="inline">bin/</code> and <code class="inline">obj/</code> are <strong>not tracked</strong> — run <code class="inline">dotnet build</code> then <code class="inline">git status</code> to verify</li>
+          <li>The initial commit message is exactly <code class="inline">feat: initial project scaffold</code></li>
+          <li>The <code class="inline">main</code> branch is pushed and visible on GitHub</li>
+        </ul>
+        <div class="callout success">
+          <div class="callout-label">Bonus</div>
+          Create a <code class="inline">feature/session-02</code> branch, add a <code class="inline">README.md</code> with the project name and a one-sentence description, commit with <code class="inline">docs: add project readme</code>, and open a pull request to <code class="inline">main</code>.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 02 — Environment Setup &amp; Git/GitHub</div>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- Persistent Footer (hidden on title slide via JS) -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

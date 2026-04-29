@@ -26,6 +26,10 @@ export default function Header() {
 			text: "Blog"
 		},
 		{
+			href: "/courses",
+			text: "Courses"
+		},
+		{
 			href: "/#contact",
 			text: "Contact",
 			hideOnMobile: true
