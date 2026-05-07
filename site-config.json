@@ -11,8 +11,8 @@
 		{
 			"id": "dotnet-backend",
 			"title": ".NET Backend Development",
-			"description": "A 20-presentation series covering ASP.NET Core, Entity Framework, REST APIs, and deployment.",
-			"slideCount": 12
+			"description": "A series covering ASP.NET Core, Entity Framework, REST APIs, and deployment.",
+			"slideCount": 20
 		}
 	],
 	"seo": {
