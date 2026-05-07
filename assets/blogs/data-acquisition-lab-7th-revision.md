@@ -24,7 +24,7 @@ void loop() {
 Sets a pin as **input** or **output**.
 
 ```cpp
-pinMode(pin, mode);`
+pinMode(pin, mode);
 ```
 
 - `pin` → The pin number (e.g., `2`, `13`, `A0`)

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -517,7 +517,7 @@
       <section class="title-slide">
         <div class="title-top-bar"></div>
         <div class="title-content">
-          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
           <div class="title-course-name">Backend Development with .NET</div>
           <div class="title-session-label">Session 02</div>
           <div class="title-rule"></div>
@@ -633,7 +633,7 @@ dotnet --list-sdks</code></pre>
         <div class="file-path-label">Terminal</div>
         <pre><code class="language-bash" style="font-size:0.95rem;">dotnet tool install --global dotnet-ef</code></pre>
         <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.95rem; color:var(--color-brand-dark); margin-top:0.8rem;">
-          You will use this in Session 09 when Entity Framework Core migrations are introduced.
+          You will use this in Session 14 when Entity Framework Core migrations are introduced.
         </p>
         <div class="callout warning" style="margin-top:1rem;">
           <div class="callout-label">Tool not found after install?</div>
@@ -689,7 +689,7 @@ dotnet --list-sdks</code></pre>
           <div class="section-label">Section 2 of 5</div>
           <div class="section-rule"></div>
           <div class="section-title">Postman &amp; API Testing</div>
-          <div class="section-desc">The tool you will use to call and inspect your API from Session 03 onward</div>
+          <div class="section-desc">The tool you will use to call and inspect your API from Session 08 onward</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
@@ -712,7 +712,7 @@ dotnet --list-sdks</code></pre>
           <li>Create a workspace named <strong>Backend with .NET</strong> — one collection per session</li>
           <li>Make a first request: <code class="inline">GET https://httpbin.org/get</code> — inspect the status code, headers, and JSON body</li>
           <li><strong>Environments</strong> — store variables such as <code class="inline">baseUrl</code> to switch between local and deployed without editing every request</li>
-          <li><strong>Collections</strong> — group related requests; you will build these heavily from Session 04 onward</li>
+          <li><strong>Collections</strong> — group related requests; you will build these heavily from Session 09 onward</li>
         </ul>
         <div class="callout info" style="margin-top:0.8rem;">
           <div class="callout-label">httpbin.org</div>
@@ -873,7 +873,7 @@ git push origin feature/session-03
               <li><code class="inline">appsettings.Development.json</code> is where connection strings and API keys typically live in .NET projects</li>
               <li>The generated <code class="inline">.gitignore</code> does <strong>not</strong> include it — you must add it manually</li>
               <li>If a secret is pushed: rotate it immediately, then remove it from history with <code class="inline">git filter-repo</code></li>
-              <li><code class="inline">dotnet user-secrets</code> is the proper local-secret store — covered in Session 19</li>
+              <li><code class="inline">dotnet user-secrets</code> is the proper local-secret store — covered in Session 24</li>
             </ul>
           </div>
           <div class="col-right">
@@ -934,7 +934,7 @@ git rm --cached \
         </div>
         <div class="section-right">
           <div class="section-right-label">What you will create</div>
-          <p style="color:var(--color-text); font-size:0.95rem; line-height:1.6;">A <code class="inline">TaskManagerApi</code> .NET solution with a Web API project, a <code class="inline">.gitignore</code>, an initial commit, and a remote on GitHub — ready to build upon from Session 03 onward.</p>
+          <p style="color:var(--color-text); font-size:0.95rem; line-height:1.6;">A <code class="inline">TaskManagerApi</code> .NET solution with a Web API project, a <code class="inline">.gitignore</code>, an initial commit, and a remote on GitHub — ready to build upon from Session 08 onward.</p>
         </div>
       </section>
 
@@ -993,7 +993,7 @@ git push -u origin main</code></pre>
           <li>Always run <code class="inline">dotnet new gitignore</code> before the first commit to exclude <code class="inline">bin/</code>, <code class="inline">obj/</code>, and secrets</li>
           <li>Merge is safe for integrating branches; rebase is for cleaning up local history — never rebase pushed branches</li>
           <li>One feature branch per session merged via PR is the professional workflow, even solo</li>
-          <li>Your <code class="inline">TaskManagerApi</code> repository is live on GitHub and ready for Session 03</li>
+          <li>Your <code class="inline">TaskManagerApi</code> repository is live on GitHub and ready for Session 08</li>
         </ul>
       </section>
 
@@ -1003,7 +1003,7 @@ git push -u origin main</code></pre>
       <section class="content-slide">
         <div class="slide-heading">What's Next</div>
         <div class="slide-rule"></div>
-        <p style="font-size:1rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Session 03 — First .NET Web API &amp; Project Architecture</p>
+        <p style="font-size:1rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Session 08 — First .NET Web API &amp; Project Architecture</p>
         <ul style="margin-bottom:1.5rem;">
           <li>Build your first <code class="inline">/tasks</code> endpoint and return data from it</li>
           <li>Understand how ASP.NET Core processes a request end-to-end</li>
@@ -1011,7 +1011,7 @@ git push -u origin main</code></pre>
         </ul>
         <p style="font-size:0.95rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">Before next session:</p>
         <ul>
-          <li>Push the initial scaffold to GitHub — the repository must be live before Session 03 starts</li>
+          <li>Push the initial scaffold to GitHub — the repository must be live before Session 08 starts</li>
           <li>Read through the generated <code class="inline">.gitignore</code> file and understand each entry</li>
         </ul>
       </section>
@@ -1051,7 +1051,7 @@ git push -u origin main</code></pre>
 
   <!-- Persistent Footer (hidden on title slide via JS) -->
   <div class="slide-footer">
-    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
     <span class="footer-slide-num" id="slide-num"></span>
     <div></div>
   </div>

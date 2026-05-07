@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Session 11 — Repository Pattern &amp; DTOs</title>
+  <title>Session 11 — API Versioning</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,11 +427,67 @@
       margin-bottom: 0.4rem;
     }
 
-    /* ── Step list (Lab) ── */
+    /* ── Versioning strategy cards ── */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .strategy-card {
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem;
+      border-top: 5px solid;
+      background: var(--color-surface);
+      border-color: var(--color-brand);
+    }
+    .strategy-card.recommended {
+      background: var(--color-brand-light);
+      border-color: var(--color-brand-dark);
+    }
+    .strategy-card .strategy-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--color-navy);
+      margin-bottom: 0.4rem;
+    }
+    .strategy-card .strategy-example {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-brand-dark);
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.3rem 0.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .strategy-card .strategy-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.83rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+    .strategy-badge {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 7px;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+      background: var(--color-brand);
+      color: #FFFFFF;
+    }
+
+    /* ── Step list (for Lab) ── */
     .step-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.55rem;
       margin-top: 0.5rem;
     }
     .step-item {
@@ -441,7 +497,7 @@
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 6px;
-      padding: 0.6rem 1rem;
+      padding: 0.65rem 1rem;
     }
     .step-num {
       font-family: 'JetBrains Mono', monospace;
@@ -453,40 +509,28 @@
     }
     .step-desc {
       font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--color-text);
       line-height: 1.5;
     }
 
-    /* ── Rule list (Key takeaways) ── */
-    .rule-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      margin-top: 0.5rem;
-    }
-    .rule-item {
-      display: flex;
-      gap: 1rem;
-      align-items: baseline;
+    /* ── Placeholder ── */
+    .placeholder {
+      border: 2px dashed var(--color-brand);
       background: var(--color-brand-light);
-      border-left: 4px solid var(--color-brand);
-      border-radius: 0 6px 6px 0;
-      padding: 0.7rem 1rem;
-    }
-    .rule-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 500;
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
       color: var(--color-brand-dark);
-      flex-shrink: 0;
-      width: 1.5rem;
     }
-    .rule-desc {
+    .placeholder-label {
+      display: block;
       font-family: 'Inter', sans-serif;
-      font-size: 0.92rem;
-      color: var(--color-brand-dark);
-      line-height: 1.5;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
     }
   </style>
 </head>
@@ -500,14 +544,14 @@
       <section class="title-slide">
         <div class="title-top-bar"></div>
         <div class="title-content">
-          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
           <div class="title-course-name">Backend Development with .NET</div>
           <div class="title-session-label">Session 11</div>
           <div class="title-rule"></div>
-          <div class="title-main">Repository Pattern<br>&amp; DTOs</div>
+          <div class="title-main">API Versioning</div>
           <div class="title-meta">
             Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
-            Week 6 &nbsp;&middot;&nbsp; 2 hours
+            Week 3 &nbsp;&middot;&nbsp; 2 hours
           </div>
         </div>
         <div class="title-bottom-bar"></div>
@@ -521,15 +565,15 @@
         <div class="slide-rule"></div>
         <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
         <ul>
-          <li>Implement the repository pattern to abstract database access behind a clean interface</li>
-          <li>Explain why exposing entity objects directly from an API is a security and stability risk</li>
-          <li>Define request and response DTOs and map between entities and DTOs using AutoMapper</li>
-          <li>Prevent over-posting attacks by controlling which fields clients are allowed to submit</li>
+          <li>Explain why API versioning is necessary and when to introduce it</li>
+          <li>Compare the three main versioning strategies and choose the right one</li>
+          <li>Implement URL-based versioning in .NET using <code class="inline">Asp.Versioning</code></li>
+          <li>Mark endpoints as deprecated and communicate that to consumers</li>
         </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 3 — Agenda / Timeline (Layout 3 + table)              -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
         <div class="slide-heading">Session Agenda</div>
@@ -544,522 +588,485 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>0:00</td><td>Why repository pattern?</td><td>Theory</td><td>15 min</td></tr>
-            <tr><td>0:15</td><td>Implementing ITaskRepository</td><td>Demo</td><td>25 min</td></tr>
-            <tr><td>0:40</td><td>DTOs — request vs response models</td><td>Theory</td><td>15 min</td></tr>
-            <tr><td>0:55</td><td>AutoMapper setup</td><td>Demo</td><td>20 min</td></tr>
-            <tr><td>1:15</td><td>Lab — refactor to repository + DTOs</td><td>Lab</td><td>35 min</td></tr>
-            <tr><td>1:50</td><td>Wrap-up</td><td>Discussion</td><td>10 min</td></tr>
+            <tr><td>0:00</td><td>The problem — why versioning exists</td><td>Discussion</td><td>15 min</td></tr>
+            <tr><td>0:15</td><td>The three versioning strategies</td><td>Theory</td><td>25 min</td></tr>
+            <tr><td>0:40</td><td>Live demo — Asp.Versioning setup</td><td>Demo</td><td>25 min</td></tr>
+            <tr><td>1:05</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:15</td><td>Lab — evolve a UserController v1 to v2</td><td>Lab</td><td>30 min</td></tr>
+            <tr><td>1:45</td><td>Deprecation strategies &amp; real-world conventions</td><td>Theory</td><td>15 min</td></tr>
           </tbody>
         </table>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 4 — Section Divider: Repository Pattern               -->
+      <!-- SLIDE 4 — Section Divider: Why Versioning Exists             -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
           <div class="section-label">Section 1 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">The Repository Pattern</div>
-          <div class="section-desc">Your service layer currently knows about <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; background:rgba(255,255,255,0.15); padding:1px 4px; border-radius:3px;">DbContext</code> directly. The repository pattern puts a typed interface between them — one that describes what data operations are possible without revealing how they are implemented.</div>
+          <div class="section-title">Why Versioning Exists</div>
+          <div class="section-desc">APIs are contracts. Once a client is consuming your API, you cannot change the contract without breaking that client. Versioning lets you evolve without leaving existing users behind.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Why tight coupling to DbContext is a problem</li>
-            <li>Designing the ITaskRepository interface</li>
-            <li>Implementing TaskRepository with EF Core</li>
-            <li>Registering the repository in the DI container</li>
+            <li>The breaking-change problem</li>
+            <li>Why clients cannot update instantly</li>
+            <li>How versioning solves it</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 5 — Why Not Use DbContext Directly? (Layout 3)        -->
+      <!-- SLIDE 5 — The Breaking Change Problem (Layout 3)            -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Why Not Use DbContext Directly?</div>
+        <div class="slide-heading">The Breaking Change Problem</div>
         <div class="slide-rule"></div>
-        <ul>
-          <li><strong>Leaking infrastructure into business logic</strong> — when a service calls <code class="inline">_context.Tasks.Where(...).ToListAsync()</code>, the EF Core query language bleeds into a layer that should only care about business rules</li>
-          <li><strong>Hard to test</strong> — spinning up a real <code class="inline">DbContext</code> in a unit test requires a database. With an interface you swap in a mock that returns fake data instantly</li>
-          <li><strong>Hard to change the database</strong> — if you ever move from SQL Server to PostgreSQL or a document store, every service that calls <code class="inline">DbContext</code> must be rewritten</li>
-          <li><strong>No single place for query logic</strong> — the same <code class="inline">Where(t => t.UserId == userId)</code> filter gets duplicated across multiple services and controllers</li>
-          <li><strong>Violates the Dependency Inversion Principle</strong> — high-level modules (services) should depend on abstractions, not on concrete infrastructure classes</li>
-        </ul>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 6 — Designing ITaskRepository (Layout 5)              -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Designing ITaskRepository</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Repositories/ITaskRepository.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.95rem;" data-line-numbers="1-8">public interface ITaskRepository
-{
-    Task&lt;TaskItem?&gt; GetByIdAsync(int id);
-    Task&lt;PagedResult&lt;TaskItem&gt;&gt; GetAllAsync(TaskFilterParams filter);
-    Task&lt;TaskItem&gt; CreateAsync(TaskItem task);
-    Task UpdateAsync(TaskItem task);
-    Task DeleteAsync(TaskItem task);
-}</code></pre>
-        <div class="callout info" style="margin-top:0.9rem;">
-          <div class="callout-label">Interface-first design</div>
-          Define the interface before writing the implementation. The interface is what the service layer sees — it describes the contract in terms of your domain (<code class="inline">TaskItem</code>, <code class="inline">PagedResult</code>), not in terms of EF Core (<code class="inline">DbSet</code>, <code class="inline">IQueryable</code>). Write the implementation only after the interface is stable.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 7 — Implementing TaskRepository (Layout 5)            -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Implementing TaskRepository</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Repositories/TaskRepository.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1-5,7-10">public class TaskRepository : ITaskRepository
-{
-    private readonly AppDbContext _context;
-    public TaskRepository(AppDbContext context) =&gt; _context = context;
-
-    public async Task&lt;TaskItem?&gt; GetByIdAsync(int id)
-        =&gt; await _context.Tasks.FindAsync(id);
-
-    public async Task&lt;TaskItem&gt; CreateAsync(TaskItem task)
-    {
-        _context.Tasks.Add(task);
-        await _context.SaveChangesAsync();
-        return task;
-    }
-
-    public async Task UpdateAsync(TaskItem task)
-    {
-        _context.Tasks.Update(task);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync(TaskItem task)
-    {
-        _context.Tasks.Remove(task);
-        await _context.SaveChangesAsync();
-    }
-}</code></pre>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 8 — Registering the Repository (Layout 4)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Registering the Repository</div>
-        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; margin-bottom:0.9rem;">Imagine a mobile app consuming <code class="inline">GET /api/users/{id}</code> that returns:</p>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.9rem;">Register the concrete class against the interface in <code class="inline">Program.cs</code>. The DI container resolves <code class="inline">ITaskRepository</code> to <code class="inline">TaskRepository</code> at runtime:</p>
-            <div class="file-path-label">Program.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.95rem;">builder.Services.AddScoped&lt;
-    ITaskRepository,
-    TaskRepository&gt;();</code></pre>
-            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.9rem;"><code class="inline">AddScoped</code> creates one instance per HTTP request — matching the lifetime of <code class="inline">DbContext</code>, which is also scoped. Always align repository lifetime with the context lifetime it wraps.</p>
+            <p style="font-size:0.82rem; font-weight:600; color:var(--color-info); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.5rem;">Current response (v1)</p>
+            <pre><code class="language-json" style="font-size:0.95rem;">{ "name": "Ahmed" }</code></pre>
+            <p style="font-size:0.88rem; margin-top:0.8rem; color:var(--color-text);">A new client requests you split <code class="inline">name</code> into <code class="inline">firstName</code> and <code class="inline">lastName</code>.</p>
+            <div class="callout error" style="margin-top:0.8rem;">
+              <div class="callout-label">The trap</div>
+              If you rename the field, every existing mobile app that reads <code class="inline">name</code> breaks — and you cannot force all users to update.
+            </div>
           </div>
           <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The service receives the interface through constructor injection:</p>
-            <div class="file-path-label">Services/TaskService.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.92rem;">public class TaskService
-{
-    private readonly ITaskRepository _repo;
-
-    public TaskService(ITaskRepository repo)
-        =&gt; _repo = repo;
-
-    public async Task&lt;TaskItem?&gt; GetByIdAsync(int id)
-        =&gt; await _repo.GetByIdAsync(id);
+            <p style="font-size:0.82rem; font-weight:600; color:var(--color-success); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.5rem;">With versioning (v2)</p>
+            <pre><code class="language-json" style="font-size:0.88rem;">{
+  "firstName": "Ahmed",
+  "lastName": "Hassan"
 }</code></pre>
-            <div class="callout success" style="margin-top:0.9rem; font-size:0.88rem;">
-              <div class="callout-label">Result</div>
-              The service no longer imports or references <code class="inline">AppDbContext</code>. It depends only on the interface — which can be mocked in tests without touching a database.
+            <div class="callout success" style="margin-top:0.8rem;">
+              <div class="callout-label">The solution</div>
+              Run both endpoints simultaneously. Old clients keep calling v1. New clients call v2 and get the improved shape.
             </div>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 9 — Section Divider: DTOs                             -->
+      <!-- SLIDE 6 — Why Clients Cannot Update Instantly (Layout 3)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Clients Cannot Update Instantly</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; margin-bottom:0.9rem;">The backend can be deployed in minutes. Clients operate on entirely different timelines.</p>
+        <ul>
+          <li><strong>Mobile apps</strong> go through app store review cycles — iOS App Store review can take days, and users may never update at all</li>
+          <li><strong>Enterprise clients</strong> have quarterly or annual release cycles and run formal regression testing before updating third-party dependencies</li>
+          <li><strong>Partner integrations</strong> may be maintained by entirely separate companies with their own roadmaps</li>
+          <li><strong>Older SDKs or scripts</strong> are often never updated — they simply keep running as long as the API behaves consistently</li>
+        </ul>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">Key insight</div>
+          The backend can be updated instantly. Clients cannot. This asymmetry is the core reason API versioning exists.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Section Divider: The Three Strategies              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
           <div class="section-label">Section 2 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">DTOs — Request &amp; Response Models</div>
-          <div class="section-desc">A DTO (Data Transfer Object) is a class shaped for communication, not for storage. It carries only what the API consumer needs to send or receive — nothing more. Returning entity objects directly is a security vulnerability, not a time-saver.</div>
+          <div class="section-title">The Three Versioning Strategies</div>
+          <div class="section-desc">URL path, query parameter, and header versioning each make different trade-offs between REST purity, developer experience, and tooling compatibility.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Why exposing entities breaks security</li>
-            <li>Response DTOs — what the client receives</li>
-            <li>Request DTOs — preventing over-posting</li>
-            <li>DTO naming conventions</li>
+            <li>URL path versioning — pros and cons</li>
+            <li>Query parameter versioning — pros and cons</li>
+            <li>Header versioning — pros and cons</li>
+            <li>Which to choose for this course</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 10 — Key Principle: Never Return Entities (Layout 6)  -->
+      <!-- SLIDE 8 — Strategy Overview Cards (Layout 3)                -->
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="callout-slide">
-        <div class="callout-slide-label">Key Principle</div>
-        <div class="callout-slide-rule"></div>
-        <div class="callout-slide-quote">
-          "Never serialize your entity objects directly.<br>The API surface and the database schema<br>are two different contracts."
+      <section class="content-slide">
+        <div class="slide-heading">Three Strategies at a Glance</div>
+        <div class="slide-rule"></div>
+        <div class="strategy-grid">
+          <div class="strategy-card recommended">
+            <div class="strategy-name">URL Path</div>
+            <code class="strategy-example">GET /api/v1/users</code>
+            <div class="strategy-desc">Version is part of the URL. Immediately visible, easy to test in a browser, and works with every proxy and gateway out of the box.</div>
+            <span class="strategy-badge">Recommended</span>
+          </div>
+          <div class="strategy-card">
+            <div class="strategy-name">Query Parameter</div>
+            <code class="strategy-example">GET /api/users?api-version=1.0</code>
+            <div class="strategy-desc">URL stays clean; version is optional and can default to latest. Often stripped by caches and proxies, and less discoverable for new consumers.</div>
+          </div>
+          <div class="strategy-card">
+            <div class="strategy-name">Header</div>
+            <code class="strategy-example">Api-Version: 1.0</code>
+            <div class="strategy-desc">Cleanest resource URIs; favored by REST purists. Invisible — cannot be tested in a browser bar and harder to explain in documentation.</div>
+          </div>
         </div>
-        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
-          Entities are shaped for the database. DTOs are shaped for the consumer. Conflating the two leaks sensitive fields, creates circular reference errors, and ties your API shape permanently to your database schema — making any future change a breaking change.
+        <div class="callout info" style="margin-top:1rem; font-size:0.88rem;">
+          <div class="callout-label">Real-world usage</div>
+          URL path: GitHub (older API), Twitter. Query parameter: Microsoft Azure REST APIs. Header: GitHub (newer API via <code class="inline">Accept: application/vnd.github.v3+json</code>), Stripe.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 11 — Why Entities Are Dangerous to Expose (Layout 4)  -->
+      <!-- SLIDE 9 — URL Path Versioning Deep Dive (Layout 4)          -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Why Entities Are Dangerous to Expose</div>
+        <div class="slide-heading">URL Path Versioning — Deep Dive</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Returning a <code class="inline">User</code> entity from a controller action sends every mapped field to the client:</p>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">// Entity — never serialize this
-public class User
-{
-    public int Id { get; set; }
-    public string Email { get; set; } = "";
-    // NEVER expose these:
-    public string PasswordHash { get; set; } = "";
-    public string RefreshToken { get; set; } = "";
-    public string InternalNotes { get; set; } = "";
-}</code></pre>
+            <p style="font-size:0.93rem; font-weight:600; color:var(--color-success); margin-bottom:0.5rem;">Advantages</p>
+            <ul style="font-size:0.92rem; margin-bottom:1rem;">
+              <li>Immediately visible in the URL — no guessing which version is being called</li>
+              <li>Easy to test directly in a browser or with curl</li>
+              <li>Works reliably with reverse proxies, load balancers, and API gateways</li>
+              <li>Most widely understood and expected by developers</li>
+            </ul>
+            <p style="font-size:0.93rem; font-weight:600; color:var(--color-error); margin-bottom:0.5rem;">Trade-offs</p>
+            <ul style="font-size:0.92rem;">
+              <li>Technically violates strict REST — the resource URI should be stable regardless of representation</li>
+              <li>URL structure changes between versions</li>
+            </ul>
           </div>
           <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">A response DTO exposes only what the consumer legitimately needs:</p>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">// Response DTO — safe to return
-public class UserResponseDto
-{
-    public int Id { get; set; }
-    public string Email { get; set; } = "";
-    // PasswordHash and RefreshToken
-    // are simply not here — they
-    // cannot be accidentally serialized
-}</code></pre>
-            <div class="callout error" style="margin-top:0.9rem; font-size:0.87rem;">
-              <div class="callout-label">Security risk</div>
-              JSON serializers serialize all public properties by default. Forgetting to add <code class="inline">[JsonIgnore]</code> to a sensitive field means that field ships to every client. A DTO eliminates the risk entirely — you cannot accidentally include a field that was never defined.
+            <div class="file-path-label">Example requests</div>
+            <pre><code class="language-http" style="font-size:0.9rem;">GET /api/v1/users/42 HTTP/1.1
+
+GET /api/v2/users/42 HTTP/1.1</code></pre>
+            <div class="callout success" style="margin-top:1rem;">
+              <div class="callout-label">Course convention</div>
+              Use URL path versioning for all sessions in this course. It is the most practical choice and what most employers will expect.
             </div>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 12 — Response DTO for TaskItem (Layout 5)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Defining a Response DTO</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">DTOs/TaskItemDto.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.95rem;">public class TaskItemDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = "";
-    public string? Description { get; set; }
-    public bool IsCompleted { get; set; }
-    public DateTime? DueDate { get; set; }
-    public DateTime CreatedAt { get; set; }
-}</code></pre>
-        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.7rem;">Compare this to the entity: <code class="inline">UserId</code>, internal foreign keys, and navigation properties are absent. Clients receive exactly what they need to display a task — nothing they could misuse.</p>
-        <div class="callout info" style="margin-top:0.8rem;">
-          <div class="callout-label">Naming convention</div>
-          Suffix response DTOs with <code class="inline">Dto</code> (e.g., <code class="inline">TaskItemDto</code>). Suffix request DTOs with <code class="inline">Request</code> (e.g., <code class="inline">CreateTaskRequest</code>, <code class="inline">UpdateTaskRequest</code>). This makes the direction of flow clear at a glance anywhere in the codebase.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 13 — Request DTOs and Over-Posting (Layout 4)         -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Request DTOs — Preventing Over-Posting</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><strong>Over-posting</strong> is when a client sends fields the server did not intend to accept — and the model binder sets them on the entity anyway.</p>
-            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Without a request DTO, a malicious POST body like this could set privileged fields:</p>
-            <pre><code class="language-json" style="font-size:0.92rem;">{
-  "title": "My Task",
-  "id": 999,
-  "isAdmin": true,
-  "createdAt": "2020-01-01"
-}</code></pre>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">A request DTO defines exactly which fields the client may send:</p>
-            <div class="file-path-label">DTOs/CreateTaskRequest.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">public class CreateTaskRequest
-{
-    [Required]
-    [MaxLength(200)]
-    public string Title { get; set; } = "";
-
-    public string? Description { get; set; }
-
-    public DateTime? DueDate { get; set; }
-
-    // Id, CreatedAt, UserId are NOT here.
-    // The client cannot set them — ever.
-}</code></pre>
-            <div class="callout success" style="margin-top:0.8rem; font-size:0.87rem;">
-              <div class="callout-label">Defense</div>
-              Fields not on the request DTO are never bound — regardless of what the client sends. No <code class="inline">[Bind]</code> attributes, no opt-outs needed.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 14 — UpdateTaskRequest (Layout 4)                     -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Update and Delete Request DTOs</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Update requests typically allow a subset of fields to be changed. Fields the client should never update — like <code class="inline">CreatedAt</code> or <code class="inline">UserId</code> — are simply absent:</p>
-            <div class="file-path-label">DTOs/UpdateTaskRequest.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">public class UpdateTaskRequest
-{
-    [Required]
-    [MaxLength(200)]
-    public string Title { get; set; } = "";
-
-    public string? Description { get; set; }
-
-    public bool IsCompleted { get; set; }
-
-    public DateTime? DueDate { get; set; }
-}</code></pre>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The controller passes the route <code class="inline">id</code> separately — it comes from the URL, not the body, so it cannot be spoofed through the request payload:</p>
-            <div class="file-path-label">Controllers/TasksController.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">[HttpPut("{id}")]
-public async Task&lt;IActionResult&gt; Update(
-    int id,
-    [FromBody] UpdateTaskRequest dto)
-{
-    var task = await _repo.GetByIdAsync(id);
-    if (task is null) return NotFound();
-
-    task.Title       = dto.Title;
-    task.Description = dto.Description;
-    task.IsCompleted = dto.IsCompleted;
-    task.DueDate     = dto.DueDate;
-
-    await _repo.UpdateAsync(task);
-    return NoContent();
-}</code></pre>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 15 — Section Divider: AutoMapper                      -->
+      <!-- SLIDE 10 — Section Divider: Asp.Versioning Setup            -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
           <div class="section-label">Section 3 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">AutoMapper</div>
-          <div class="section-desc">Manually copying fields from an entity to a DTO — and back — produces repetitive, error-prone code. AutoMapper generates those assignments from a declared mapping profile, eliminating the boilerplate while keeping the conversion logic in one place.</div>
+          <div class="section-title">Asp.Versioning Setup</div>
+          <div class="section-desc">.NET provides first-class versioning support via the <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">Asp.Versioning.Mvc</code> NuGet package. Installation, configuration, and two controllers co-existing side by side.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Installing AutoMapper</li>
-            <li>Writing a MappingProfile</li>
-            <li>Registering AutoMapper in DI</li>
-            <li>Injecting and using IMapper in services</li>
+            <li>Package installation</li>
+            <li>Configuring Program.cs</li>
+            <li>v1 controller</li>
+            <li>v2 controller — the breaking change</li>
+            <li>Testing in Postman</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 16 — The Manual Mapping Problem (Layout 4)            -->
+      <!-- SLIDE 11 — Package Installation (Layout 4)                  -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">The Manual Mapping Problem</div>
+        <div class="slide-heading">Installing Asp.Versioning</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Without a mapping library, every service method hand-copies properties between the entity and the DTO:</p>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">// Repeated in every service method
-var dto = new TaskItemDto
-{
-    Id          = task.Id,
-    Title       = task.Title,
-    Description = task.Description,
-    IsCompleted = task.IsCompleted,
-    DueDate     = task.DueDate,
-    CreatedAt   = task.CreatedAt
-};
-return dto;</code></pre>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">With AutoMapper this becomes a single call. The field-copying is generated from the mapping profile:</p>
-            <pre><code class="language-csharp" style="font-size:0.92rem;">// One call — AutoMapper handles the rest
-var dto = _mapper.Map&lt;TaskItemDto&gt;(task);
-return dto;</code></pre>
-            <div class="callout warning" style="margin-top:0.9rem; font-size:0.87rem;">
-              <div class="callout-label">Not magic</div>
-              AutoMapper matches properties by name. If a source and destination property have different names, you must configure the mapping explicitly. Trust the convention for simple cases; be explicit when names diverge.
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Two NuGet packages are required:</p>
+            <ul style="font-size:0.92rem;">
+              <li><code class="inline">Asp.Versioning.Mvc</code> — core versioning attributes and route constraints</li>
+              <li><code class="inline">Asp.Versioning.Mvc.ApiExplorer</code> — integrates versioning with Swagger / OpenAPI discovery (needed for Session 13)</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Note</div>
+              These packages replaced the older <code class="inline">Microsoft.AspNetCore.Mvc.Versioning</code> package. If you see tutorials referencing the old name, they are outdated.
             </div>
           </div>
+          <div class="col-right">
+            <div class="file-path-label">Terminal</div>
+            <pre><code class="language-bash" style="font-size:0.9rem;">dotnet add package Asp.Versioning.Mvc
+dotnet add package Asp.Versioning.Mvc.ApiExplorer</code></pre>
+          </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 17 — Installing AutoMapper &amp; MappingProfile (Layout 5) -->
+      <!-- SLIDE 12 — Program.cs Configuration (Layout 5)             -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Installing AutoMapper &amp; Writing a Profile</div>
+        <div class="slide-heading">Configuring Versioning in Program.cs</div>
         <div class="slide-rule"></div>
-        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package AutoMapper</code></pre>
-        <div class="file-path-label" style="margin-top:1rem;">Mappings/MappingProfile.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="1,4-9">public class MappingProfile : Profile
-{
-    public MappingProfile()
-    {
-        // Entity -&gt; Response DTO (property names match — no extra config needed)
-        CreateMap&lt;TaskItem, TaskItemDto&gt;();
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="3-10">builder.Services.AddControllers();
 
-        // Request DTO -&gt; Entity (set server-controlled fields explicitly)
-        CreateMap&lt;CreateTaskRequest, TaskItem&gt;()
-            .ForMember(dest =&gt; dest.CreatedAt,
-                       opt  =&gt; opt.MapFrom(_ =&gt; DateTime.UtcNow));
-    }
-}</code></pre>
-        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.7rem;"><code class="inline">ForMember</code> lets you override how a single destination property is filled. Here <code class="inline">CreatedAt</code> is always set to the server's current UTC time — the client cannot influence it even if they send a value.</p>
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+}).AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});</code></pre>
+        <ul style="font-size:0.88rem; margin-top:0.8rem;">
+          <li><code class="inline">DefaultApiVersion</code> — falls back to v1.0 when no version is specified</li>
+          <li><code class="inline">AssumeDefaultVersionWhenUnspecified</code> — prevents a 400 error for clients that omit the version</li>
+          <li><code class="inline">ReportApiVersions</code> — adds <code class="inline">api-supported-versions</code> header to every response</li>
+        </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 18 — Registering AutoMapper &amp; Using IMapper (Layout 4) -->
+      <!-- SLIDE 13 — v1 Controller (Layout 5)                         -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Registering AutoMapper &amp; Injecting IMapper</div>
+        <div class="slide-heading">UsersV1Controller</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/UsersV1Controller.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.9rem;" data-line-numbers="2-3">[ApiController]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/users")]
+public class UsersV1Controller : ControllerBase
+{
+    [HttpGet("{id}")]
+    public IActionResult Get(int id) =>
+        Ok(new { id, name = "Ahmed Hassan" });
+}</code></pre>
+        <ul style="font-size:0.9rem; margin-top:0.9rem;">
+          <li><code class="inline">[ApiVersion("1.0")]</code> declares which version this controller handles</li>
+          <li><code class="inline">v{version:apiVersion}</code> is a route constraint that Asp.Versioning resolves automatically</li>
+          <li>The response shape exposes a single <code class="inline">name</code> field — this is the contract v1 clients depend on</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — v2 Controller (Layout 5)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">UsersV2Controller — The Breaking Change</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/UsersV2Controller.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="2-3,10-15">[ApiController]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/users")]
+public class UsersV2Controller : ControllerBase
+{
+    [HttpGet("{id}")]
+    public IActionResult Get(int id) =>
+        Ok(new
+        {
+            id,
+            firstName = "Ahmed",
+            lastName  = "Hassan",
+            createdAt = DateTime.UtcNow
+        });
+}</code></pre>
+        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.6rem;">v1 and v2 coexist in the same project. Asp.Versioning routes each request to the correct controller based on the URL segment.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Testing in Postman (Layout 4)                    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Testing Both Versions in Postman</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">One line in <code class="inline">Program.cs</code> scans the assembly for all classes that inherit <code class="inline">Profile</code> and registers them:</p>
-            <div class="file-path-label">Program.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.95rem;">builder.Services.AddAutoMapper(
-    typeof(MappingProfile));</code></pre>
-            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.9rem;">Pass any type from the assembly that contains the profiles. AutoMapper discovers all <code class="inline">Profile</code> subclasses in that assembly automatically.</p>
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Send these two requests and compare the responses:</p>
+            <pre><code class="language-http" style="font-size:0.88rem;">GET /api/v1/users/1
+
+GET /api/v2/users/1</code></pre>
+            <p style="font-size:0.88rem; margin-top:0.9rem; color:var(--color-text-muted);">Also inspect the response headers — with <code class="inline">ReportApiVersions: true</code>, every response includes:</p>
+            <pre><code class="language-http" style="font-size:0.88rem;">api-supported-versions: 1.0, 2.0</code></pre>
           </div>
           <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Inject <code class="inline">IMapper</code> into the service via the constructor:</p>
-            <div class="file-path-label">Services/TaskService.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">public class TaskService
-{
-    private readonly ITaskRepository _repo;
-    private readonly IMapper _mapper;
-
-    public TaskService(
-        ITaskRepository repo,
-        IMapper mapper)
-    {
-        _repo   = repo;
-        _mapper = mapper;
-    }
-
-    public async Task&lt;TaskItemDto?&gt; GetByIdAsync(int id)
-    {
-        var task = await _repo.GetByIdAsync(id);
-        return task is null
-            ? null
-            : _mapper.Map&lt;TaskItemDto&gt;(task);
-    }
+            <p style="font-size:0.82rem; font-weight:600; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.4rem;">v1 response</p>
+            <pre><code class="language-json" style="font-size:0.88rem;">{ "id": 1, "name": "Ahmed Hassan" }</code></pre>
+            <p style="font-size:0.82rem; font-weight:600; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:1rem; margin-bottom:0.4rem;">v2 response</p>
+            <pre><code class="language-json" style="font-size:0.88rem;">{
+  "id": 1,
+  "firstName": "Ahmed",
+  "lastName": "Hassan",
+  "createdAt": "2026-01-15T10:00:00Z"
 }</code></pre>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 19 — Create and Map in One Flow (Layout 5)            -->
+      <!-- SLIDE 16 — Lab (Layout 3)                                   -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Create and Map in One Flow</div>
+        <div class="slide-heading">Lab — Evolve a UserController from v1 to v2</div>
         <div class="slide-rule"></div>
-        <div class="file-path-label">Services/TaskService.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="3,6,9">public async Task&lt;TaskItemDto&gt; CreateAsync(CreateTaskRequest request)
-{
-    // Map request DTO -&gt; entity (AutoMapper sets CreatedAt via ForMember)
-    var task = _mapper.Map&lt;TaskItem&gt;(request);
-
-    // Persist via repository (no DbContext in sight)
-    var created = await _repo.CreateAsync(task);
-
-    // Map entity -&gt; response DTO (sensitive fields absent by design)
-    return _mapper.Map&lt;TaskItemDto&gt;(created);
-}</code></pre>
-        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.7rem;">Notice the three layers are cleanly separated: the request DTO enters, the entity is persisted through the repository, and the response DTO exits. No <code class="inline">DbContext</code>, no raw entity, no sensitive fields reach the controller.</p>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Starting from a v1 <code class="inline">UserController</code> that returns <code class="inline">{ "id": 1, "name": "Ahmed Hassan" }</code>, add versioning so v1 and v2 coexist:</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Install <code class="inline">Asp.Versioning.Mvc</code> and <code class="inline">Asp.Versioning.Mvc.ApiExplorer</code> via <code class="inline">dotnet add package</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Add <code class="inline">AddApiVersioning</code> config to <code class="inline">Program.cs</code> with default version 1.0</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Create <code class="inline">UsersV1Controller</code> and <code class="inline">UsersV2Controller</code> with correct <code class="inline">[ApiVersion]</code> attributes</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">v2 response must include: <code class="inline">id</code>, <code class="inline">firstName</code>, <code class="inline">lastName</code>, <code class="inline">email</code>, <code class="inline">createdAt</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Verify in Postman: <code class="inline">GET /api/v1/users/1</code> still returns the old shape; <code class="inline">GET /api/v2/users/1</code> returns the new shape</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">6</span>
+            <span class="step-desc"><strong>Stretch goal:</strong> add <code class="inline">Deprecated = true</code> to <code class="inline">[ApiVersion("1.0")]</code> and verify the <code class="inline">api-deprecated-versions</code> header appears</span>
+          </div>
+        </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 20 — Section Divider: Lab                             -->
+      <!-- SLIDE 17 — Callout: The Versioning Contract (Layout 6)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Design Principle</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "Never make breaking changes to an existing version.<br>Create a new version instead."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
+          Adding a new optional field is non-breaking. Removing a field, renaming a field, or adding a required field are all breaking changes that require a new version.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Section Divider: Deprecation & Conventions        -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
           <div class="section-label">Section 4 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">Lab — Refactor to Repository &amp; DTOs</div>
-          <div class="section-desc">Take the Task API built in Sessions 09–10 and apply everything covered today: introduce the repository interface, replace direct DbContext usage in services, add request and response DTOs, configure AutoMapper, and verify no sensitive fields leak through any endpoint.</div>
+          <div class="section-title">Deprecation &amp; Real-World Conventions</div>
+          <div class="section-desc">When you release v2, v1 does not vanish — it enters a deprecation period. How long to keep it, how to signal its sunset date, and how leading APIs handle versioning in production.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Create ITaskRepository and TaskRepository</li>
-            <li>Define TaskItemDto, CreateTaskRequest, UpdateTaskRequest</li>
-            <li>Add a MappingProfile and register AutoMapper</li>
-            <li>Update TaskService to use ITaskRepository and return DTOs</li>
-            <li>Verify no sensitive fields appear in any response</li>
+            <li>Marking a version deprecated in code</li>
+            <li>RFC 8594 Sunset header</li>
+            <li>How long to maintain old versions</li>
+            <li>Versioning numbering conventions</li>
+            <li>Stripe's date-based approach</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 21 — Lab Steps (Layout 3 + step-list)                 -->
+      <!-- SLIDE 19 — Marking a Version Deprecated (Layout 4)          -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Lab — Refactor to Repository &amp; DTOs</div>
+        <div class="slide-heading">Marking a Version Deprecated</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Refactor the Task API to use the repository pattern and DTOs throughout. Each step builds on the last — complete them in order.</p>
-        <div class="step-list">
-          <div class="step-item">
-            <span class="step-num">1</span>
-            <span class="step-desc">Create <code class="inline">ITaskRepository</code> in a <code class="inline">Repositories/</code> folder and implement <code class="inline">TaskRepository</code> using <code class="inline">AppDbContext</code></span>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Set <code class="inline">Deprecated = true</code> on the <code class="inline">[ApiVersion]</code> attribute. Asp.Versioning automatically adds the deprecation header to all responses from that controller.</p>
+            <ul style="font-size:0.92rem; margin-top:0.5rem;">
+              <li>The endpoint still works — deprecation is a warning, not a removal</li>
+              <li>Clients who inspect headers can detect it and prompt their developers to migrate</li>
+              <li>Combine with a <code class="inline">Sunset</code> header (RFC 8594) to communicate the removal date</li>
+            </ul>
+            <div class="callout warning" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Important</div>
+              Never remove a version without a deprecation period and a concrete sunset date announced in advance.
+            </div>
           </div>
-          <div class="step-item">
-            <span class="step-num">2</span>
-            <span class="step-desc">Create <code class="inline">TaskItemDto</code>, <code class="inline">CreateTaskRequest</code>, and <code class="inline">UpdateTaskRequest</code> in a <code class="inline">DTOs/</code> folder</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">3</span>
-            <span class="step-desc">Add a <code class="inline">MappingProfile</code> class with mappings for all three pairs, registering AutoMapper in <code class="inline">Program.cs</code></span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">4</span>
-            <span class="step-desc">Update <code class="inline">TaskService</code> to inject <code class="inline">ITaskRepository</code> and <code class="inline">IMapper</code>, removing all direct <code class="inline">AppDbContext</code> references</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">5</span>
-            <span class="step-desc">Verify via Swagger UI that every endpoint returns <code class="inline">TaskItemDto</code> shapes — check that <code class="inline">PasswordHash</code>, <code class="inline">RefreshToken</code>, or any other sensitive field is absent from all responses</span>
+          <div class="col-right">
+            <div class="file-path-label">Controllers/UsersV1Controller.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="2">[ApiController]
+[ApiVersion("1.0", Deprecated = true)]
+[Route("api/v{version:apiVersion}/users")]
+public class UsersV1Controller : ControllerBase
+{
+    // ...
+}</code></pre>
+            <div class="file-path-label" style="margin-top:1rem;">Response headers</div>
+            <pre><code class="language-http" style="font-size:0.88rem;">api-supported-versions: 2.0
+api-deprecated-versions: 1.0
+Sunset: Sat, 01 Jan 2027 00:00:00 GMT
+Deprecation: true</code></pre>
           </div>
         </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — How Long to Maintain Old Versions (Layout 3)     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">How Long to Maintain Old Versions</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.9rem;">There is no universal rule — the right duration depends on who your clients are and what their update cycle looks like.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Audience</th>
+              <th>Recommended minimum</th>
+              <th>Rationale</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Startups / internal APIs</td><td>3–6 months</td><td>Small teams, fast iteration, direct communication</td></tr>
+            <tr><td>Public APIs with mobile clients</td><td>12–18 months</td><td>App store cycles and user update lag</td></tr>
+            <tr><td>Enterprise / B2B</td><td>2+ years</td><td>Annual release cycles and formal validation processes</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1rem; font-size:0.9rem;">
+          <div class="callout-label">Stripe's approach</div>
+          Stripe versions by date (e.g., <code class="inline">2024-01-01</code>) and pins each API key to the version active when the key was created. They maintain every past version indefinitely — eliminating accidental breakage at the cost of significant maintenance complexity.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Versioning Numbering Conventions (Layout 3)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Versioning Numbering Conventions</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Convention</th>
+              <th>Example</th>
+              <th>Used by</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Integer</td><td>v1, v2, v3</td><td>GitHub, Twitter, most public REST APIs</td></tr>
+            <tr><td>Semantic (major.minor)</td><td>v1.0, v2.1</td><td>Microsoft Azure REST APIs</td></tr>
+            <tr><td>Date-based</td><td>2024-01-01</td><td>Stripe</td></tr>
+          </tbody>
+        </table>
+        <div class="callout success" style="margin-top:1.2rem;">
+          <div class="callout-label">Course convention</div>
+          Use integer URL path versioning: <code class="inline">v1</code>, <code class="inline">v2</code>, and so on. This is simple, explicit, and what most employers will expect when they ask about API versioning experience.
+        </div>
+        <ul style="font-size:0.92rem; margin-top:0.8rem;">
+          <li>Only increment the major version on breaking changes — not for every new endpoint or optional field</li>
+          <li>Semantic versioning minor bumps (v1.1) are useful for signalling additions without a breaking change</li>
+        </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
@@ -1069,12 +1076,12 @@ return dto;</code></pre>
         <div class="slide-heading">Summary</div>
         <div class="slide-rule"></div>
         <ul>
-          <li><strong>The repository pattern</strong> places an interface between the service layer and the database — services depend on <code class="inline">ITaskRepository</code>, not on <code class="inline">DbContext</code>, making the data layer swappable and testable</li>
-          <li><strong>Register repositories as Scoped</strong> to match the lifetime of the <code class="inline">DbContext</code> they wrap — one instance per HTTP request</li>
-          <li><strong>Response DTOs</strong> expose only what the consumer legitimately needs — fields like password hashes and refresh tokens are absent by design, not by annotation</li>
-          <li><strong>Request DTOs prevent over-posting</strong> — server-controlled fields such as <code class="inline">Id</code>, <code class="inline">CreatedAt</code>, and role flags are simply not present in the request model</li>
-          <li><strong>AutoMapper eliminates hand-copying</strong> — declare mappings once in a <code class="inline">Profile</code> class and call <code class="inline">_mapper.Map&lt;T&gt;(source)</code> everywhere</li>
-          <li><strong>Use <code class="inline">ForMember</code></strong> whenever a server-controlled value (such as <code class="inline">DateTime.UtcNow</code>) must be set during mapping rather than read from the incoming request</li>
+          <li><strong>APIs are contracts</strong> — once consumed, they cannot change without breaking clients who cannot update instantly</li>
+          <li><strong>Three strategies</strong> — URL path, query parameter, and header versioning; URL path is the most practical and widely expected</li>
+          <li><strong>Asp.Versioning</strong> makes it easy — <code class="inline">[ApiVersion]</code> attributes and route constraints handle all the routing automatically</li>
+          <li><strong>Breaking vs. non-breaking</strong> — adding optional fields is safe; removing, renaming, or adding required fields demands a new version</li>
+          <li><strong>Deprecate before you remove</strong> — set <code class="inline">Deprecated = true</code>, announce a sunset date, and give clients time to migrate</li>
+          <li><strong>Integer versioning is the default</strong> — simple, clear, and universally understood</li>
         </ul>
       </section>
 
@@ -1084,16 +1091,16 @@ return dto;</code></pre>
       <section class="content-slide">
         <div class="slide-heading">What's Next</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 12 — Input Validation</strong></p>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 12 — Pagination, Filtering &amp; Sorting</strong></p>
         <ul>
-          <li>The request DTOs you defined today accept any string for <code class="inline">Title</code> — Session 12 covers how to enforce rules on those inputs using Data Annotations and FluentValidation</li>
-          <li>You will learn how ASP.NET Core's model validation pipeline automatically rejects malformed requests before they reach your service layer, and how to return structured validation error responses</li>
-          <li>The <code class="inline">CreateTaskRequest</code> and <code class="inline">UpdateTaskRequest</code> DTOs you built today will be the targets for the validation rules added in Session 12</li>
-          <li>After Session 12 the complete data flow — validated request DTO in, repository operation, response DTO out — will be fully hardened</li>
+          <li>Your API now supports multiple coexisting versions — Session 12 focuses on making those endpoints <strong>scalable for large data sets</strong></li>
+          <li>You will implement cursor-based and page-based pagination so <code class="inline">GET /api/v1/tasks</code> does not return ten thousand records at once</li>
+          <li>Filtering and sorting are added as query parameters — tied directly to the concepts of non-breaking changes from today's session</li>
+          <li>These techniques apply equally to every version of a versioned API</li>
         </ul>
         <div class="callout info" style="margin-top:1rem;">
           <div class="callout-label">Before next session</div>
-          Complete the assignment below. Make sure the lab is working — all five steps — before Session 12. The validation session builds directly on the DTO and repository structure you set up today.
+          Complete today's assignment. Your Task API should have working v1 and v2 endpoints, with v1 marked as deprecated and the <code class="inline">api-deprecated-versions</code> header confirmed in Postman.
         </div>
       </section>
 
@@ -1104,25 +1111,25 @@ return dto;</code></pre>
         <div class="slide-heading">Assignment</div>
         <div class="slide-rule"></div>
         <p style="font-size:0.92rem; margin-bottom:0.8rem;">
-          <strong>Refactor the Task Manager API to use the repository pattern and DTOs throughout.</strong>
+          <strong>Add URL-based versioning to your Task API and introduce a v2 with a breaking response change.</strong>
         </p>
         <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
         <ul style="font-size:0.92rem;">
-          <li>Create <code class="inline">ITaskRepository</code> and <code class="inline">TaskRepository</code>, register the repository as Scoped in <code class="inline">Program.cs</code></li>
-          <li>Define <code class="inline">TaskItemDto</code>, <code class="inline">CreateTaskRequest</code>, and <code class="inline">UpdateTaskRequest</code> with appropriate fields</li>
-          <li>Write a <code class="inline">MappingProfile</code> that maps all three pairs; set <code class="inline">CreatedAt</code> via <code class="inline">ForMember</code> during the create mapping</li>
-          <li>Update <code class="inline">TaskService</code> to depend on <code class="inline">ITaskRepository</code> and <code class="inline">IMapper</code> — all controller actions must return DTOs, not entities</li>
+          <li>Install <code class="inline">Asp.Versioning.Mvc</code> and configure it in <code class="inline">Program.cs</code> with default version 1.0</li>
+          <li>Create <code class="inline">TasksV1Controller</code> — returns tasks with <code class="inline">id</code>, <code class="inline">title</code>, <code class="inline">isCompleted</code></li>
+          <li>Create <code class="inline">TasksV2Controller</code> — returns tasks with <code class="inline">id</code>, <code class="inline">title</code>, <code class="inline">status</code> (string: "pending" / "in-progress" / "completed"), <code class="inline">dueDate</code>, <code class="inline">createdAt</code></li>
+          <li>Mark v1 as deprecated using <code class="inline">Deprecated = true</code></li>
         </ul>
         <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
         <ul style="font-size:0.88rem; margin-top:0.2rem;">
-          <li><code class="inline">GET /api/tasks/{id}</code> returns a <code class="inline">TaskItemDto</code> — no entity navigation properties, no sensitive fields in the response body</li>
-          <li><code class="inline">POST /api/tasks</code> accepts a <code class="inline">CreateTaskRequest</code> body; sending extra fields like <code class="inline">id</code> or <code class="inline">createdAt</code> has no effect on the created record</li>
-          <li><code class="inline">TaskService</code> has zero references to <code class="inline">AppDbContext</code> — all database access goes through <code class="inline">ITaskRepository</code></li>
-          <li><code class="inline">MappingProfile</code> is the only place where field assignments between entities and DTOs are defined</li>
+          <li><code class="inline">GET /api/v1/tasks</code> returns the old shape and includes <code class="inline">api-deprecated-versions: 1.0</code> in the response headers</li>
+          <li><code class="inline">GET /api/v2/tasks</code> returns the new shape with the <code class="inline">status</code> field</li>
+          <li>Both versions work simultaneously — neither breaks the other</li>
+          <li>Response headers include <code class="inline">api-supported-versions: 1.0, 2.0</code> on every response</li>
         </ul>
         <div class="callout warning" style="margin-top:0.7rem;">
           <div class="callout-label">Bonus</div>
-          Add a <code class="inline">TaskSummaryDto</code> that includes only <code class="inline">Id</code>, <code class="inline">Title</code>, and <code class="inline">IsCompleted</code>. Use it in a new <code class="inline">GET /api/tasks</code> list endpoint so that the collection response is lighter than the single-item response. Map it with an additional entry in <code class="inline">MappingProfile</code>.
+          Add a custom middleware that injects a <code class="inline">Sunset</code> header (set to one year from today) whenever the requested version is flagged as deprecated.
         </div>
       </section>
 
@@ -1131,7 +1138,7 @@ return dto;</code></pre>
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="qa-slide">
         <div class="qa-heading">Questions?</div>
-        <div class="qa-sub">Session 11 — Repository Pattern &amp; DTOs</div>
+        <div class="qa-sub">Session 11 — API Versioning</div>
       </section>
 
     </div>
@@ -1139,7 +1146,7 @@ return dto;</code></pre>
 
   <!-- ── Persistent Footer ── -->
   <div class="slide-footer">
-    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
     <span class="footer-slide-num" id="slide-num"></span>
     <div></div>
   </div>

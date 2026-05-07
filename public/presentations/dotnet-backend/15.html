@@ -1,0 +1,1063 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 15 — EF Core Migrations &amp; CRUD</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 15</div>
+          <div class="title-rule"></div>
+          <div class="title-main">EF Core Migrations<br>&amp; CRUD</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 5 &nbsp;&middot;&nbsp; 2.5 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Create and apply EF Core migrations to generate and evolve a real database schema</li>
+          <li>Implement full CRUD operations — Create, Read, Update, Delete — against a live database using <code class="inline">DbContext</code></li>
+          <li>Write LINQ queries that execute at the database level for filtering, sorting, and pagination</li>
+          <li>Understand eager loading and recognize the N+1 query problem before it reaches production</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda / Timeline (Layout 3 + table)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Migrations — what and why</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:15</td><td>Create &amp; apply first migration</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>0:35</td><td>CRUD with DbContext</td><td>Demo</td><td>30 min</td></tr>
+            <tr><td>1:05</td><td>LINQ for filtering and pagination</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>1:25</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:35</td><td>Eager loading &amp; N+1 problem</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>1:55</td><td>Lab — persist the task list to the database</td><td>Lab</td><td>30 min</td></tr>
+            <tr><td>2:25</td><td>Wrap-up</td><td>Discussion</td><td>5 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Migrations Workflow              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Migrations Workflow</div>
+          <div class="section-desc">A migration is a snapshot of the difference between your C# model and the current database schema. EF Core compares those two states and generates SQL to bring the database in line with your code — without you writing a single SQL DDL statement by hand.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Why migrations exist and what problem they solve</li>
+            <li>The four key CLI commands</li>
+            <li>What EF Core generates inside a migration file</li>
+            <li>Rolling forward and rolling back</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Why Migrations? (Layout 3)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Migrations?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Schema lives in code, not in a DBA's head</strong> — every column, index, and constraint is defined in C# entity classes and committed to version control alongside the application code that uses it</li>
+          <li><strong>Changes are incremental and reversible</strong> — each migration is a named, ordered script. You can roll forward to apply it or roll back to undo it with a single CLI command</li>
+          <li><strong>Teams stay in sync</strong> — when a teammate adds a new column, they add a migration. When you pull their branch and run <code class="inline">dotnet ef database update</code>, your local database reflects their change automatically</li>
+          <li><strong>No manual SQL required</strong> — EF Core generates the SQL diff from the model snapshot. You review the generated migration, verify it, and apply it — the SQL is produced for you</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Prerequisite</div>
+          Session 14 installed EF Core, configured <code class="inline">AppDbContext</code>, and defined the <code class="inline">TaskItem</code> entity. This session applies that setup to create and apply a real migration.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Migration CLI Commands (Layout 4)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Migration CLI Commands</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The EF Core CLI tools expose four commands you will use on every project:</p>
+            <ul style="font-size:0.93rem;">
+              <li><code class="inline">migrations add</code> — compares the current model to the last snapshot and generates a new migration file with the diff</li>
+              <li><code class="inline">database update</code> — applies all pending migrations to the database in order</li>
+              <li><code class="inline">migrations remove</code> — deletes the most recently added migration file, but only if it has not been applied to the database yet</li>
+              <li><code class="inline">database update 0</code> — rolls back every migration, leaving an empty database with no tables</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-bash" style="font-size:0.95rem;"># Create a new migration
+dotnet ef migrations add InitialCreate
+
+# Apply all pending migrations
+dotnet ef database update
+
+# Remove the last unapplied migration
+dotnet ef migrations remove
+
+# Roll back all migrations
+dotnet ef database update 0</code></pre>
+            <div class="callout warning" style="margin-top:0.9rem;">
+              <div class="callout-label">Install the tools first</div>
+              Run <code class="inline">dotnet tool install --global dotnet-ef</code> once. The tools must be installed globally before any <code class="inline">dotnet ef</code> command is available in the terminal.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Inside a Migration File (Layout 5)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Inside a Migration File</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Migrations/20240501120000_InitialCreate.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1-8,10-14">public partial class InitialCreate : Migration
+{
+    protected override void Up(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.CreateTable(
+            name: "Tasks",
+            columns: table =&gt; new
+            {
+                Id          = table.Column&lt;int&gt;(nullable: false)
+                                   .Annotation("Npgsql:ValueGenerationStrategy",
+                                                NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                Title       = table.Column&lt;string&gt;(nullable: false),
+                IsCompleted = table.Column&lt;bool&gt;(nullable: false),
+                CreatedAt   = table.Column&lt;DateTime&gt;(nullable: false)
+            },
+            constraints: table =&gt;
+            {
+                table.PrimaryKey("PK_Tasks", x =&gt; x.Id);
+            });
+    }
+
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(name: "Tasks");
+    }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;"><code class="inline">Up()</code> runs when the migration is applied. <code class="inline">Down()</code> runs when it is rolled back. EF Core generates both methods — you should always review them before applying.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Section Divider: CRUD with DbContext              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">CRUD with DbContext</div>
+          <div class="section-desc">Once the migration is applied and the table exists, every CRUD operation follows the same pattern: load or create an entity, modify it in memory, then call SaveChangesAsync to flush the change tracker to the database in a single round trip.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Adding an entity and persisting it</li>
+            <li>Reading all records and reading by ID</li>
+            <li>Updating an existing entity</li>
+            <li>Deleting an entity</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Key Principle: The Change Tracker (Layout 6)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Principle</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "EF Core tracks every entity it loads.<br>You change the object — EF Core writes the SQL."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
+          The change tracker is the engine behind EF Core CRUD. When you call <code style="font-family:'JetBrains Mono',monospace; font-size:0.88em; background:rgba(0,0,0,0.2); border-radius:3px; padding:1px 5px;">SaveChangesAsync()</code>, EF Core inspects every tracked entity, identifies what changed, and generates the minimal SQL — INSERT, UPDATE, or DELETE — to synchronize the database with the in-memory state. You never write that SQL yourself.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Create and Read (Layout 5)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Create and Read</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Services/TaskService.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="1-5,7-10">// CREATE — add a new row to the Tasks table
+var task = new TaskItem { Title = "Write tests", CreatedAt = DateTime.UtcNow };
+_context.Tasks.Add(task);
+await _context.SaveChangesAsync();
+// task.Id is now populated with the generated primary key
+
+// READ ALL — load every row as a list
+var tasks = await _context.Tasks.ToListAsync();
+
+// READ ONE — look up by primary key; returns null if not found
+var task = await _context.Tasks.FindAsync(id);</code></pre>
+        <div class="callout success" style="margin-top:0.8rem;">
+          <div class="callout-label">FindAsync vs FirstOrDefaultAsync</div>
+          <code class="inline">FindAsync(id)</code> checks the change tracker first — if the entity is already loaded, no SQL is issued. <code class="inline">FirstOrDefaultAsync(t =&gt; t.Id == id)</code> always hits the database. Use <code class="inline">FindAsync</code> when you have a primary key; use <code class="inline">FirstOrDefaultAsync</code> when filtering on any other column.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Update and Delete (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Update and Delete</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.7rem;"><strong>Update</strong> — load the entity, modify it, then save. No explicit "mark as modified" call is needed; the change tracker detects the difference automatically.</p>
+            <pre><code class="language-csharp" style="font-size:0.9rem;">var task = await _context.Tasks
+    .FindAsync(id);
+
+if (task is null)
+    return NotFound();
+
+task.IsCompleted = true;
+task.Title = dto.Title;
+
+await _context.SaveChangesAsync();</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.7rem;"><strong>Delete</strong> — load the entity, remove it from the <code class="inline">DbSet</code>, then save. EF Core issues a <code class="inline">DELETE</code> statement for that row.</p>
+            <pre><code class="language-csharp" style="font-size:0.9rem;">var task = await _context.Tasks
+    .FindAsync(id);
+
+if (task is null)
+    return NotFound();
+
+_context.Tasks.Remove(task);
+await _context.SaveChangesAsync();</code></pre>
+            <div class="callout warning" style="margin-top:0.8rem; font-size:0.88rem;">
+              <div class="callout-label">Always load before deleting</div>
+              Calling <code class="inline">Remove</code> on an entity that was never loaded will throw. Load first — this also lets you return 404 if the record does not exist.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Section Divider: LINQ for Filtering & Pagination -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">LINQ for Filtering &amp; Pagination</div>
+          <div class="section-desc">LINQ queries against a DbSet are not executed immediately — they build an expression tree. Only when you call ToListAsync, CountAsync, or a similar terminal operator does EF Core translate the entire tree into a single SQL statement and send it to the database.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Deferred execution and <code class="inline">IQueryable</code></li>
+            <li>Composing filters conditionally</li>
+            <li>Counting the total before paging</li>
+            <li>Applying <code class="inline">Skip</code> and <code class="inline">Take</code> for pagination</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Deferred Execution and IQueryable (Layout 3)     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Deferred Execution and IQueryable</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>LINQ on a DbSet returns <code class="inline">IQueryable&lt;T&gt;</code></strong> — not a list. The query has not run yet; EF Core is building an expression tree in memory</li>
+          <li><strong>Composition is free</strong> — you can call <code class="inline">.Where()</code>, <code class="inline">.OrderBy()</code>, <code class="inline">.Skip()</code>, and <code class="inline">.Take()</code> in any order and as many times as needed; each call adds a clause to the tree, not to a result set</li>
+          <li><strong>A terminal operator fires the SQL</strong> — calling <code class="inline">ToListAsync()</code>, <code class="inline">CountAsync()</code>, <code class="inline">FirstOrDefaultAsync()</code>, or <code class="inline">AnyAsync()</code> translates the entire tree into one SQL statement and sends it to the database</li>
+          <li><strong>This is database-side filtering</strong> — only the rows that match your <code class="inline">Where</code> clause are returned over the network. The alternative — loading all rows into memory and filtering in C# — is never acceptable at scale</li>
+        </ul>
+        <div class="callout error" style="margin-top:1rem;">
+          <div class="callout-label">Anti-pattern</div>
+          Never call <code class="inline">ToListAsync()</code> first and then filter with <code class="inline">.Where()</code> on the resulting list. This loads every row into application memory before filtering — a performance disaster on any table larger than a few hundred rows.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — LINQ Filtering & Pagination — Full Query (Layout 5) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Composing a Filtered, Paginated Query</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Services/TaskService.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,3-5,7-8,10-14">var query = _context.Tasks.AsQueryable();
+
+if (!string.IsNullOrEmpty(filter.Search))
+    query = query.Where(t =&gt;
+        EF.Functions.ILike(t.Title, $"%{filter.Search}%"));
+
+if (filter.IsCompleted.HasValue)
+    query = query.Where(t =&gt; t.IsCompleted == filter.IsCompleted.Value);
+
+var total = await query.CountAsync();   // first SQL call — COUNT only
+
+var items = await query
+    .OrderByDescending(t =&gt; t.CreatedAt)
+    .Skip((filter.Page - 1) * filter.PageSize)
+    .Take(filter.PageSize)
+    .ToListAsync();                     // second SQL call — the page of rows</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;"><code class="inline">EF.Functions.ILike</code> maps to PostgreSQL's case-insensitive <code class="inline">ILIKE</code> operator. Use <code class="inline">EF.Functions.Like</code> for SQL Server. Both translate to a SQL predicate — no data is loaded for the search.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Section Divider: Eager Loading & N+1             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Eager Loading &amp; the N+1 Problem</div>
+          <div class="section-desc">Lazy loading hides a trap: loading a collection and then accessing a navigation property inside a loop fires one extra database query per item. On 1,000 tasks, that is 1,001 queries. Eager loading collapses those 1,001 round trips into a single SQL JOIN.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What the N+1 problem looks like in code</li>
+            <li>Why it is invisible until it hits production load</li>
+            <li>Fixing it with <code class="inline">.Include()</code></li>
+            <li>Chaining multiple includes</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — The N+1 Problem (Layout 3)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The N+1 Problem</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>The pattern</strong> — you fetch N items (one query), then for each item you access a navigation property that triggers another query — a total of N+1 database round trips</li>
+          <li><strong>Why it hides in development</strong> — with 5 rows in your local database, 6 queries finish in milliseconds. In production with 10,000 rows, 10,001 queries saturate the connection pool and the page times out</li>
+          <li><strong>The tell-tale sign</strong> — a loop body that accesses <code class="inline">task.User</code>, <code class="inline">task.Category</code>, or any navigation property without <code class="inline">.Include()</code> on the original query</li>
+        </ul>
+        <div class="callout error" style="margin-top:1rem;">
+          <div class="callout-label">The bad pattern</div>
+          <pre style="margin:0; background:transparent; box-shadow:none;"><code class="language-csharp" style="font-size:0.88rem; background:#FAE8E8;">var tasks = await _context.Tasks.ToListAsync();
+foreach (var task in tasks)
+{
+    var user = await _context.Users.FindAsync(task.UserId); // N extra queries!
+}</code></pre>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Eager Loading with Include (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Fixing N+1 with Eager Loading</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><code class="inline">.Include()</code> tells EF Core to JOIN the related table in the same query — all data arrives in one round trip regardless of how many rows are returned.</p>
+            <ul style="font-size:0.93rem;">
+              <li>Pass a navigation property expression: <code class="inline">t =&gt; t.User</code></li>
+              <li>Chain <code class="inline">.ThenInclude()</code> to load a navigation property of the related entity</li>
+              <li>Multiple <code class="inline">.Include()</code> calls load multiple independent relationships</li>
+              <li>The generated SQL uses <code class="inline">LEFT JOIN</code> — the task row is returned even when the related row is null</li>
+            </ul>
+            <div class="callout success" style="margin-top:0.9rem;">
+              <div class="callout-label">Always prefer eager loading</div>
+              Unless you have a deliberate reason to lazy-load, always use <code class="inline">.Include()</code> for related data you know you will need. It is explicit, predictable, and query-efficient.
+            </div>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.9rem;">// One query — one SQL JOIN
+var tasks = await _context.Tasks
+    .Include(t =&gt; t.User)
+    .ToListAsync();
+
+// foreach is now safe — no extra queries
+foreach (var task in tasks)
+{
+    Console.WriteLine(task.User.Name);
+}
+
+// Chaining deeper relationships
+var tasks = await _context.Tasks
+    .Include(t =&gt; t.User)
+        .ThenInclude(u =&gt; u.Department)
+    .Include(t =&gt; t.Category)
+    .ToListAsync();</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Lab: Persist to Database (Layout 3)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Persist the Task List to the Database</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Replace the in-memory list in <code class="inline">TaskService</code> with real EF Core calls. All existing endpoints must behave identically from the outside — only the data storage layer changes.</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Run <code class="inline">dotnet ef migrations add InitialCreate</code> and inspect the generated migration file — confirm it creates the <code class="inline">Tasks</code> table with the correct columns</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Run <code class="inline">dotnet ef database update</code> and verify the table was created in the database using a database explorer or <code class="inline">psql</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Inject <code class="inline">AppDbContext</code> into <code class="inline">TaskService</code> via the constructor and remove the <code class="inline">List&lt;TaskItem&gt;</code> in-memory field</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">Rewrite each service method — <code class="inline">GetAll</code>, <code class="inline">GetById</code>, <code class="inline">Create</code>, <code class="inline">Update</code>, <code class="inline">Delete</code> — using <code class="inline">DbContext</code> and <code class="inline">async/await</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Add LINQ filtering to <code class="inline">GetAll</code> — <code class="inline">ILike</code> search on title and an optional <code class="inline">isCompleted</code> filter, with <code class="inline">CountAsync</code> and <code class="inline">Skip/Take</code> pagination</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">6</span>
+            <span class="step-desc">Use Swagger UI to test all five endpoints — create a task, list it, update it, verify the change persists after restarting the application, then delete it</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Migrations are version-controlled schema changes</strong> — EF Core generates them from your entity model; <code class="inline">dotnet ef database update</code> applies them in order</li>
+          <li><strong>CRUD follows a consistent pattern</strong> — add or load an entity, modify it in memory, call <code class="inline">SaveChangesAsync()</code> — EF Core's change tracker handles the SQL</li>
+          <li><strong>LINQ queries are deferred</strong> — each <code class="inline">.Where()</code> and <code class="inline">.OrderBy()</code> adds to an expression tree; the SQL is not sent until you call a terminal operator like <code class="inline">ToListAsync()</code></li>
+          <li><strong>Always filter at the database level</strong> — compose your <code class="inline">Where</code> clauses before calling <code class="inline">ToListAsync()</code>; never load all rows and filter in memory</li>
+          <li><strong>The N+1 problem is silent until production</strong> — use <code class="inline">.Include()</code> for every related entity you know you will access to collapse N+1 round trips into a single SQL JOIN</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 16 — Repository Pattern &amp; DTOs</strong></p>
+        <ul>
+          <li>The <code class="inline">TaskService</code> now talks directly to <code class="inline">DbContext</code>. Session 16 introduces the <strong>Repository Pattern</strong> to sit between the service layer and EF Core — making the data layer swappable and independently testable</li>
+          <li>You will define a <code class="inline">ITaskRepository</code> interface, implement it with an EF Core-backed class, and inject it into the service — the service never imports EF Core again</li>
+          <li><strong>DTOs (Data Transfer Objects)</strong> will replace direct entity exposure in controller responses — decoupling your API's public contract from the database schema</li>
+          <li>After Session 16, the architecture will have three clear layers: Controller → Service → Repository — each with a single responsibility and a testable seam between them</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the lab and the assignment. Make sure data persists across application restarts before Session 16 — the repository will wrap the same <code class="inline">DbContext</code> calls you write today.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Migrate the Task Manager API from in-memory storage to a real database using EF Core.</strong>
+        </p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.4rem;">What to build:</p>
+        <ul style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <li>Create and apply an <code class="inline">InitialCreate</code> migration that produces the <code class="inline">Tasks</code> table with all required columns</li>
+          <li>Rewrite <code class="inline">TaskService</code> to use <code class="inline">AppDbContext</code> for all five CRUD operations, with full <code class="inline">async/await</code></li>
+          <li>Add LINQ filtering and pagination to the <code class="inline">GetAll</code> method — search by title (case-insensitive), filter by completion status, and return a paginated response with a total count</li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.4rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-bottom:0.6rem;">
+          <li>The <code class="inline">Tasks</code> table exists in the database and matches the entity definition after running <code class="inline">dotnet ef database update</code></li>
+          <li>All five CRUD endpoints return correct results against the database — verified through Swagger UI</li>
+          <li>Data created through <code class="inline">POST /api/tasks</code> survives an application restart and is visible on the next <code class="inline">GET /api/tasks</code></li>
+          <li><code class="inline">GET /api/tasks?search=meeting&amp;page=1&amp;pageSize=5</code> returns only matching tasks and the correct <code class="inline">totalCount</code>, without loading all rows into memory</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.4rem;">
+          <div class="callout-label">Bonus</div>
+          Add a second migration that introduces an <code class="inline">UpdatedAt</code> column to the <code class="inline">Tasks</code> table. Set this column automatically in the <code class="inline">Update</code> service method and confirm the migration applies cleanly without data loss on an already-populated database.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 15 — EF Core Migrations &amp; CRUD</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

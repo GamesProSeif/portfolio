@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Session 09 — Entity Framework Core Intro</title>
+  <title>Session 09 — HTTP Methods &amp; Status Codes</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,66 +427,153 @@
       margin-bottom: 0.4rem;
     }
 
-    /* ── Step list (Lab) ── */
-    .step-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+    /* ── HTTP Method Badges ── */
+    .method-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #FFFFFF;
+      border-radius: 3px;
+      padding: 2px 8px;
+      letter-spacing: 0.04em;
+    }
+    .method-badge.get    { background: var(--color-success); }
+    .method-badge.post   { background: var(--color-info); }
+    .method-badge.put    { background: var(--color-navy-mid); }
+    .method-badge.patch  { background: var(--color-warning); }
+    .method-badge.delete { background: var(--color-error); }
+
+    /* ── Check / Cross icons ── */
+    .check { color: var(--color-success); font-weight: 600; }
+    .cross  { color: var(--color-error);   font-weight: 600; }
+
+    /* ── Status code family grid ── */
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
       margin-top: 0.5rem;
     }
-    .step-item {
-      display: flex;
-      gap: 1rem;
-      align-items: baseline;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+    .status-card {
       border-radius: 6px;
-      padding: 0.6rem 1rem;
+      padding: 1.1rem 1.3rem;
+      border-left: 5px solid;
     }
-    .step-num {
+    .status-card.s2xx {
+      background: #E5F3EC;
+      border-color: var(--color-success);
+    }
+    .status-card.s3xx {
+      background: #EBF3FA;
+      border-color: var(--color-info);
+    }
+    .status-card.s4xx {
+      background: #FBF4E3;
+      border-color: var(--color-warning);
+    }
+    .status-card.s5xx {
+      background: #FAE8E8;
+      border-color: var(--color-error);
+    }
+    .status-card-range {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 1.3rem;
       font-weight: 500;
-      color: var(--color-brand);
-      flex-shrink: 0;
-      width: 1.5rem;
+      margin-bottom: 0.3rem;
     }
-    .step-desc {
+    .status-card.s2xx .status-card-range { color: var(--color-success); }
+    .status-card.s3xx .status-card-range { color: var(--color-info); }
+    .status-card.s4xx .status-card-range { color: var(--color-warning); }
+    .status-card.s5xx .status-card-range { color: var(--color-error); }
+    .status-card-name {
       font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
-      color: var(--color-text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+    .status-card-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
       line-height: 1.5;
     }
 
-    /* ── Rule list (Key takeaways) ── */
-    .rule-list {
+    /* ── Decision steps ── */
+    .decision-list {
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.65rem;
       margin-top: 0.5rem;
     }
-    .rule-item {
+    .decision-item {
       display: flex;
+      align-items: center;
       gap: 1rem;
-      align-items: baseline;
-      background: var(--color-brand-light);
-      border-left: 4px solid var(--color-brand);
-      border-radius: 0 6px 6px 0;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
       padding: 0.7rem 1rem;
     }
-    .rule-num {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--color-brand-dark);
-      flex-shrink: 0;
-      width: 1.5rem;
-    }
-    .rule-desc {
+    .decision-condition {
       font-family: 'Inter', sans-serif;
       font-size: 0.92rem;
-      color: var(--color-brand-dark);
+      color: var(--color-text);
+      flex: 1;
+    }
+    .decision-arrow {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ── Lab issue list ── */
+    .issue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .issue-item {
+      background: #FAE8E8;
+      border: 1px solid #e8b0b0;
+      border-radius: 6px;
+      padding: 0.65rem 1rem;
+      display: flex;
+      gap: 0.8rem;
+      align-items: baseline;
+    }
+    .issue-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--color-error);
+      flex-shrink: 0;
+    }
+    .issue-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--color-error);
       line-height: 1.5;
+    }
+
+    /* ── Placeholder ── */
+    .placeholder {
+      border: 2px dashed var(--color-brand);
+      background: var(--color-brand-light);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-brand-dark);
+    }
+    .placeholder-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
     }
   </style>
 </head>
@@ -500,14 +587,14 @@
       <section class="title-slide">
         <div class="title-top-bar"></div>
         <div class="title-content">
-          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
           <div class="title-course-name">Backend Development with .NET</div>
           <div class="title-session-label">Session 09</div>
           <div class="title-rule"></div>
-          <div class="title-main">Entity Framework Core<br>Intro</div>
+          <div class="title-main">HTTP Methods<br>&amp; Status Codes</div>
           <div class="title-meta">
             Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
-            Week 5 &nbsp;&middot;&nbsp; 2.5 hours
+            Week 2 &nbsp;&middot;&nbsp; 2 hours
           </div>
         </div>
         <div class="title-bottom-bar"></div>
@@ -521,11 +608,11 @@
         <div class="slide-rule"></div>
         <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
         <ul>
-          <li>Explain what an ORM is and why Entity Framework Core is the .NET standard for database access</li>
-          <li>Distinguish between the code-first and database-first approaches, and choose the right one for a new project</li>
-          <li>Set up a <code class="inline">DbContext</code> with a PostgreSQL or SQL Server connection string</li>
-          <li>Define entity classes and configure their properties and relationships using the Fluent API</li>
-          <li>Register <code class="inline">DbContext</code> in <code class="inline">Program.cs</code> and verify the application starts cleanly against a real database</li>
+          <li>Choose the correct HTTP method for any given operation</li>
+          <li>Return the correct status code for every possible outcome</li>
+          <li>Explain idempotency and safety — and why clients depend on them</li>
+          <li>Identify and fix common HTTP misuse patterns found in real-world APIs</li>
+          <li>Test all method and status code scenarios confidently in Postman</li>
         </ul>
       </section>
 
@@ -545,597 +632,703 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>0:00</td><td>What is an ORM?</td><td>Theory</td><td>15 min</td></tr>
-            <tr><td>0:15</td><td>Code-first vs database-first</td><td>Theory</td><td>10 min</td></tr>
-            <tr><td>0:25</td><td>Install EF Core &amp; configure DbContext</td><td>Demo</td><td>30 min</td></tr>
-            <tr><td>0:55</td><td>Entity configuration</td><td>Demo</td><td>20 min</td></tr>
-            <tr><td>1:15</td><td>Break</td><td>—</td><td>10 min</td></tr>
-            <tr><td>1:25</td><td>Lab — wire up the Task entity</td><td>Lab</td><td>45 min</td></tr>
-            <tr><td>2:10</td><td>Review &amp; Q&amp;A</td><td>Discussion</td><td>20 min</td></tr>
+            <tr><td>0:00</td><td>HTTP methods — the full picture</td><td>Theory</td><td>30 min</td></tr>
+            <tr><td>0:30</td><td>Idempotency &amp; safety explained</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:45</td><td>HTTP status codes — by family</td><td>Theory</td><td>25 min</td></tr>
+            <tr><td>1:10</td><td>Live demo — wrong codes in the wild</td><td>Demo</td><td>15 min</td></tr>
+            <tr><td>1:25</td><td>Lab — fix the broken API</td><td>Lab</td><td>25 min</td></tr>
+            <tr><td>1:50</td><td>Wrap-up</td><td>Discussion</td><td>10 min</td></tr>
           </tbody>
         </table>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 4 — Section Divider: What is an ORM?                  -->
+      <!-- SLIDE 4 — Section Divider: HTTP Methods (Layout 2)          -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
           <div class="section-label">Section 1 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">What is an ORM?</div>
-          <div class="section-desc">An Object-Relational Mapper bridges the gap between C# objects and relational database tables. Instead of writing raw SQL, you work with strongly-typed C# classes and let the framework handle the translation — queries, inserts, updates, and deletes included.</div>
+          <div class="section-title">HTTP Methods</div>
+          <div class="section-desc">Every request you make to an API starts with a method. Picking the right one is not style — it is a contract between your API and every client, browser, proxy, and CDN that talks to it.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>The impedance mismatch problem between objects and tables</li>
-            <li>What EF Core does at runtime</li>
-            <li>The EF Core pipeline: LINQ to SQL</li>
-            <li>When an ORM fits and when raw SQL is better</li>
+            <li>The five methods you will use daily</li>
+            <li>Decision guide — how to choose</li>
+            <li>Common mistakes to avoid</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 5 — What is an ORM? (Layout 3)                        -->
+      <!-- SLIDE 5 — HTTP Methods Table (Layout 3 + table)             -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">What is an ORM?</div>
+        <div class="slide-heading">The Five Core HTTP Methods</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Use case</th>
+              <th>Request body?</th>
+              <th>Idempotent?</th>
+              <th>Safe?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="method-badge get">GET</span></td>
+              <td>Retrieve a resource</td>
+              <td><span class="cross">No</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="check">Yes</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge post">POST</span></td>
+              <td>Create a new resource</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge put">PUT</span></td>
+              <td>Replace a resource entirely</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge patch">PATCH</span></td>
+              <td>Partially update a resource</td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+            <tr>
+              <td><span class="method-badge delete">DELETE</span></td>
+              <td>Remove a resource</td>
+              <td><span class="cross">No</span></td>
+              <td><span class="check">Yes</span></td>
+              <td><span class="cross">No</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:0.9rem;">
+          <div class="callout-label">Safe vs Idempotent</div>
+          Safe means no side effects. Idempotent means calling it multiple times gives the same result. These are covered fully in the next section.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Decision Guide (Layout 3)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Which Method to Use?</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Ask yourself what the operation is doing, not what it sounds like.</p>
+        <div class="decision-list">
+          <div class="decision-item">
+            <span class="decision-condition">Reading data — nothing changes on the server</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge get">GET</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Creating a new resource — server assigns the ID</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge post">POST</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Replacing the entire object — client sends the full representation</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge put">PUT</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Updating only a few fields — partial change, rest stays as-is</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge patch">PATCH</span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-condition">Removing a resource permanently</span>
+            <span class="decision-arrow">&rarr;</span>
+            <span class="method-badge delete">DELETE</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Common Mistakes (Layout 3)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Common Method Mistakes</div>
         <div class="slide-rule"></div>
         <ul>
-          <li>An <strong>Object-Relational Mapper (ORM)</strong> maps C# classes to database tables and class properties to columns — eliminating manual SQL strings for routine operations</li>
-          <li><strong>Entity Framework Core</strong> is Microsoft's official ORM for .NET — it is cross-platform, open-source, and supports PostgreSQL, SQL Server, SQLite, and more through provider packages</li>
-          <li>At runtime, EF Core translates <strong>LINQ queries</strong> written in C# into provider-specific SQL and executes them against the database</li>
-          <li>Results are returned as <strong>tracked C# objects</strong> — EF Core watches them for changes, and a single <code class="inline">SaveChanges()</code> call flushes all changes to the database in one transaction</li>
-          <li>EF Core also handles <strong>schema generation and migrations</strong> — C# class definitions become the source of truth for the database schema</li>
+          <li>
+            <strong>The RPC trap</strong> — using <code class="inline">POST</code> for everything because it is easy.
+            <code class="inline">POST /tasks/complete/5</code> should be <code class="inline">PATCH /tasks/5</code> with a body.
+          </li>
+          <li>
+            <strong>GET with a body</strong> — using a body on <code class="inline">GET</code> to pass filters is non-standard and breaks many HTTP clients and proxies. Use query parameters instead: <code class="inline">GET /tasks?status=open</code>.
+          </li>
+          <li>
+            <strong>Confusing PUT and PATCH</strong> — <code class="inline">PUT</code> requires the full object. If you only send the fields you want to change, the missing fields get set to null or default. Use <code class="inline">PATCH</code> for partial updates.
+          </li>
+          <li>
+            <strong>Ignoring idempotency on PUT</strong> — if your <code class="inline">PUT</code> handler creates the resource when it does not exist, make sure it does not create a second copy on retry.
+          </li>
         </ul>
-        <div class="callout info" style="margin-top:1rem;">
-          <div class="callout-label">Mental model</div>
-          Think of EF Core as a translator. You speak C# and LINQ; the database speaks SQL. EF Core sits in the middle and handles the conversation so you rarely need to write SQL by hand.
-        </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 6 — When to Use an ORM (Layout 4)                     -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">ORM vs Raw SQL — Choosing the Right Tool</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">EF Core is a strong fit when:</p>
-            <ul style="font-size:0.92rem;">
-              <li>You own the schema and want C# classes to drive it</li>
-              <li>CRUD operations dominate the access pattern</li>
-              <li>You want compile-time safety on queries and column names</li>
-              <li>Migrations and schema versioning are part of the workflow</li>
-              <li>You work across multiple database providers and want portability</li>
-            </ul>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">Raw SQL or Dapper fits better when:</p>
-            <ul style="font-size:0.92rem;">
-              <li>Queries are complex aggregations or multi-join reports that the ORM translates poorly</li>
-              <li>Performance is critical and EF Core's generated SQL is too expensive</li>
-              <li>The schema is legacy and cannot be changed to match C# conventions</li>
-              <li>Stored procedures are the mandated data access layer</li>
-            </ul>
-            <div class="callout success" style="margin-top:0.8rem; font-size:0.85rem;">
-              <div class="callout-label">Best practice</div>
-              EF Core and raw SQL are not mutually exclusive. Use <code class="inline">FromSqlRaw</code> or Dapper for complex queries, and EF Core for everything else — even in the same project.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 7 — Section Divider: Code-First vs Database-First      -->
+      <!-- SLIDE 8 — Section Divider: Idempotency & Safety (Layout 2)  -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
           <div class="section-label">Section 2 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">Code-First vs Database-First</div>
-          <div class="section-desc">EF Core supports two primary workflows. Code-first treats C# classes as the source of truth and generates the database schema from them. Database-first starts from an existing schema and generates the C# classes. For new projects, code-first is almost always the right choice.</div>
+          <div class="section-title">Idempotency &amp; Safety</div>
+          <div class="section-desc">Networks fail. Clients retry. Whether your API handles a retry gracefully or silently creates duplicate data depends entirely on whether you chose the right method.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Code-first: C# defines the schema</li>
-            <li>Database-first: scaffolding from an existing database</li>
-            <li>Why code-first is the standard for new .NET projects</li>
-            <li>The role of migrations in the code-first workflow</li>
+            <li>Safe operations defined</li>
+            <li>Idempotent operations defined</li>
+            <li>Why clients depend on both</li>
+            <li>The POST retry problem</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 8 — Code-First vs Database-First (Layout 3 + table)   -->
+      <!-- SLIDE 9 — Safe vs Idempotent (Layout 4 + table)             -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Code-First vs Database-First</div>
-        <div class="slide-rule"></div>
-        <table>
-          <thead>
-            <tr>
-              <th>Aspect</th>
-              <th>Code-First</th>
-              <th>Database-First</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Source of truth</td>
-              <td>C# entity classes</td>
-              <td>Existing database schema</td>
-            </tr>
-            <tr>
-              <td>Schema changes</td>
-              <td>Edit C# class, run migration</td>
-              <td>Alter table, re-scaffold classes</td>
-            </tr>
-            <tr>
-              <td>Version control</td>
-              <td>Migration files in Git</td>
-              <td>Schema scripts managed separately</td>
-            </tr>
-            <tr>
-              <td>Best for</td>
-              <td>New projects, greenfield development</td>
-              <td>Integrating with a legacy database</td>
-            </tr>
-            <tr>
-              <td>This course uses</td>
-              <td style="color:var(--color-success); font-weight:600;">Yes — always code-first</td>
-              <td>Not covered</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="callout info" style="margin-top:1rem;">
-          <div class="callout-label">Migrations</div>
-          In code-first, a migration is a C# file that records exactly how to move the database schema from one version to the next — and how to roll it back. Migrations are covered in Session 10.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 9 — Why Code-First for New Projects (Layout 3)        -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Why Code-First for New Projects</div>
-        <div class="slide-rule"></div>
-        <ul>
-          <li><strong>Single source of truth</strong> — the C# entity classes define the schema. There is no separate SQL script to keep in sync with the code</li>
-          <li><strong>Version control integration</strong> — every schema change produces a migration file checked into Git alongside the code that required the change</li>
-          <li><strong>Reproducible environments</strong> — any developer can clone the repo, run <code class="inline">dotnet ef database update</code>, and have an identical database in minutes</li>
-          <li><strong>Refactoring safety</strong> — renaming a property in C# produces a migration that renames the column; the change is atomic and tracked</li>
-          <li><strong>Team-friendly</strong> — pull requests contain both the feature code and its migration, so reviewers see exactly what the schema impact is</li>
-        </ul>
-        <div class="callout warning" style="margin-top:1rem;">
-          <div class="callout-label">One exception</div>
-          If you must integrate with a database that another team owns and you cannot change its schema, use <code class="inline">dotnet ef dbcontext scaffold</code> to generate classes from the existing tables. This is the database-first path and is the only justified use of it on a new project.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 10 — Section Divider: Install EF Core & DbContext      -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="section-divider">
-        <div class="section-left">
-          <div class="section-label">Section 3 of 4</div>
-          <div class="section-rule"></div>
-          <div class="section-title">Install EF Core &amp; Configure DbContext</div>
-          <div class="section-desc">DbContext is the central class in EF Core. It represents a session with the database, exposes DbSet properties for each entity, and coordinates change tracking and transaction management. Getting it wired up correctly is the foundation for everything that follows.</div>
-        </div>
-        <div class="section-right">
-          <div class="section-right-label">In this section</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Which NuGet packages to install</li>
-            <li>What DbContext does and why it is a unit of work</li>
-            <li>Writing the AppDbContext class with DbSet properties</li>
-            <li>Registering DbContext in Program.cs with a connection string</li>
-            <li>Keeping connection strings out of source control</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 11 — Installing EF Core Packages (Layout 5)           -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Installing EF Core Packages</div>
-        <div class="slide-rule"></div>
-        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Three packages are needed — the core library, the design-time tooling, and the database provider:</p>
-        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package Microsoft.EntityFrameworkCore
-dotnet add package Microsoft.EntityFrameworkCore.Design
-dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL</code></pre>
-        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Using SQL Server instead? Replace the provider:</p>
-        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package Microsoft.EntityFrameworkCore.SqlServer</code></pre>
-        <div class="callout info" style="margin-top:0.9rem;">
-          <div class="callout-label">Package roles</div>
-          <strong>Microsoft.EntityFrameworkCore</strong> is the runtime — change tracking, LINQ translation, migrations. <strong>Design</strong> is needed for <code class="inline">dotnet ef</code> CLI commands. The <strong>provider</strong> package (Npgsql or SqlServer) handles the dialect-specific SQL generation and the ADO.NET connection.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 12 — DbContext: the Unit of Work (Layout 4)           -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">DbContext — the Unit of Work</div>
+        <div class="slide-heading">Safe vs Idempotent — Defined</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.92rem; margin-bottom:0.8rem;"><code class="inline">DbContext</code> is the entry point to the database in EF Core. One instance represents one database session:</p>
-            <ul style="font-size:0.92rem;">
-              <li><strong>DbSet&lt;T&gt;</strong> — one property per entity type, representing the corresponding table</li>
-              <li><strong>Change tracker</strong> — monitors loaded entities for modifications; flushes them all on <code class="inline">SaveChanges()</code></li>
-              <li><strong>OnModelCreating</strong> — the hook where Fluent API configuration is applied (constraints, indexes, relationships)</li>
-              <li><strong>Scoped lifetime</strong> — in ASP.NET Core, each HTTP request gets its own DbContext instance, created by DI and disposed at request end</li>
+            <ul style="font-size:0.97rem;">
+              <li>
+                <strong>Safe</strong> — the operation produces no side effects on the server. Calling it once or a hundred times leaves the state unchanged. Only <code class="inline">GET</code>, <code class="inline">HEAD</code>, and <code class="inline">OPTIONS</code> are safe.
+              </li>
+              <li style="margin-top:0.8rem;">
+                <strong>Idempotent</strong> — calling the operation multiple times with the same input produces the same result as calling it once. <code class="inline">GET</code>, <code class="inline">PUT</code>, and <code class="inline">DELETE</code> are idempotent.
+              </li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Key distinction</div>
+              Safe implies idempotent. Idempotent does not imply safe. <code class="inline">DELETE</code> is idempotent (second call still returns success) but it is not safe — the first call changed the server state.
+            </div>
+          </div>
+          <div class="col-right">
+            <table style="font-size:0.85rem;">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th style="text-align:center;">Safe</th>
+                  <th style="text-align:center;">Idempotent</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="method-badge get">GET</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge post">POST</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge put">PUT</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge patch">PATCH</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                </tr>
+                <tr>
+                  <td><span class="method-badge delete">DELETE</span></td>
+                  <td style="text-align:center;"><span class="cross">No</span></td>
+                  <td style="text-align:center;"><span class="check">Yes</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Why It Matters (Layout 4 + SVG)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Clients Depend on This</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.97rem;">
+              <li>HTTP clients (Axios, fetch, .NET HttpClient) automatically retry requests on network timeout — but only if the method is idempotent.</li>
+              <li>A retried <code class="inline">POST</code> that creates a new record each time will produce <strong>duplicate data</strong> with no error.</li>
+              <li>A retried <code class="inline">PUT</code> simply sets the same value again — harmless.</li>
+              <li>CDNs and load balancers also use these properties to decide whether to cache or replay requests.</li>
             </ul>
           </div>
           <div class="col-right">
-            <!-- EF Core pipeline diagram using inline SVG -->
-            <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:340px;">
-              <!-- Controller box -->
-              <rect x="10" y="10" width="140" height="44" rx="6" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
-              <text x="80" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2A1F1A">Controller</text>
-              <text x="80" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">LINQ query via DbSet</text>
-              <!-- Arrow down -->
-              <line x1="80" y1="54" x2="80" y2="84" stroke="#B8694E" stroke-width="1.5" marker-end="url(#arrow)"/>
-              <!-- DbContext box -->
-              <rect x="10" y="84" width="140" height="44" rx="6" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
-              <text x="80" y="102" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2A1F1A">DbContext</text>
-              <text x="80" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Change tracker + SaveChanges</text>
-              <!-- Arrow down -->
-              <line x1="80" y1="128" x2="80" y2="158" stroke="#B8694E" stroke-width="1.5" marker-end="url(#arrow)"/>
-              <!-- EF Core provider box -->
-              <rect x="10" y="158" width="140" height="44" rx="6" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
-              <text x="80" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2A1F1A">EF Core Provider</text>
-              <text x="80" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">LINQ → SQL translation</text>
-              <!-- Arrow down -->
-              <line x1="80" y1="202" x2="80" y2="232" stroke="#B8694E" stroke-width="1.5" marker-end="url(#arrow)"/>
-              <!-- Database box -->
-              <rect x="10" y="232" width="140" height="44" rx="6" fill="#1B2A3B" stroke="#1B2A3B" stroke-width="1.5"/>
-              <text x="80" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">Database</text>
-              <text x="80" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">PostgreSQL / SQL Server</text>
-              <!-- Arrow marker -->
-              <defs>
-                <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-                  <path d="M0,0 L0,8 L8,4 Z" fill="#B8694E"/>
-                </marker>
-              </defs>
-              <!-- Side label -->
-              <text x="200" y="60" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Tracked objects</text>
-              <text x="200" y="130" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">SQL statement</text>
-              <text x="200" y="210" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Result rows</text>
+            <!-- SVG: POST retry problem vs PUT retry safety -->
+            <svg viewBox="0 0 300 240" style="width:100%; height:auto; max-height:230px;">
+              <!-- POST label -->
+              <text x="10" y="18" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#8B1A1A">POST — not idempotent</text>
+              <!-- Client -->
+              <rect x="10" y="26" width="60" height="30" rx="4" fill="#FAE8E8" stroke="#8B1A1A" stroke-width="1.5"/>
+              <text x="40" y="45" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8B1A1A">Client</text>
+              <!-- Request 1 arrow -->
+              <line x1="70" y1="41" x2="140" y2="41" stroke="#8B1A1A" stroke-width="1.3"/>
+              <polygon points="140,37 148,41 140,45" fill="#8B1A1A"/>
+              <text x="107" y="36" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A5C00">timeout</text>
+              <!-- Server -->
+              <rect x="148" y="26" width="60" height="30" rx="4" fill="#FAE8E8" stroke="#8B1A1A" stroke-width="1.5"/>
+              <text x="178" y="45" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8B1A1A">Server</text>
+              <!-- Retry arrow (dashed) -->
+              <line x1="70" y1="67" x2="140" y2="67" stroke="#8B1A1A" stroke-width="1.3" stroke-dasharray="4,3"/>
+              <polygon points="140,63 148,67 140,71" fill="#8B1A1A"/>
+              <text x="107" y="62" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8B1A1A">retry</text>
+              <!-- Result -->
+              <rect x="10" y="82" width="198" height="22" rx="3" fill="#FAE8E8" stroke="#8B1A1A" stroke-width="1"/>
+              <text x="109" y="97" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8B1A1A">Result: 2 records created</text>
+
+              <!-- Divider -->
+              <line x1="10" y1="118" x2="290" y2="118" stroke="#E0D5CF" stroke-width="1"/>
+
+              <!-- PUT label -->
+              <text x="10" y="136" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#2E6B4F">PUT — idempotent</text>
+              <!-- Client -->
+              <rect x="10" y="144" width="60" height="30" rx="4" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
+              <text x="40" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">Client</text>
+              <!-- Request 1 arrow -->
+              <line x1="70" y1="159" x2="140" y2="159" stroke="#2E6B4F" stroke-width="1.3"/>
+              <polygon points="140,155 148,159 140,163" fill="#2E6B4F"/>
+              <text x="107" y="154" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#8A5C00">timeout</text>
+              <!-- Server -->
+              <rect x="148" y="144" width="60" height="30" rx="4" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
+              <text x="178" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">Server</text>
+              <!-- Retry arrow (dashed) -->
+              <line x1="70" y1="185" x2="140" y2="185" stroke="#2E6B4F" stroke-width="1.3" stroke-dasharray="4,3"/>
+              <polygon points="140,181 148,185 140,189" fill="#2E6B4F"/>
+              <text x="107" y="180" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#2E6B4F">retry</text>
+              <!-- Result -->
+              <rect x="10" y="200" width="198" height="22" rx="3" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1"/>
+              <text x="109" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#2E6B4F">Result: same state — safe to retry</text>
             </svg>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 13 — Writing AppDbContext (Layout 5)                  -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Writing AppDbContext</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Data/AppDbContext.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,5-6,8-16">public class AppDbContext : DbContext
-{
-    public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options) : base(options) { }
-
-    public DbSet&lt;TaskItem&gt; Tasks =&gt; Set&lt;TaskItem&gt;();
-    public DbSet&lt;User&gt; Users =&gt; Set&lt;User&gt;();
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity&lt;TaskItem&gt;(entity =&gt;
-        {
-            entity.HasKey(t =&gt; t.Id);
-            entity.Property(t =&gt; t.Title).IsRequired().HasMaxLength(200);
-            entity.Property(t =&gt; t.CreatedAt).HasDefaultValueSql("NOW()");
-        });
-    }
-}</code></pre>
-        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">
-          <code class="inline">DbSet&lt;T&gt;</code> properties expose each table as a queryable collection.
-          <code class="inline">OnModelCreating</code> is called once at startup — this is where Fluent API configuration lives.
-          The constructor receives <code class="inline">DbContextOptions</code> from DI, which carries the connection string and provider.
-        </p>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 14 — Registering DbContext in Program.cs (Layout 4)   -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Registering DbContext in Program.cs</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.92rem; margin-bottom:0.8rem;">One call in <code class="inline">Program.cs</code> registers <code class="inline">AppDbContext</code> in the DI container with the Npgsql provider:</p>
-            <div class="file-path-label">Program.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.9rem;">builder.Services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
-    options.UseNpgsql(
-        builder.Configuration
-               .GetConnectionString("Default")));
-</code></pre>
-            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.7rem;">For SQL Server, replace <code class="inline">UseNpgsql</code> with <code class="inline">UseSqlServer</code> — the rest of the code stays identical.</p>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.92rem; margin-bottom:0.6rem;">What <code class="inline">AddDbContext</code> does:</p>
-            <ul style="font-size:0.92rem;">
-              <li>Registers <code class="inline">AppDbContext</code> as a <strong>scoped</strong> service — one instance per HTTP request</li>
-              <li>Creates a connection pool shared across all instances so database connections are not opened and closed for every query</li>
-              <li>Configures the provider (Npgsql) and passes it the connection string read from configuration</li>
-              <li>Makes <code class="inline">AppDbContext</code> available for constructor injection in controllers, services, and repositories</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 15 — Connection String Setup (Layout 4)               -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Connection String Setup</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.92rem; margin-bottom:0.7rem;">Store the connection string in <code class="inline">appsettings.Development.json</code> — not in the committed <code class="inline">appsettings.json</code>:</p>
-            <div class="file-path-label">appsettings.Development.json</div>
-            <pre><code class="language-json" style="font-size:0.9rem;">{
-  "ConnectionStrings": {
-    "Default": "Host=localhost;Database=taskmanager;Username=postgres;Password=yourpassword"
-  }
-}</code></pre>
-            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:0.7rem;">The file name <code class="inline">appsettings.Development.json</code> is loaded automatically when <code class="inline">ASPNETCORE_ENVIRONMENT=Development</code>. It overrides values from <code class="inline">appsettings.json</code>.</p>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.92rem; margin-bottom:0.6rem;">Add the file to <code class="inline">.gitignore</code> immediately:</p>
-            <div class="file-path-label">.gitignore</div>
-            <pre><code class="language-bash" style="font-size:0.9rem;">appsettings.Development.json
-appsettings.*.json
-!appsettings.json</code></pre>
-            <div class="callout error" style="margin-top:0.9rem;">
-              <div class="callout-label">Never commit credentials</div>
-              A connection string with a password pushed to a public repository is a security incident. Add the file to <code class="inline">.gitignore</code> before the first commit. Use environment variables or a secrets manager (Azure Key Vault, AWS Secrets Manager) in production.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 16 — Key Principle (Layout 6)                         -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="callout-slide">
-        <div class="callout-slide-label">Key Principle</div>
-        <div class="callout-slide-rule"></div>
-        <div class="callout-slide-quote">
-          "Configuration that changes between environments must never be compiled into the binary or committed to source control."
-        </div>
-        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
-          Connection strings, API keys, and passwords are environment-specific secrets. They belong in environment variables, user secrets, or a secrets manager — not in appsettings.json files committed to Git. This rule applies from day one, not just when a project goes to production.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 17 — Section Divider: Entity Configuration            -->
+      <!-- SLIDE 11 — Section Divider: Status Codes (Layout 2)         -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
-          <div class="section-label">Section 4 of 4</div>
+          <div class="section-label">Section 3 of 4</div>
           <div class="section-rule"></div>
-          <div class="section-title">Entity Configuration</div>
-          <div class="section-desc">Entities are plain C# classes that EF Core maps to tables. Configuration — constraints, default values, max lengths, indexes, and relationships — can be expressed through conventions, data annotations, or the Fluent API. The Fluent API in OnModelCreating is the most expressive and least intrusive option.</div>
+          <div class="section-title">HTTP Status Codes</div>
+          <div class="section-desc">The three-digit number in every response is a machine-readable signal. Browsers, monitoring tools, load balancers, and frontend frameworks all read it before your body is even parsed.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Writing a well-structured entity class</li>
-            <li>Fluent API: required, max length, defaults</li>
-            <li>Configuring indexes for frequent query columns</li>
-            <li>Defining a one-to-many relationship</li>
-            <li>Entity configuration best practices</li>
+            <li>The four code families</li>
+            <li>2xx — success codes</li>
+            <li>4xx — client error codes</li>
+            <li>3xx &amp; 5xx — briefly</li>
+            <li>The 401 vs 403 distinction</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 18 — Writing the TaskItem Entity (Layout 4)           -->
+      <!-- SLIDE 12 — Status Code Families Overview (Layout 3)         -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Writing the TaskItem Entity</div>
+        <div class="slide-heading">Status Code Families</div>
+        <div class="slide-rule"></div>
+        <div class="status-grid">
+          <div class="status-card s2xx">
+            <div class="status-card-range">2xx</div>
+            <div class="status-card-name">Success</div>
+            <div class="status-card-desc">The request was received, understood, and accepted. Always return one of these when things go right.</div>
+          </div>
+          <div class="status-card s3xx">
+            <div class="status-card-range">3xx</div>
+            <div class="status-card-name">Redirection</div>
+            <div class="status-card-desc">Further action is needed. The resource has moved or the client should use a cached version.</div>
+          </div>
+          <div class="status-card s4xx">
+            <div class="status-card-range">4xx</div>
+            <div class="status-card-name">Client Error</div>
+            <div class="status-card-desc">The request is wrong. The client sent bad data, is not authenticated, or is not allowed. The client must fix the request.</div>
+          </div>
+          <div class="status-card s5xx">
+            <div class="status-card-range">5xx</div>
+            <div class="status-card-name">Server Error</div>
+            <div class="status-card-desc">The server failed. The request may have been valid but something broke on the server side. The client can try again later.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — 2xx Success Codes (Layout 3 + table)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">2xx — Success Codes</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>When to return it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">200</code></td>
+              <td>OK</td>
+              <td>The default success response — use for GET, PUT, and PATCH when returning a body</td>
+            </tr>
+            <tr>
+              <td><code class="inline">201</code></td>
+              <td>Created</td>
+              <td>A POST that created a new resource. Include a <code class="inline">Location</code> header pointing to the new resource URL</td>
+            </tr>
+            <tr>
+              <td><code class="inline">204</code></td>
+              <td>No Content</td>
+              <td>Success with no response body — use for DELETE, or PATCH when nothing is returned</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">In ASP.NET Core</div>
+          Return <code class="inline">Ok(resource)</code> for 200, <code class="inline">Created(location, resource)</code> for 201, <code class="inline">NoContent()</code> for 204.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — 4xx Client Errors (Layout 3 + table)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">4xx — Client Error Codes</div>
+        <div class="slide-rule"></div>
+        <table style="font-size:0.84rem;">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>When to return it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">400</code></td>
+              <td>Bad Request</td>
+              <td>Malformed request body, missing required fields, failed model validation</td>
+            </tr>
+            <tr>
+              <td><code class="inline">401</code></td>
+              <td>Unauthorized</td>
+              <td>No token provided, or the token is invalid / expired</td>
+            </tr>
+            <tr>
+              <td><code class="inline">403</code></td>
+              <td>Forbidden</td>
+              <td>Valid token, but the user does not have permission for this action</td>
+            </tr>
+            <tr>
+              <td><code class="inline">404</code></td>
+              <td>Not Found</td>
+              <td>The requested resource does not exist — wrong ID, deleted record</td>
+            </tr>
+            <tr>
+              <td><code class="inline">409</code></td>
+              <td>Conflict</td>
+              <td>State conflict — duplicate email on registration, concurrent edit collision</td>
+            </tr>
+            <tr>
+              <td><code class="inline">422</code></td>
+              <td>Unprocessable Entity</td>
+              <td>Request is well-formed but fails a business rule (e.g. closing a task that is already closed)</td>
+            </tr>
+            <tr>
+              <td><code class="inline">429</code></td>
+              <td>Too Many Requests</td>
+              <td>Rate limit exceeded — covered in Session 21</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — 3xx & 5xx (Layout 3)                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">3xx &amp; 5xx — Briefly</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">3xx — Redirection</p>
+        <table style="font-size:0.87rem; margin-bottom:1.2rem;">
+          <thead>
+            <tr><th>Code</th><th>Name</th><th>When to use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">301</code></td>
+              <td>Moved Permanently</td>
+              <td>A URL has changed permanently — tell clients to update their bookmarks</td>
+            </tr>
+            <tr>
+              <td><code class="inline">304</code></td>
+              <td>Not Modified</td>
+              <td>Response has not changed since the client's cached version (ETag / conditional requests)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.9rem; font-weight:600; color:var(--color-navy); margin-bottom:0.5rem;">5xx — Server Error</p>
+        <table style="font-size:0.87rem;">
+          <thead>
+            <tr><th>Code</th><th>Name</th><th>When to use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="inline">500</code></td>
+              <td>Internal Server Error</td>
+              <td>Unhandled exception — let the middleware produce this; never return it manually</td>
+            </tr>
+            <tr>
+              <td><code class="inline">503</code></td>
+              <td>Service Unavailable</td>
+              <td>Overloaded or down — typically produced by the load balancer, not your code</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — 401 vs 403 (Layout 6 callout slide)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Distinction — Memorise This</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          401 = "I don't know who you are."<br>
+          403 = "I know exactly who you are — and the answer is no."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:600px; text-align:center; color:rgba(255,255,255,0.85);">
+          401 means no token or an invalid token. 403 means the token is valid but the user lacks the required role or permission.
+          Returning 401 when you mean 403 tells the client to re-authenticate — which will not help, because the token is fine.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Section Divider: Demo & Lab (Layout 2)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Demo &amp; Lab</div>
+          <div class="section-desc">Theory lands differently when you see broken code in the wild. First we look at real examples of wrong status codes, then you fix a pre-written controller that has five deliberate errors.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Live demo — wrong codes in real APIs</li>
+            <li>Why wrong codes break clients</li>
+            <li>Lab — five bugs to find and fix</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Live Demo (Layout 3)                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Wrong Codes in the Wild</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Real APIs get this wrong more often than you would expect. Here is what to look for in Postman:</p>
+        <ul>
+          <li>
+            <strong>200 with an error body</strong> — response is <code class="inline">200 OK</code> but the JSON reads <code class="inline">&#123;"error": "user not found"&#125;</code>.
+            Frontend error handlers never fire; the error is silently ignored.
+          </li>
+          <li>
+            <strong>200 on failed login</strong> — <code class="inline">&#123;"success": false, "message": "wrong password"&#125;</code> with status 200.
+            Monitoring tools report 100% uptime even during an outage.
+          </li>
+          <li>
+            <strong>200 on a create</strong> — a POST that creates a resource returns 200 instead of 201.
+            The client has no <code class="inline">Location</code> header to follow; the UI must do an extra GET to find the new resource's ID.
+          </li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.9rem;">
+          <div class="callout-label">Why this matters</div>
+          Monitoring, alerting, load balancers, browser caching, and every HTTP client library all key off the status code — not the body. A wrong code silently breaks all of them.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Lab: Fix the Broken API (Layout 4 + code)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Fix the Broken API</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.92rem; margin-bottom:0.8rem;">An entity is a plain C# class. EF Core discovers it through the <code class="inline">DbSet&lt;T&gt;</code> property on <code class="inline">AppDbContext</code>:</p>
-            <ul style="font-size:0.92rem;">
-              <li>By convention, a property named <code class="inline">Id</code> or <code class="inline">TaskItemId</code> becomes the primary key</li>
-              <li>Non-nullable value types (int, DateTime) map to NOT NULL columns automatically</li>
-              <li>Nullable reference types (<code class="inline">string?</code>) map to nullable columns when nullable reference types are enabled</li>
-              <li>Navigation properties represent foreign-key relationships — EF Core uses them to generate <code class="inline">JOIN</code> queries</li>
-            </ul>
+            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.7rem;">Find and fix these five bugs in the provided controller:</p>
+            <div class="issue-list">
+              <div class="issue-item">
+                <span class="issue-num">Bug 1</span>
+                <span class="issue-desc">A <span class="method-badge get" style="font-size:0.72rem;">GET</span> endpoint that modifies data on the server</span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 2</span>
+                <span class="issue-desc">A <span class="method-badge post" style="font-size:0.72rem;">POST</span> returning <code class="inline" style="color:var(--color-error);">200</code> instead of <code class="inline" style="color:var(--color-error);">201</code></span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 3</span>
+                <span class="issue-desc">A <span class="method-badge delete" style="font-size:0.72rem;">DELETE</span> returning <code class="inline" style="color:var(--color-error);">200</code> with a body instead of <code class="inline" style="color:var(--color-error);">204</code></span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 4</span>
+                <span class="issue-desc">A <span class="method-badge get" style="font-size:0.72rem;">GET</span> by ID that returns <code class="inline" style="color:var(--color-error);">null</code> instead of <code class="inline" style="color:var(--color-error);">404</code></span>
+              </div>
+              <div class="issue-item">
+                <span class="issue-num">Bug 5</span>
+                <span class="issue-desc">A validation failure returning <code class="inline" style="color:var(--color-error);">500</code> manually — should be <code class="inline" style="color:var(--color-error);">400</code></span>
+              </div>
+            </div>
           </div>
           <div class="col-right">
-            <div class="file-path-label">Models/TaskItem.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">public class TaskItem
+            <div class="file-path-label">Controllers/TasksController.cs (broken)</div>
+            <pre><code class="language-csharp" style="font-size:0.78rem;" data-line-numbers="6,15,24,32,40">// Bug 1: GET that modifies data
+[HttpGet("complete/{id}")]
+public IActionResult MarkComplete(int id)
 {
-    public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public bool IsCompleted { get; set; }
-    public DateTime CreatedAt { get; set; }
+    var task = _tasks.First(t => t.Id == id);
+    task.IsComplete = true;          // side effect!
+    return Ok(task);
+}
 
-    // Foreign key
-    public int UserId { get; set; }
+// Bug 2: POST returning 200
+[HttpPost]
+public IActionResult Create(TaskItem task)
+{
+    _tasks.Add(task);
+    return Ok(task);                 // should be Created(...)
+}
 
-    // Navigation property
-    public User User { get; set; } = null!;
+// Bug 3: DELETE returning body
+[HttpDelete("{id}")]
+public IActionResult Delete(int id)
+{
+    var task = _tasks.First(t => t.Id == id);
+    _tasks.Remove(task);
+    return Ok(task);                 // should be NoContent()
+}
+
+// Bug 4: Missing 404
+[HttpGet("{id}")]
+public IActionResult GetById(int id)
+{
+    var task = _tasks.FirstOrDefault(t => t.Id == id);
+    return Ok(task);                 // null if not found!
+}
+
+// Bug 5: Manual 500 for validation
+[HttpPut("{id}")]
+public IActionResult Update(int id, TaskItem task)
+{
+    if (string.IsNullOrEmpty(task.Title))
+        return StatusCode(500, "Title required"); // should be 400
+    return Ok(task);
 }</code></pre>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 19 — Fluent API Configuration (Layout 5)              -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Fluent API Configuration</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Data/AppDbContext.cs — OnModelCreating</div>
-        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="3-4,5,6,8-12">modelBuilder.Entity&lt;TaskItem&gt;(entity =&gt;
-{
-    entity.HasKey(t =&gt; t.Id);
-    entity.Property(t =&gt; t.Title).IsRequired().HasMaxLength(200);
-    entity.Property(t =&gt; t.Description).HasMaxLength(2000);
-    entity.Property(t =&gt; t.CreatedAt).HasDefaultValueSql("NOW()");
-
-    entity.HasOne(t =&gt; t.User)
-          .WithMany(u =&gt; u.Tasks)
-          .HasForeignKey(t =&gt; t.UserId)
-          .OnDelete(DeleteBehavior.Cascade);
-});</code></pre>
-        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">
-          <code class="inline">IsRequired()</code> adds a NOT NULL constraint.
-          <code class="inline">HasMaxLength(200)</code> sets <code class="inline">varchar(200)</code> in the database — without it, EF Core defaults to <code class="inline">text</code> (Postgres) or <code class="inline">nvarchar(max)</code> (SQL Server), which cannot be indexed efficiently.
-          <code class="inline">HasDefaultValueSql("NOW()")</code> lets the database populate the timestamp automatically.
-        </p>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 20 — Indexes and Best Practices (Layout 4)            -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Indexes and Entity Configuration Best Practices</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">Add indexes for columns you filter on frequently:</p>
-            <pre><code class="language-csharp" style="font-size:0.88rem;">entity.HasIndex(t =&gt; t.UserId);
-entity.HasIndex(t =&gt; t.IsCompleted);
-entity.HasIndex(t =&gt; t.CreatedAt);</code></pre>
-            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.7rem;">Foreign key columns should almost always have an index — EF Core does not create them automatically for non-primary-key foreign keys.</p>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">Best practices summary:</p>
-            <ul style="font-size:0.92rem;">
-              <li>Always call <code class="inline">HasMaxLength()</code> on string columns — avoid unbounded columns</li>
-              <li>Use <code class="inline">HasDefaultValueSql()</code> for server-side timestamps so the database clock is authoritative</li>
-              <li>Define <code class="inline">OnDelete</code> behavior explicitly — do not rely on the provider default</li>
-              <li>Keep all Fluent API configuration in <code class="inline">OnModelCreating</code> or in dedicated <code class="inline">IEntityTypeConfiguration&lt;T&gt;</code> classes for large models</li>
-            </ul>
-            <div class="callout info" style="margin-top:0.8rem; font-size:0.85rem;">
-              <div class="callout-label">EF Core 8</div>
-              With nullable reference types enabled, EF Core 8 infers <code class="inline">IsRequired()</code> automatically for non-nullable <code class="inline">string</code> properties. You still need <code class="inline">HasMaxLength()</code> — nullability does not imply a length constraint.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 21 — Lab: Wire Up the Task Entity (Lab)               -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Lab — Wire Up the Task Entity</div>
-        <div class="slide-rule"></div>
-        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Connect the Task Manager API to a real database. By the end of this lab, the application will start cleanly against a running PostgreSQL or SQL Server instance.</p>
-        <div class="step-list">
-          <div class="step-item">
-            <span class="step-num">1</span>
-            <span class="step-desc">Install <code class="inline">Microsoft.EntityFrameworkCore</code>, <code class="inline">Microsoft.EntityFrameworkCore.Design</code>, and <code class="inline">Npgsql.EntityFrameworkCore.PostgreSQL</code> (or the SQL Server provider)</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">2</span>
-            <span class="step-desc">Create a <code class="inline">TaskItem</code> entity class with <code class="inline">Id</code>, <code class="inline">Title</code>, <code class="inline">Description</code>, <code class="inline">IsCompleted</code>, <code class="inline">CreatedAt</code>, and a <code class="inline">UserId</code> foreign key</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">3</span>
-            <span class="step-desc">Create <code class="inline">AppDbContext</code> with a <code class="inline">DbSet&lt;TaskItem&gt;</code> property and configure the entity in <code class="inline">OnModelCreating</code> with <code class="inline">IsRequired()</code>, <code class="inline">HasMaxLength()</code>, and <code class="inline">HasDefaultValueSql()</code></span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">4</span>
-            <span class="step-desc">Add the connection string to <code class="inline">appsettings.Development.json</code> and add that file to <code class="inline">.gitignore</code> before committing</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">5</span>
-            <span class="step-desc">Register <code class="inline">AppDbContext</code> in <code class="inline">Program.cs</code> with <code class="inline">AddDbContext</code> and <code class="inline">UseNpgsql</code> (or <code class="inline">UseSqlServer</code>)</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">6</span>
-            <span class="step-desc">Run the application with <code class="inline">dotnet run</code> and confirm no startup errors. Migrations and actual database creation are covered in Session 10</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 22 — Summary (Layout 3)                               -->
+      <!-- SLIDE 20 — Summary (Layout 3)                               -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
         <div class="slide-heading">Summary</div>
         <div class="slide-rule"></div>
         <ul>
-          <li><strong>EF Core is an ORM</strong> — it maps C# classes to database tables and translates LINQ queries into provider-specific SQL, eliminating manual SQL strings for routine operations</li>
-          <li><strong>Code-first is the standard approach</strong> — C# entity classes are the source of truth; migrations translate class changes into schema changes tracked in version control</li>
-          <li><strong>DbContext is the central class</strong> — it exposes <code class="inline">DbSet&lt;T&gt;</code> properties per table, manages change tracking, and is registered as a scoped service in DI</li>
-          <li><strong>Fluent API in OnModelCreating</strong> is the recommended way to configure constraints, indexes, default values, and relationships without polluting entity classes with attributes</li>
-          <li><strong>Connection strings are secrets</strong> — store them in <code class="inline">appsettings.Development.json</code>, add that file to <code class="inline">.gitignore</code>, and use environment variables or a secrets manager in production</li>
-          <li><strong>Migrations come next</strong> — Session 10 covers creating and applying migrations to generate and evolve the real database schema from these entity definitions</li>
+          <li><strong>GET never modifies data</strong> — if your operation has a side effect, use a different method</li>
+          <li><strong>POST returns 201</strong> with a <code class="inline">Location</code> header pointing to the created resource</li>
+          <li><strong>DELETE returns 204</strong> — no body, no exception for an already-deleted resource on a second call</li>
+          <li><strong>401 = who are you?</strong> / <strong>403 = I know you, but no</strong> — never confuse them</li>
+          <li><strong>Never return 200 with an error in the body</strong> — the status code is the signal; the body is the detail</li>
+          <li>Idempotency is a <strong>client contract</strong> — HTTP clients use it to decide whether to retry automatically</li>
         </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 23 — What's Next (Layout 3)                           -->
+      <!-- SLIDE 21 — What's Next (Layout 3)                           -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
         <div class="slide-heading">What's Next</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 10 — Migrations, CRUD &amp; LINQ</strong></p>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 10 — Error Handling &amp; Clean Error Responses</strong></p>
         <ul>
-          <li>The <code class="inline">AppDbContext</code> and entity classes set up in this session are the foundation — Session 10 picks up exactly where this lab ends</li>
-          <li>You will install the <code class="inline">dotnet ef</code> CLI tool, create your first migration with <code class="inline">dotnet ef migrations add</code>, and apply it to generate the real tables with <code class="inline">dotnet ef database update</code></li>
-          <li>The in-memory lists currently backing the Task API endpoints will be replaced with real <code class="inline">DbSet</code> queries — <code class="inline">ToListAsync()</code>, <code class="inline">FindAsync()</code>, <code class="inline">AddAsync()</code>, and <code class="inline">SaveChangesAsync()</code></li>
-          <li>LINQ filtering, ordering, and pagination will be pushed to the database layer so the SQL is efficient from the start</li>
+          <li>Now that you know which status code to return, Session 10 covers how to return a <strong>consistent, structured error body</strong> alongside it</li>
+          <li>We will build a global exception handler using ASP.NET Core middleware so your controllers never need a try-catch block</li>
+          <li>You will implement the <strong>RFC 7807 Problem Details</strong> standard — the same format used by .NET's built-in <code class="inline">ValidationProblemDetails</code></li>
+          <li>After Session 10 you will be able to combine what you learned today (correct codes) with a clean, predictable error response body that frontend developers can rely on</li>
         </ul>
         <div class="callout info" style="margin-top:1rem;">
           <div class="callout-label">Before next session</div>
-          Complete the assignment and make sure <code class="inline">dotnet run</code> starts the application without errors against a live database instance. The Session 10 demo builds directly on top of this working setup.
+          Complete today's assignment. When you return 404, what should the response body look like? Think about it — Session 10 answers that question.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 24 — Assignment (Layout 3)                            -->
+      <!-- SLIDE 22 — Assignment (Layout 3)                            -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
         <div class="slide-heading">Assignment</div>
         <div class="slide-rule"></div>
         <p style="font-size:0.92rem; margin-bottom:0.8rem;">
-          <strong>Wire up Entity Framework Core for the Task Manager API and connect it to a real database.</strong>
+          <strong>Build a <code class="inline">ProductsController</code></strong> with in-memory storage and full HTTP method + status code compliance.
         </p>
-        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
-        <ul style="font-size:0.92rem;">
-          <li>Install the EF Core packages and the appropriate database provider, then create <code class="inline">AppDbContext</code> with <code class="inline">DbSet&lt;TaskItem&gt;</code> and <code class="inline">DbSet&lt;User&gt;</code></li>
-          <li>Configure both entities using the Fluent API in <code class="inline">OnModelCreating</code>: required fields, max lengths, default values, and the foreign key relationship between <code class="inline">TaskItem</code> and <code class="inline">User</code></li>
-          <li>Register <code class="inline">AppDbContext</code> in <code class="inline">Program.cs</code> and store the connection string in <code class="inline">appsettings.Development.json</code>, adding it to <code class="inline">.gitignore</code></li>
+        <ul style="font-size:0.93rem;">
+          <li><span class="method-badge get" style="font-size:0.72rem;">GET</span> <code class="inline">/api/products</code> returns <code class="inline">200</code> with the full list</li>
+          <li><span class="method-badge get" style="font-size:0.72rem;">GET</span> <code class="inline">/api/products/{id}</code> returns <code class="inline">200</code> with the product or <code class="inline">404</code> if not found</li>
+          <li><span class="method-badge post" style="font-size:0.72rem;">POST</span> <code class="inline">/api/products</code> creates the product and returns <code class="inline">201</code> with the new resource in the body</li>
+          <li><span class="method-badge put" style="font-size:0.72rem;">PUT</span> <code class="inline">/api/products/{id}</code> replaces the full product and returns <code class="inline">200</code>, or <code class="inline">404</code> if it does not exist</li>
+          <li><span class="method-badge delete" style="font-size:0.72rem;">DELETE</span> <code class="inline">/api/products/{id}</code> removes the product and returns <code class="inline">204</code> with no body</li>
         </ul>
         <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
         <ul style="font-size:0.88rem; margin-top:0.2rem;">
-          <li><code class="inline">dotnet run</code> starts the application without any EF Core-related startup exceptions</li>
-          <li><code class="inline">AppDbContext</code> has <code class="inline">DbSet</code> properties for both <code class="inline">TaskItem</code> and <code class="inline">User</code>, configured via the Fluent API</li>
-          <li>All string columns have explicit <code class="inline">HasMaxLength()</code> calls and no column is left as unbounded text</li>
-          <li><code class="inline">appsettings.Development.json</code> is listed in <code class="inline">.gitignore</code> and is not committed to the repository</li>
+          <li>No endpoint ever returns <code class="inline">200</code> when an error occurred</li>
+          <li>The POST response body includes the newly created product with its assigned ID</li>
+          <li>Test all endpoints in Postman and verify the status code on each response</li>
         </ul>
-        <div class="callout warning" style="margin-top:0.7rem;">
+        <div class="callout warning" style="margin-top:0.8rem;">
           <div class="callout-label">Bonus</div>
-          Extract the entity configuration into a dedicated <code class="inline">TaskItemConfiguration : IEntityTypeConfiguration&lt;TaskItem&gt;</code> class and register it in <code class="inline">OnModelCreating</code> using <code class="inline">modelBuilder.ApplyConfiguration(new TaskItemConfiguration())</code>. This keeps <code class="inline">AppDbContext</code> clean as the model grows.
+          Add a <span class="method-badge patch" style="font-size:0.72rem;">PATCH</span> endpoint that updates only the <code class="inline">Name</code> field. Return <code class="inline">400</code> if <code class="inline">Name</code> is empty or missing from the request body.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 25 — Q&A                                              -->
+      <!-- SLIDE 23 — Q&A                                              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="qa-slide">
         <div class="qa-heading">Questions?</div>
-        <div class="qa-sub">Session 09 — Entity Framework Core Intro</div>
+        <div class="qa-sub">Session 09 — HTTP Methods &amp; Status Codes</div>
       </section>
 
     </div>
@@ -1143,7 +1336,7 @@ entity.HasIndex(t =&gt; t.CreatedAt);</code></pre>
 
   <!-- ── Persistent Footer ── -->
   <div class="slide-footer">
-    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
     <span class="footer-slide-num" id="slide-num"></span>
     <div></div>
   </div>

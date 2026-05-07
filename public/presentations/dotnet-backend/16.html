@@ -1,0 +1,1179 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 16 — Repository Pattern &amp; DTOs</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 16</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Repository Pattern<br>&amp; DTOs</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 6 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Implement the repository pattern to abstract database access behind a clean interface</li>
+          <li>Explain why exposing entity objects directly from an API is a security and stability risk</li>
+          <li>Define request and response DTOs and map between entities and DTOs using AutoMapper</li>
+          <li>Prevent over-posting attacks by controlling which fields clients are allowed to submit</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda / Timeline (Layout 3 + table)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Why repository pattern?</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:15</td><td>Implementing ITaskRepository</td><td>Demo</td><td>25 min</td></tr>
+            <tr><td>0:40</td><td>DTOs — request vs response models</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:55</td><td>AutoMapper setup</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>1:15</td><td>Lab — refactor to repository + DTOs</td><td>Lab</td><td>35 min</td></tr>
+            <tr><td>1:50</td><td>Wrap-up</td><td>Discussion</td><td>10 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Repository Pattern               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">The Repository Pattern</div>
+          <div class="section-desc">Your service layer currently knows about <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; background:rgba(255,255,255,0.15); padding:1px 4px; border-radius:3px;">DbContext</code> directly. The repository pattern puts a typed interface between them — one that describes what data operations are possible without revealing how they are implemented.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Why tight coupling to DbContext is a problem</li>
+            <li>Designing the ITaskRepository interface</li>
+            <li>Implementing TaskRepository with EF Core</li>
+            <li>Registering the repository in the DI container</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Why Not Use DbContext Directly? (Layout 3)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Not Use DbContext Directly?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Leaking infrastructure into business logic</strong> — when a service calls <code class="inline">_context.Tasks.Where(...).ToListAsync()</code>, the EF Core query language bleeds into a layer that should only care about business rules</li>
+          <li><strong>Hard to test</strong> — spinning up a real <code class="inline">DbContext</code> in a unit test requires a database. With an interface you swap in a mock that returns fake data instantly</li>
+          <li><strong>Hard to change the database</strong> — if you ever move from SQL Server to PostgreSQL or a document store, every service that calls <code class="inline">DbContext</code> must be rewritten</li>
+          <li><strong>No single place for query logic</strong> — the same <code class="inline">Where(t => t.UserId == userId)</code> filter gets duplicated across multiple services and controllers</li>
+          <li><strong>Violates the Dependency Inversion Principle</strong> — high-level modules (services) should depend on abstractions, not on concrete infrastructure classes</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Designing ITaskRepository (Layout 5)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Designing ITaskRepository</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Repositories/ITaskRepository.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.95rem;" data-line-numbers="1-8">public interface ITaskRepository
+{
+    Task&lt;TaskItem?&gt; GetByIdAsync(int id);
+    Task&lt;PagedResult&lt;TaskItem&gt;&gt; GetAllAsync(TaskFilterParams filter);
+    Task&lt;TaskItem&gt; CreateAsync(TaskItem task);
+    Task UpdateAsync(TaskItem task);
+    Task DeleteAsync(TaskItem task);
+}</code></pre>
+        <div class="callout info" style="margin-top:0.9rem;">
+          <div class="callout-label">Interface-first design</div>
+          Define the interface before writing the implementation. The interface is what the service layer sees — it describes the contract in terms of your domain (<code class="inline">TaskItem</code>, <code class="inline">PagedResult</code>), not in terms of EF Core (<code class="inline">DbSet</code>, <code class="inline">IQueryable</code>). Write the implementation only after the interface is stable.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Implementing TaskRepository (Layout 5)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Implementing TaskRepository</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Repositories/TaskRepository.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1-5,7-10">public class TaskRepository : ITaskRepository
+{
+    private readonly AppDbContext _context;
+    public TaskRepository(AppDbContext context) =&gt; _context = context;
+
+    public async Task&lt;TaskItem?&gt; GetByIdAsync(int id)
+        =&gt; await _context.Tasks.FindAsync(id);
+
+    public async Task&lt;TaskItem&gt; CreateAsync(TaskItem task)
+    {
+        _context.Tasks.Add(task);
+        await _context.SaveChangesAsync();
+        return task;
+    }
+
+    public async Task UpdateAsync(TaskItem task)
+    {
+        _context.Tasks.Update(task);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(TaskItem task)
+    {
+        _context.Tasks.Remove(task);
+        await _context.SaveChangesAsync();
+    }
+}</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Registering the Repository (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering the Repository</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.9rem;">Register the concrete class against the interface in <code class="inline">Program.cs</code>. The DI container resolves <code class="inline">ITaskRepository</code> to <code class="inline">TaskRepository</code> at runtime:</p>
+            <div class="file-path-label">Program.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.95rem;">builder.Services.AddScoped&lt;
+    ITaskRepository,
+    TaskRepository&gt;();</code></pre>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.9rem;"><code class="inline">AddScoped</code> creates one instance per HTTP request — matching the lifetime of <code class="inline">DbContext</code>, which is also scoped. Always align repository lifetime with the context lifetime it wraps.</p>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The service receives the interface through constructor injection:</p>
+            <div class="file-path-label">Services/TaskService.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">public class TaskService
+{
+    private readonly ITaskRepository _repo;
+
+    public TaskService(ITaskRepository repo)
+        =&gt; _repo = repo;
+
+    public async Task&lt;TaskItem?&gt; GetByIdAsync(int id)
+        =&gt; await _repo.GetByIdAsync(id);
+}</code></pre>
+            <div class="callout success" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Result</div>
+              The service no longer imports or references <code class="inline">AppDbContext</code>. It depends only on the interface — which can be mocked in tests without touching a database.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Section Divider: DTOs                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">DTOs — Request &amp; Response Models</div>
+          <div class="section-desc">A DTO (Data Transfer Object) is a class shaped for communication, not for storage. It carries only what the API consumer needs to send or receive — nothing more. Returning entity objects directly is a security vulnerability, not a time-saver.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Why exposing entities breaks security</li>
+            <li>Response DTOs — what the client receives</li>
+            <li>Request DTOs — preventing over-posting</li>
+            <li>DTO naming conventions</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Key Principle: Never Return Entities (Layout 6)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Principle</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "Never serialize your entity objects directly.<br>The API surface and the database schema<br>are two different contracts."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
+          Entities are shaped for the database. DTOs are shaped for the consumer. Conflating the two leaks sensitive fields, creates circular reference errors, and ties your API shape permanently to your database schema — making any future change a breaking change.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Why Entities Are Dangerous to Expose (Layout 4)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Entities Are Dangerous to Expose</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Returning a <code class="inline">User</code> entity from a controller action sends every mapped field to the client:</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">// Entity — never serialize this
+public class User
+{
+    public int Id { get; set; }
+    public string Email { get; set; } = "";
+    // NEVER expose these:
+    public string PasswordHash { get; set; } = "";
+    public string RefreshToken { get; set; } = "";
+    public string InternalNotes { get; set; } = "";
+}</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">A response DTO exposes only what the consumer legitimately needs:</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">// Response DTO — safe to return
+public class UserResponseDto
+{
+    public int Id { get; set; }
+    public string Email { get; set; } = "";
+    // PasswordHash and RefreshToken
+    // are simply not here — they
+    // cannot be accidentally serialized
+}</code></pre>
+            <div class="callout error" style="margin-top:0.9rem; font-size:0.87rem;">
+              <div class="callout-label">Security risk</div>
+              JSON serializers serialize all public properties by default. Forgetting to add <code class="inline">[JsonIgnore]</code> to a sensitive field means that field ships to every client. A DTO eliminates the risk entirely — you cannot accidentally include a field that was never defined.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Response DTO for TaskItem (Layout 5)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Defining a Response DTO</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">DTOs/TaskItemDto.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.95rem;">public class TaskItemDto
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = "";
+    public string? Description { get; set; }
+    public bool IsCompleted { get; set; }
+    public DateTime? DueDate { get; set; }
+    public DateTime CreatedAt { get; set; }
+}</code></pre>
+        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.7rem;">Compare this to the entity: <code class="inline">UserId</code>, internal foreign keys, and navigation properties are absent. Clients receive exactly what they need to display a task — nothing they could misuse.</p>
+        <div class="callout info" style="margin-top:0.8rem;">
+          <div class="callout-label">Naming convention</div>
+          Suffix response DTOs with <code class="inline">Dto</code> (e.g., <code class="inline">TaskItemDto</code>). Suffix request DTOs with <code class="inline">Request</code> (e.g., <code class="inline">CreateTaskRequest</code>, <code class="inline">UpdateTaskRequest</code>). This makes the direction of flow clear at a glance anywhere in the codebase.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Request DTOs and Over-Posting (Layout 4)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Request DTOs — Preventing Over-Posting</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><strong>Over-posting</strong> is when a client sends fields the server did not intend to accept — and the model binder sets them on the entity anyway.</p>
+            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Without a request DTO, a malicious POST body like this could set privileged fields:</p>
+            <pre><code class="language-json" style="font-size:0.92rem;">{
+  "title": "My Task",
+  "id": 999,
+  "isAdmin": true,
+  "createdAt": "2020-01-01"
+}</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">A request DTO defines exactly which fields the client may send:</p>
+            <div class="file-path-label">DTOs/CreateTaskRequest.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">public class CreateTaskRequest
+{
+    [Required]
+    [MaxLength(200)]
+    public string Title { get; set; } = "";
+
+    public string? Description { get; set; }
+
+    public DateTime? DueDate { get; set; }
+
+    // Id, CreatedAt, UserId are NOT here.
+    // The client cannot set them — ever.
+}</code></pre>
+            <div class="callout success" style="margin-top:0.8rem; font-size:0.87rem;">
+              <div class="callout-label">Defense</div>
+              Fields not on the request DTO are never bound — regardless of what the client sends. No <code class="inline">[Bind]</code> attributes, no opt-outs needed.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — UpdateTaskRequest (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Update and Delete Request DTOs</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Update requests typically allow a subset of fields to be changed. Fields the client should never update — like <code class="inline">CreatedAt</code> or <code class="inline">UserId</code> — are simply absent:</p>
+            <div class="file-path-label">DTOs/UpdateTaskRequest.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">public class UpdateTaskRequest
+{
+    [Required]
+    [MaxLength(200)]
+    public string Title { get; set; } = "";
+
+    public string? Description { get; set; }
+
+    public bool IsCompleted { get; set; }
+
+    public DateTime? DueDate { get; set; }
+}</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The controller passes the route <code class="inline">id</code> separately — it comes from the URL, not the body, so it cannot be spoofed through the request payload:</p>
+            <div class="file-path-label">Controllers/TasksController.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">[HttpPut("{id}")]
+public async Task&lt;IActionResult&gt; Update(
+    int id,
+    [FromBody] UpdateTaskRequest dto)
+{
+    var task = await _repo.GetByIdAsync(id);
+    if (task is null) return NotFound();
+
+    task.Title       = dto.Title;
+    task.Description = dto.Description;
+    task.IsCompleted = dto.IsCompleted;
+    task.DueDate     = dto.DueDate;
+
+    await _repo.UpdateAsync(task);
+    return NoContent();
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Section Divider: AutoMapper                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">AutoMapper</div>
+          <div class="section-desc">Manually copying fields from an entity to a DTO — and back — produces repetitive, error-prone code. AutoMapper generates those assignments from a declared mapping profile, eliminating the boilerplate while keeping the conversion logic in one place.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Installing AutoMapper</li>
+            <li>Writing a MappingProfile</li>
+            <li>Registering AutoMapper in DI</li>
+            <li>Injecting and using IMapper in services</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — The Manual Mapping Problem (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The Manual Mapping Problem</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Without a mapping library, every service method hand-copies properties between the entity and the DTO:</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">// Repeated in every service method
+var dto = new TaskItemDto
+{
+    Id          = task.Id,
+    Title       = task.Title,
+    Description = task.Description,
+    IsCompleted = task.IsCompleted,
+    DueDate     = task.DueDate,
+    CreatedAt   = task.CreatedAt
+};
+return dto;</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">With AutoMapper this becomes a single call. The field-copying is generated from the mapping profile:</p>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">// One call — AutoMapper handles the rest
+var dto = _mapper.Map&lt;TaskItemDto&gt;(task);
+return dto;</code></pre>
+            <div class="callout warning" style="margin-top:0.9rem; font-size:0.87rem;">
+              <div class="callout-label">Not magic</div>
+              AutoMapper matches properties by name. If a source and destination property have different names, you must configure the mapping explicitly. Trust the convention for simple cases; be explicit when names diverge.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Installing AutoMapper &amp; MappingProfile (Layout 5) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Installing AutoMapper &amp; Writing a Profile</div>
+        <div class="slide-rule"></div>
+        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package AutoMapper</code></pre>
+        <div class="file-path-label" style="margin-top:1rem;">Mappings/MappingProfile.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="1,4-9">public class MappingProfile : Profile
+{
+    public MappingProfile()
+    {
+        // Entity -&gt; Response DTO (property names match — no extra config needed)
+        CreateMap&lt;TaskItem, TaskItemDto&gt;();
+
+        // Request DTO -&gt; Entity (set server-controlled fields explicitly)
+        CreateMap&lt;CreateTaskRequest, TaskItem&gt;()
+            .ForMember(dest =&gt; dest.CreatedAt,
+                       opt  =&gt; opt.MapFrom(_ =&gt; DateTime.UtcNow));
+    }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.7rem;"><code class="inline">ForMember</code> lets you override how a single destination property is filled. Here <code class="inline">CreatedAt</code> is always set to the server's current UTC time — the client cannot influence it even if they send a value.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Registering AutoMapper &amp; Using IMapper (Layout 4) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering AutoMapper &amp; Injecting IMapper</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">One line in <code class="inline">Program.cs</code> scans the assembly for all classes that inherit <code class="inline">Profile</code> and registers them:</p>
+            <div class="file-path-label">Program.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.95rem;">builder.Services.AddAutoMapper(
+    typeof(MappingProfile));</code></pre>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.9rem;">Pass any type from the assembly that contains the profiles. AutoMapper discovers all <code class="inline">Profile</code> subclasses in that assembly automatically.</p>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Inject <code class="inline">IMapper</code> into the service via the constructor:</p>
+            <div class="file-path-label">Services/TaskService.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">public class TaskService
+{
+    private readonly ITaskRepository _repo;
+    private readonly IMapper _mapper;
+
+    public TaskService(
+        ITaskRepository repo,
+        IMapper mapper)
+    {
+        _repo   = repo;
+        _mapper = mapper;
+    }
+
+    public async Task&lt;TaskItemDto?&gt; GetByIdAsync(int id)
+    {
+        var task = await _repo.GetByIdAsync(id);
+        return task is null
+            ? null
+            : _mapper.Map&lt;TaskItemDto&gt;(task);
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Create and Map in One Flow (Layout 5)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Create and Map in One Flow</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Services/TaskService.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="3,6,9">public async Task&lt;TaskItemDto&gt; CreateAsync(CreateTaskRequest request)
+{
+    // Map request DTO -&gt; entity (AutoMapper sets CreatedAt via ForMember)
+    var task = _mapper.Map&lt;TaskItem&gt;(request);
+
+    // Persist via repository (no DbContext in sight)
+    var created = await _repo.CreateAsync(task);
+
+    // Map entity -&gt; response DTO (sensitive fields absent by design)
+    return _mapper.Map&lt;TaskItemDto&gt;(created);
+}</code></pre>
+        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.7rem;">Notice the three layers are cleanly separated: the request DTO enters, the entity is persisted through the repository, and the response DTO exits. No <code class="inline">DbContext</code>, no raw entity, no sensitive fields reach the controller.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Section Divider: Lab                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Lab — Refactor to Repository &amp; DTOs</div>
+          <div class="section-desc">Take the Task API built in Sessions 09–10 and apply everything covered today: introduce the repository interface, replace direct DbContext usage in services, add request and response DTOs, configure AutoMapper, and verify no sensitive fields leak through any endpoint.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Create ITaskRepository and TaskRepository</li>
+            <li>Define TaskItemDto, CreateTaskRequest, UpdateTaskRequest</li>
+            <li>Add a MappingProfile and register AutoMapper</li>
+            <li>Update TaskService to use ITaskRepository and return DTOs</li>
+            <li>Verify no sensitive fields appear in any response</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Lab Steps (Layout 3 + step-list)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Refactor to Repository &amp; DTOs</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Refactor the Task API to use the repository pattern and DTOs throughout. Each step builds on the last — complete them in order.</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Create <code class="inline">ITaskRepository</code> in a <code class="inline">Repositories/</code> folder and implement <code class="inline">TaskRepository</code> using <code class="inline">AppDbContext</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Create <code class="inline">TaskItemDto</code>, <code class="inline">CreateTaskRequest</code>, and <code class="inline">UpdateTaskRequest</code> in a <code class="inline">DTOs/</code> folder</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Add a <code class="inline">MappingProfile</code> class with mappings for all three pairs, registering AutoMapper in <code class="inline">Program.cs</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">Update <code class="inline">TaskService</code> to inject <code class="inline">ITaskRepository</code> and <code class="inline">IMapper</code>, removing all direct <code class="inline">AppDbContext</code> references</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Verify via Swagger UI that every endpoint returns <code class="inline">TaskItemDto</code> shapes — check that <code class="inline">PasswordHash</code>, <code class="inline">RefreshToken</code>, or any other sensitive field is absent from all responses</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>The repository pattern</strong> places an interface between the service layer and the database — services depend on <code class="inline">ITaskRepository</code>, not on <code class="inline">DbContext</code>, making the data layer swappable and testable</li>
+          <li><strong>Register repositories as Scoped</strong> to match the lifetime of the <code class="inline">DbContext</code> they wrap — one instance per HTTP request</li>
+          <li><strong>Response DTOs</strong> expose only what the consumer legitimately needs — fields like password hashes and refresh tokens are absent by design, not by annotation</li>
+          <li><strong>Request DTOs prevent over-posting</strong> — server-controlled fields such as <code class="inline">Id</code>, <code class="inline">CreatedAt</code>, and role flags are simply not present in the request model</li>
+          <li><strong>AutoMapper eliminates hand-copying</strong> — declare mappings once in a <code class="inline">Profile</code> class and call <code class="inline">_mapper.Map&lt;T&gt;(source)</code> everywhere</li>
+          <li><strong>Use <code class="inline">ForMember</code></strong> whenever a server-controlled value (such as <code class="inline">DateTime.UtcNow</code>) must be set during mapping rather than read from the incoming request</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 17 — Input Validation</strong></p>
+        <ul>
+          <li>The request DTOs you defined today accept any string for <code class="inline">Title</code> — Session 17 covers how to enforce rules on those inputs using Data Annotations and FluentValidation</li>
+          <li>You will learn how ASP.NET Core's model validation pipeline automatically rejects malformed requests before they reach your service layer, and how to return structured validation error responses</li>
+          <li>The <code class="inline">CreateTaskRequest</code> and <code class="inline">UpdateTaskRequest</code> DTOs you built today will be the targets for the validation rules added in Session 17</li>
+          <li>After Session 17 the complete data flow — validated request DTO in, repository operation, response DTO out — will be fully hardened</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the assignment below. Make sure the lab is working — all five steps — before Session 17. The validation session builds directly on the DTO and repository structure you set up today.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Refactor the Task Manager API to use the repository pattern and DTOs throughout.</strong>
+        </p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
+        <ul style="font-size:0.92rem;">
+          <li>Create <code class="inline">ITaskRepository</code> and <code class="inline">TaskRepository</code>, register the repository as Scoped in <code class="inline">Program.cs</code></li>
+          <li>Define <code class="inline">TaskItemDto</code>, <code class="inline">CreateTaskRequest</code>, and <code class="inline">UpdateTaskRequest</code> with appropriate fields</li>
+          <li>Write a <code class="inline">MappingProfile</code> that maps all three pairs; set <code class="inline">CreatedAt</code> via <code class="inline">ForMember</code> during the create mapping</li>
+          <li>Update <code class="inline">TaskService</code> to depend on <code class="inline">ITaskRepository</code> and <code class="inline">IMapper</code> — all controller actions must return DTOs, not entities</li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-top:0.2rem;">
+          <li><code class="inline">GET /api/tasks/{id}</code> returns a <code class="inline">TaskItemDto</code> — no entity navigation properties, no sensitive fields in the response body</li>
+          <li><code class="inline">POST /api/tasks</code> accepts a <code class="inline">CreateTaskRequest</code> body; sending extra fields like <code class="inline">id</code> or <code class="inline">createdAt</code> has no effect on the created record</li>
+          <li><code class="inline">TaskService</code> has zero references to <code class="inline">AppDbContext</code> — all database access goes through <code class="inline">ITaskRepository</code></li>
+          <li><code class="inline">MappingProfile</code> is the only place where field assignments between entities and DTOs are defined</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.7rem;">
+          <div class="callout-label">Bonus</div>
+          Add a <code class="inline">TaskSummaryDto</code> that includes only <code class="inline">Id</code>, <code class="inline">Title</code>, and <code class="inline">IsCompleted</code>. Use it in a new <code class="inline">GET /api/tasks</code> list endpoint so that the collection response is lighter than the single-item response. Map it with an additional entry in <code class="inline">MappingProfile</code>.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 16 — Repository Pattern &amp; DTOs</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

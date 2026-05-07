@@ -1,0 +1,1274 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 19 — Implementing JWT Auth in .NET</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 19</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Implementing JWT Auth in .NET</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 7 &nbsp;&middot;&nbsp; 2.5 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Configure JWT bearer authentication in ASP.NET Core using <code class="inline">AddAuthentication</code> and <code class="inline">AddJwtBearer</code></li>
+          <li>Implement a login endpoint that issues signed JWT tokens from user credentials</li>
+          <li>Protect endpoints with the <code class="inline">[Authorize]</code> attribute and verify a 401 is returned without a valid token</li>
+          <li>Read identity claims (user ID, email, role) from the token inside a controller action</li>
+          <li>Connect the issued token to the React frontend via the <code class="inline">Authorization: Bearer</code> header</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Recap from theory session</td><td>Discussion</td><td>10 min</td></tr>
+            <tr><td>0:10</td><td>Configure AddAuthentication / AddJwtBearer</td><td>Demo</td><td>25 min</td></tr>
+            <tr><td>0:35</td><td>Registration &amp; login endpoints</td><td>Demo</td><td>30 min</td></tr>
+            <tr><td>1:05</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:15</td><td>Protecting endpoints with [Authorize]</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>1:35</td><td>Reading claims from the token</td><td>Demo</td><td>15 min</td></tr>
+            <tr><td>1:50</td><td>Lab — add auth to the Task API</td><td>Lab</td><td>40 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Setup & Configuration             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Setup &amp; Configuration</div>
+          <div class="section-desc">Before any authentication logic can run, ASP.NET Core needs to know the scheme, the validation parameters, and where the signing secret lives. This section wires up the NuGet packages and the middleware pipeline so every incoming request can be authenticated before it reaches your action code.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>NuGet packages required</li>
+            <li>JWT settings in appsettings.json</li>
+            <li>Registering the bearer scheme in Program.cs</li>
+            <li>Token validation parameters</li>
+            <li>Middleware order: UseAuthentication before UseAuthorization</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — NuGet Packages (Layout 4)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">NuGet Packages</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Two packages are needed. Install both before writing any configuration code:</p>
+            <ul style="font-size:0.93rem;">
+              <li><code class="inline">Microsoft.AspNetCore.Authentication.JwtBearer</code> — the ASP.NET Core middleware that validates incoming Bearer tokens on every protected request</li>
+              <li><code class="inline">BCrypt.Net-Next</code> — a well-tested bcrypt implementation for hashing and verifying passwords. Never store plain-text passwords or roll your own hashing</li>
+            </ul>
+            <div class="callout warning" style="margin-top:0.9rem;">
+              <div class="callout-label">Package version</div>
+              Install the JwtBearer package version that matches your target framework. For .NET 8 use version 8.x; for .NET 9 use 9.x. A version mismatch causes runtime binding failures that are hard to diagnose.
+            </div>
+          </div>
+          <div class="col-right">
+            <pre><code class="language-bash" style="font-size:0.92rem;">dotnet add package \
+  Microsoft.AspNetCore.Authentication.JwtBearer
+
+dotnet add package BCrypt.Net-Next</code></pre>
+            <div class="callout info" style="margin-top:0.9rem;">
+              <div class="callout-label">Why BCrypt?</div>
+              BCrypt is a slow adaptive hashing algorithm — its cost factor can be increased as hardware gets faster. Unlike MD5 or SHA-256, it is designed specifically to resist brute-force and rainbow-table attacks on password databases.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — JWT Settings in appsettings (Layout 5)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">JWT Settings in appsettings.Development.json</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">appsettings.Development.json</div>
+        <pre><code class="language-json" style="font-size:0.92rem;" data-line-numbers="2-7">{
+  "Jwt": {
+    "Secret": "your-super-secret-key-at-least-32-characters",
+    "Issuer": "TaskManagerApi",
+    "Audience": "TaskManagerApiUsers",
+    "ExpiryMinutes": 60
+  }
+}</code></pre>
+        <div class="callout error" style="margin-top:1rem;">
+          <div class="callout-label">Never commit the secret</div>
+          The <code class="inline">Jwt:Secret</code> value must be at least 32 characters for HMAC-SHA256. In production, store it in an environment variable or a secrets manager — never in a file committed to version control. Use <code class="inline">dotnet user-secrets</code> for local development instead of <code class="inline">appsettings.Development.json</code>.
+        </div>
+        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.6rem;"><code class="inline">Issuer</code> and <code class="inline">Audience</code> are validated on every incoming token to prevent tokens issued by another service from being accepted by this API.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Program.cs: AddAuthentication (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering JWT Bearer in Program.cs</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1-3,5-17,19-20">builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration["Jwt:Secret"]!))
+        };
+    });
+
+app.UseAuthentication();   // must come before UseAuthorization
+app.UseAuthorization();</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Middleware order matters: <code class="inline">UseAuthentication</code> populates <code class="inline">HttpContext.User</code>; <code class="inline">UseAuthorization</code> then decides whether the authenticated user is allowed to call the endpoint.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Token Validation Parameters (Layout 3)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What Each Validation Parameter Does</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>What it checks</th>
+              <th>Effect if invalid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code class="inline">ValidateIssuer</code></td><td>Token <code class="inline">iss</code> claim matches <code class="inline">ValidIssuer</code></td><td>401 Unauthorized</td></tr>
+            <tr><td><code class="inline">ValidateAudience</code></td><td>Token <code class="inline">aud</code> claim matches <code class="inline">ValidAudience</code></td><td>401 Unauthorized</td></tr>
+            <tr><td><code class="inline">ValidateLifetime</code></td><td>Current time is before <code class="inline">exp</code> claim</td><td>401 Unauthorized</td></tr>
+            <tr><td><code class="inline">ValidateIssuerSigningKey</code></td><td>Signature verifies with the configured key</td><td>401 Unauthorized</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">All four should be true in production</div>
+          Disabling any of these checks weakens the security guarantee. Setting <code class="inline">ValidateLifetime = false</code> means expired tokens are permanently valid — a major risk if a token is ever compromised. Always keep all four enabled.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Key Concept (Layout 6)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "Authentication asks who you are.<br>Authorization asks what you are allowed to do."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
+          JWT authentication answers the first question by verifying the token's signature and claims. The <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">[Authorize]</code> attribute answers the second. Both must be present in the middleware pipeline and they must run in that order.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Section Divider: Registration & Login             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Registration &amp; Login Endpoints</div>
+          <div class="section-desc">With the middleware configured, the next step is to give users a way to register and obtain a token. This section builds the User entity, hashes passwords with BCrypt, and writes the two auth endpoints that every protected API needs.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The User entity</li>
+            <li>Hashing passwords with BCrypt</li>
+            <li>POST /api/auth/register</li>
+            <li>POST /api/auth/login</li>
+            <li>Generating a signed JWT token</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — User Entity (Layout 4)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The User Entity</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The <code class="inline">User</code> entity stores only what is needed to authenticate and authorize a caller. Note the naming convention: <code class="inline">PasswordHash</code>, not <code class="inline">Password</code>.</p>
+            <ul style="font-size:0.93rem;">
+              <li><strong>Email</strong> — the login identifier; must be unique across all users</li>
+              <li><strong>PasswordHash</strong> — the BCrypt output of the plain-text password. The plain-text password is never stored anywhere</li>
+              <li><strong>Role</strong> — a string claim embedded in the token, used later for authorization policies</li>
+            </ul>
+            <div class="callout warning" style="margin-top:0.9rem;">
+              <div class="callout-label">Separate from TaskItem</div>
+              Keep the User entity in its own file. Mixing auth concerns into the task entity creates coupling that will cause problems when adding roles, refresh tokens, or OAuth later.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Models/User.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">public class User
+{
+    public int Id { get; set; }
+
+    public string Email { get; set; } = "";
+
+    public string PasswordHash { get; set; } = "";
+
+    public string Role { get; set; } = "User";
+}</code></pre>
+            <div class="callout info" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">DbContext</div>
+              Add <code class="inline">DbSet&lt;User&gt; Users</code> to your <code class="inline">AppDbContext</code> and run a migration to create the Users table before implementing the endpoints.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Register Endpoint (Layout 5)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">POST /api/auth/register</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/AuthController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1-3,9-10,12-14">[ApiController]
+[Route("api/auth")]
+public class AuthController : ControllerBase
+{
+    private readonly AppDbContext _context;
+    private readonly IConfiguration _config;
+
+    public AuthController(AppDbContext context, IConfiguration config)
+        => (_context, _config) = (context, config);
+
+    [HttpPost("register")]
+    public async Task&lt;IActionResult&gt; Register([FromBody] RegisterRequest req)
+    {
+        if (await _context.Users.AnyAsync(u => u.Email == req.Email))
+            return Conflict(new { message = "Email already in use." });
+
+        var user = new User
+        {
+            Email = req.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password),
+            Role = "User"
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "Registration successful." });
+    }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;"><code class="inline">BCrypt.HashPassword</code> handles salt generation automatically. The resulting hash is a self-contained string that includes the algorithm, cost factor, salt, and hash — everything needed to verify the password later.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Login Endpoint (Layout 5)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">POST /api/auth/login</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/AuthController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="3-4,6-7,9">[HttpPost("login")]
+public async Task&lt;IActionResult&gt; Login([FromBody] LoginRequest req)
+{
+    var user = await _context.Users
+        .FirstOrDefaultAsync(u => u.Email == req.Email);
+
+    if (user is null || !BCrypt.Net.BCrypt.Verify(req.Password, user.PasswordHash))
+        return Unauthorized(new { message = "Invalid credentials." });
+
+    var token = GenerateToken(user);
+    return Ok(new { token });
+}</code></pre>
+        <div class="callout error" style="margin-top:0.9rem;">
+          <div class="callout-label">Generic error message</div>
+          Always return the same message for both "user not found" and "wrong password". Distinguishing between them tells an attacker whether an email address is registered — a user enumeration vulnerability. The client receives only "Invalid credentials." regardless of which check failed.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Generating a Token (Layout 5)                    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Generating a Signed JWT Token</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/AuthController.cs — GenerateToken</div>
+        <pre><code class="language-csharp" style="font-size:0.80rem;" data-line-numbers="3-6,8-9,11-17">private string GenerateToken(User user)
+{
+    var claims = new[]
+    {
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, user.Role)
+    };
+
+    var key = new SymmetricSecurityKey(
+        Encoding.UTF8.GetBytes(_config["Jwt:Secret"]!));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    var token = new JwtSecurityToken(
+        issuer: _config["Jwt:Issuer"],
+        audience: _config["Jwt:Audience"],
+        claims: claims,
+        expires: DateTime.UtcNow.AddMinutes(
+            int.Parse(_config["Jwt:ExpiryMinutes"]!)),
+        signingCredentials: creds
+    );
+
+    return new JwtSecurityTokenHandler().WriteToken(token);
+}</code></pre>
+        <p style="font-size:0.83rem; color:var(--color-brand-dark); margin-top:0.5rem;">Claims embedded here (<code class="inline">NameIdentifier</code>, <code class="inline">Email</code>, <code class="inline">Role</code>) are readable inside any <code class="inline">[Authorize]</code>-protected action via <code class="inline">User.FindFirst(...)</code> without another database query.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Request DTOs (Layout 4)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Request DTOs for Register and Login</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Dedicated DTOs keep the controller action signature clean and allow adding FluentValidation rules independently of the User entity.</p>
+            <ul style="font-size:0.93rem;">
+              <li>Never bind directly to the <code class="inline">User</code> entity — it would expose the <code class="inline">PasswordHash</code> and <code class="inline">Role</code> fields to over-posting</li>
+              <li>Add <code class="inline">[Required]</code> and <code class="inline">[EmailAddress]</code> annotations (or FluentValidation rules) to both DTOs so malformed requests are rejected before the action runs</li>
+              <li>The <code class="inline">LoginRequest</code> intentionally mirrors <code class="inline">RegisterRequest</code> — they may diverge later if registration requires additional fields like a display name</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Models/AuthRequests.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.92rem;">public class RegisterRequest
+{
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = "";
+
+    [Required]
+    [MinLength(8)]
+    public string Password { get; set; } = "";
+}
+
+public class LoginRequest
+{
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = "";
+
+    [Required]
+    public string Password { get; set; } = "";
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Section Divider: Protecting Endpoints             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Protecting Endpoints</div>
+          <div class="section-desc">With tokens being issued, it is time to require them. The <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">[Authorize]</code> attribute instructs the authorization middleware to reject any request that does not present a valid Bearer token. This section covers placement, scope, and how to allow anonymous access to specific endpoints.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Applying [Authorize] at controller and action level</li>
+            <li>[AllowAnonymous] for public endpoints</li>
+            <li>What a 401 response looks like</li>
+            <li>Testing the protected flow in Postman</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — [Authorize] Placement (Layout 4)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Applying [Authorize] to the Tasks Controller</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Place <code class="inline">[Authorize]</code> on the controller class to protect every action in it by default:</p>
+            <ul style="font-size:0.93rem;">
+              <li>Any request without a valid Bearer token receives <strong>401 Unauthorized</strong> before the action code runs</li>
+              <li>Add <code class="inline">[AllowAnonymous]</code> to individual actions that should remain public (health checks, public read endpoints)</li>
+              <li>The auth controller itself must <strong>not</strong> carry <code class="inline">[Authorize]</code> — otherwise users could not reach the register or login endpoints to obtain a token</li>
+            </ul>
+            <div class="callout success" style="margin-top:0.9rem;">
+              <div class="callout-label">Controller-level is the safer default</div>
+              Applying <code class="inline">[Authorize]</code> at the controller level and using <code class="inline">[AllowAnonymous]</code> as an exception is safer than the reverse. You cannot accidentally leave an endpoint unprotected.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Controllers/TasksController.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="1,2">[Authorize]
+[ApiController]
+[Route("api/tasks")]
+public class TasksController : ControllerBase
+{
+    // All actions in this controller
+    // require a valid Bearer token.
+
+    [HttpGet]
+    public async Task&lt;IActionResult&gt; GetAll()
+    {
+        // ...
+    }
+
+    [HttpGet("{id}")]
+    public async Task&lt;IActionResult&gt; GetById(int id)
+    {
+        // ...
+    }
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Testing the Flow in Postman (Layout 3)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Testing the Protected Flow in Postman</div>
+        <div class="slide-rule"></div>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc"><code class="inline">POST /api/auth/register</code> with a JSON body containing <code class="inline">email</code> and <code class="inline">password</code>. Expect 200 with a success message.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc"><code class="inline">POST /api/auth/login</code> with the same credentials. Expect 200 with a <code class="inline">token</code> field in the response body. Copy the token value.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc"><code class="inline">GET /api/tasks</code> with no Authorization header. Expect <strong>401 Unauthorized</strong> — this confirms the endpoint is protected.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">In Postman, go to the Authorization tab, select <strong>Bearer Token</strong>, and paste the token. Send the same request again. Expect 200 with the task list.</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Modify one character in the token (breaking the signature) and send again. Expect 401 — this confirms signature validation is active.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Section Divider: Reading Claims                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Reading Claims from the Token</div>
+          <div class="section-desc">Once a request is authenticated, the claims embedded in the token are available on <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">HttpContext.User</code>. Controller actions can read the user ID or email from claims instead of passing them as query or body parameters — which would be a security risk.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>User.FindFirst() and User.Claims</li>
+            <li>Reading the current user ID from the token</li>
+            <li>The /me endpoint pattern</li>
+            <li>Using the user ID to scope data access</li>
+            <li>Connecting to the React frontend</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Reading Claims in a Controller (Layout 5)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Reading Claims Inside a Controller Action</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/AuthController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="1,3-5">[Authorize]
+[HttpGet("me")]
+public IActionResult GetCurrentUser()
+{
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var email  = User.FindFirst(ClaimTypes.Email)?.Value;
+    var role   = User.FindFirst(ClaimTypes.Role)?.Value;
+
+    return Ok(new { userId, email, role });
+}</code></pre>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">User.FindFirst vs User.Claims</div>
+          <code class="inline">User.FindFirst(type)</code> returns the first claim of the given type — use it when you expect exactly one value (user ID, email). <code class="inline">User.FindAll(type)</code> returns all claims of that type — needed if a user can have multiple roles. <code class="inline">User.Claims</code> exposes the full collection if you need to inspect everything.
+        </div>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">The <code class="inline">?.</code> null-conditional operator is important here — if the middleware is misconfigured and <code class="inline">FindFirst</code> returns null, the action returns null values rather than throwing a NullReferenceException.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Scoping Data to the Current User (Layout 4)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Scoping Data Access to the Current User</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Reading the user ID from the token — rather than from a query parameter — prevents a user from requesting another user's data by changing a number in the URL:</p>
+            <ul style="font-size:0.93rem;">
+              <li>Extract <code class="inline">userId</code> from the token claims at the start of the action</li>
+              <li>Filter every query by that user ID — the caller cannot override it</li>
+              <li>Return 403 Forbidden (not 404) if the resource exists but belongs to a different user — this reveals less information about what exists</li>
+              <li>This pattern is the foundation of row-level security in the Task API</li>
+            </ul>
+            <div class="callout warning" style="margin-top:0.9rem; font-size:0.88rem;">
+              <div class="callout-label">Never trust the request body for the user ID</div>
+              If the create-task request contains a <code class="inline">userId</code> field, ignore it. The real user ID comes from the token. Accepting it from the body would let any authenticated user create tasks on behalf of another user.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Controllers/TasksController.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="3-5,7-8">[Authorize]
+[HttpGet]
+public async Task&lt;IActionResult&gt; GetAll()
+{
+    var userIdStr = User.FindFirst(
+        ClaimTypes.NameIdentifier)?.Value;
+
+    if (!int.TryParse(userIdStr, out var userId))
+        return Unauthorized();
+
+    var tasks = await _context.Tasks
+        .Where(t => t.UserId == userId)
+        .ToListAsync();
+
+    return Ok(tasks);
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Connecting to React (Layout 4)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Connecting the Token to the React Frontend</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.93rem; margin-bottom:0.8rem;">The same flow the students have consumed as React developers now makes sense from the other side:</p>
+            <ul style="font-size:0.93rem;">
+              <li>After a successful login response, store the token in <code class="inline">localStorage</code> or a React context (avoid <code class="inline">localStorage</code> if XSS is a concern — prefer <code class="inline">httpOnly</code> cookies in production)</li>
+              <li>Attach the token to every subsequent request via the <code class="inline">Authorization: Bearer &lt;token&gt;</code> header</li>
+              <li>When the server returns 401, clear the stored token and redirect to the login page</li>
+              <li>The <code class="inline">exp</code> claim tells the frontend exactly when the token expires — decode it client-side to proactively refresh before the user gets a 401 mid-session</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">React — api.js (example)</div>
+            <pre><code class="language-javascript" style="font-size:0.88rem;">// After login, store the token
+localStorage.setItem('token', data.token);
+
+// Attach to every request
+const token = localStorage.getItem('token');
+const response = await fetch('/api/tasks', {
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  }
+});
+
+// Handle 401 — token expired or invalid
+if (response.status === 401) {
+  localStorage.removeItem('token');
+  navigate('/login');
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Lab (numbered steps)                             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Add Auth to the Task API</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Implement the complete authentication flow and verify the protected endpoint behaviour end-to-end in Postman.</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Create the <code class="inline">User</code> entity (<code class="inline">Id</code>, <code class="inline">Email</code>, <code class="inline">PasswordHash</code>, <code class="inline">Role</code>), add <code class="inline">DbSet&lt;User&gt;</code> to <code class="inline">AppDbContext</code>, and run a migration</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Implement <code class="inline">POST /api/auth/register</code> — hash the password with BCrypt, reject duplicate emails with 409 Conflict</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Configure <code class="inline">AddAuthentication / AddJwtBearer</code> in <code class="inline">Program.cs</code> with all four validation parameters enabled; add <code class="inline">UseAuthentication</code> and <code class="inline">UseAuthorization</code> in the correct order</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">Implement <code class="inline">POST /api/auth/login</code> — verify the password with <code class="inline">BCrypt.Verify</code>, return a signed JWT token on success</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Add <code class="inline">[Authorize]</code> to the <code class="inline">TasksController</code>; test the full flow in Postman: register &rarr; login &rarr; copy token &rarr; call protected endpoint</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">6</span>
+            <span class="step-desc">Verify that calling a protected endpoint without a token returns 401, and that a tampered token also returns 401</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>AddAuthentication / AddJwtBearer wires up token validation</strong> — all four parameters (issuer, audience, lifetime, signing key) should be enabled; middleware order matters: <code class="inline">UseAuthentication</code> before <code class="inline">UseAuthorization</code></li>
+          <li><strong>Passwords are stored as BCrypt hashes, never plain text</strong> — <code class="inline">BCrypt.HashPassword</code> on register, <code class="inline">BCrypt.Verify</code> on login; the secret value is never retrievable from the hash</li>
+          <li><strong>[Authorize] enforces authentication at the controller or action level</strong> — requests without a valid Bearer token receive 401 before action code runs; use <code class="inline">[AllowAnonymous]</code> for public endpoints</li>
+          <li><strong>Claims in the token replace database lookups for identity</strong> — <code class="inline">User.FindFirst(ClaimTypes.NameIdentifier)</code> gives you the user ID inside any protected action without an additional query</li>
+          <li><strong>Scope every data query to the authenticated user's ID from the token</strong> — never accept a user ID from the request body or URL for ownership decisions</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 20 — Authorization: Roles &amp; Policies</strong></p>
+        <ul>
+          <li>Session 19 authenticated the caller — the API now knows <em>who</em> is making the request. Session 20 adds <strong>authorization</strong>: deciding <em>what</em> they are allowed to do based on their role or other attributes</li>
+          <li>You will use the <code class="inline">Role</code> claim embedded in the token to restrict endpoints to specific roles with <code class="inline">[Authorize(Roles = "Admin")]</code></li>
+          <li>Policy-based authorization allows richer rules beyond roles — for example, "only the owner of a task may delete it" — implemented via custom <code class="inline">IAuthorizationRequirement</code> and handler classes</li>
+          <li>The <code class="inline">UserId</code> claim added in this session becomes the key for ownership-based policies in Session 20</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the lab and assignment. Make sure your Task API returns 401 for unauthenticated requests and correctly scopes task queries to the authenticated user's ID from the token claims.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Add full JWT authentication to the Task Manager API and verify the complete authenticated flow.</strong>
+        </p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
+        <ul style="font-size:0.92rem;">
+          <li>Implement <code class="inline">POST /api/auth/register</code> and <code class="inline">POST /api/auth/login</code> with BCrypt password hashing and a <code class="inline">GenerateToken</code> helper that embeds the user ID, email, and role as claims</li>
+          <li>Configure <code class="inline">AddAuthentication / AddJwtBearer</code> with all validation parameters and the correct middleware order in <code class="inline">Program.cs</code></li>
+          <li>Protect the entire <code class="inline">TasksController</code> with <code class="inline">[Authorize]</code> and scope all task queries to the authenticated user's ID read from the token claims</li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-top:0.2rem;">
+          <li>Registering with a valid email and password returns 200; registering again with the same email returns 409</li>
+          <li>Logging in with correct credentials returns a JWT token; incorrect credentials always return 401 with "Invalid credentials."</li>
+          <li>Calling <code class="inline">GET /api/tasks</code> without a token returns 401; with a valid token returns 200 with only that user's tasks</li>
+          <li>Calling <code class="inline">GET /api/tasks</code> with a tampered token (one character changed) returns 401</li>
+          <li>Creating a task while authenticated stores the correct <code class="inline">UserId</code> from the token, not from the request body</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.7rem;">
+          <div class="callout-label">Bonus</div>
+          Add the Swagger UI JWT button so you can authenticate directly in the Swagger UI without switching to Postman. See Session 13 for the <code class="inline">AddSecurityDefinition</code> configuration that enables the "Authorize" button in Swagger.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 27 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 19 — Implementing JWT Auth in .NET</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

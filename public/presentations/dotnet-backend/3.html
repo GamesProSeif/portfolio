@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Session 03 — First .NET Web API &amp; Project Architecture</title>
+  <title>Session 03 — C# Fundamentals: Types, Control Flow &amp; Arrays</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,115 +427,29 @@
       margin-bottom: 0.4rem;
     }
 
-    /* ── Lifetime cards ── */
-    .lifetime-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .lifetime-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
-      padding: 1.1rem;
-    }
-    .lifetime-card.highlight {
-      background: var(--color-brand-light);
-      border-color: var(--color-brand);
-    }
-    .lifetime-card-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 500;
-      font-size: 1rem;
-      color: var(--color-navy);
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .lifetime-card.highlight .lifetime-card-name {
-      color: var(--color-brand-dark);
-      border-bottom-color: var(--color-brand);
-    }
-    .lifetime-card-desc {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
-      color: var(--color-text-muted);
-      line-height: 1.55;
-    }
-    .lifetime-card.highlight .lifetime-card-desc {
-      color: var(--color-brand-dark);
-    }
-    .lifetime-tag {
+    /* ── Type badge chips ── */
+    .type-chip {
       display: inline-block;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      background: var(--color-brand);
-      color: #fff;
-      border-radius: 3px;
-      padding: 1px 6px;
-      margin-bottom: 0.5rem;
-    }
-
-    /* ── Endpoint cards ── */
-    .endpoint-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 0.5rem;
-    }
-    .endpoint-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
-      padding: 0.9rem 1.1rem;
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-    }
-    .endpoint-method {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82rem;
       font-weight: 500;
-      color: #FFFFFF;
-      background: var(--color-navy-mid);
-      border-radius: 3px;
-      padding: 2px 8px;
-      flex-shrink: 0;
-    }
-    .endpoint-path {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
+      background: var(--color-brand-light);
       color: var(--color-brand-dark);
-      font-weight: 500;
-      flex-shrink: 0;
+      border: 1px solid var(--color-brand);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin: 2px 3px 2px 0;
     }
-    .endpoint-desc {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
-      color: var(--color-text-muted);
+    .type-chip.ref {
+      background: #EBF3FA;
+      color: var(--color-info);
+      border-color: var(--color-info);
     }
 
-    /* ── Placeholder ── */
-    .placeholder {
-      border: 2px dashed var(--color-brand);
-      background: var(--color-brand-light);
-      border-radius: 6px;
-      padding: 1.5rem;
-      text-align: center;
-      color: var(--color-brand-dark);
-    }
-    .placeholder-label {
-      display: block;
-      font-family: 'Inter', sans-serif;
-      font-weight: 700;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
+    /* ── Agenda table smaller font ── */
+    .agenda-table td, .agenda-table th {
+      font-size: 0.88rem;
+      padding: 0.4rem 0.8rem;
     }
   </style>
 </head>
@@ -549,14 +463,14 @@
       <section class="title-slide">
         <div class="title-top-bar"></div>
         <div class="title-content">
-          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
           <div class="title-course-name">Backend Development with .NET</div>
           <div class="title-session-label">Session 03</div>
           <div class="title-rule"></div>
-          <div class="title-main">First .NET Web API<br>&amp; Project Architecture</div>
+          <div class="title-main">C# Fundamentals<br>Types, Control Flow &amp; Arrays</div>
           <div class="title-meta">
             Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
-            Week 2 &nbsp;&middot;&nbsp; 2.5 hours
+            Week 2 &nbsp;&middot;&nbsp; 2 hours
           </div>
         </div>
         <div class="title-bottom-bar"></div>
@@ -568,660 +482,622 @@
       <section class="content-slide">
         <div class="slide-heading">Session Goals</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1.2rem;">By the end of this session, you will be able to:</p>
         <ul>
-          <li>Create and run a .NET Web API project from scratch using the CLI</li>
-          <li>Navigate and explain every file produced by <code class="inline">dotnet new webapi</code></li>
-          <li>Describe the layered architecture — Controllers, Services, and Repositories — and explain why each layer exists</li>
-          <li>Understand what dependency injection is, how .NET's container works, and the three service lifetimes</li>
-          <li>Write a working <code class="inline">TasksController</code> with GET and POST endpoints using in-memory data</li>
+          <li>Declare variables using the correct data type for a given situation</li>
+          <li>Convert between types safely using built-in methods</li>
+          <li>Control program flow using conditions and loops</li>
+          <li>Declare, initialize, and traverse arrays</li>
         </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- SLIDE 3 — Agenda (Layout 3)                                 -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-heading">Agenda</div>
         <div class="slide-rule"></div>
-        <table>
+        <table class="agenda-table">
           <thead>
-            <tr>
-              <th>Time</th>
-              <th>Segment</th>
-              <th>Type</th>
-              <th>Duration</th>
-            </tr>
+            <tr><th>Time</th><th>Topic</th><th>Type</th><th>Duration</th></tr>
           </thead>
           <tbody>
-            <tr><td>0:00</td><td>Tour of the generated project</td><td>Demo</td><td>20 min</td></tr>
-            <tr><td>0:20</td><td>Middleware pipeline explained</td><td>Theory</td><td>15 min</td></tr>
-            <tr><td>0:35</td><td>Layered architecture — the why</td><td>Theory</td><td>20 min</td></tr>
-            <tr><td>0:55</td><td>Dependency injection in .NET</td><td>Theory + Demo</td><td>25 min</td></tr>
-            <tr><td>1:20</td><td>Break</td><td>—</td><td>10 min</td></tr>
-            <tr><td>1:30</td><td>Build the first TasksController</td><td>Lab</td><td>40 min</td></tr>
-            <tr><td>2:10</td><td>Code review &amp; discussion</td><td>Discussion</td><td>20 min</td></tr>
+            <tr><td>0:00</td><td>Variables &amp; data types</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>0:25</td><td>Type conversion</td><td>Theory + Demo</td><td>15 min</td></tr>
+            <tr><td>0:40</td><td>Conditions: if/else &amp; switch</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>1:00</td><td>Break</td><td>—</td><td>5 min</td></tr>
+            <tr><td>1:05</td><td>Loops: for, while, foreach</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>1:25</td><td>Arrays</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>1:45</td><td>Exercises</td><td>Exercise</td><td>15 min</td></tr>
           </tbody>
         </table>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 4 — Section Divider: Tour (Layout 2)                  -->
+      <!-- SLIDE 4 — Section Divider: Variables & Data Types           -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
-          <div class="section-label">Section 1 of 6</div>
+          <div class="section-label">Section 1 of 5</div>
           <div class="section-rule"></div>
-          <div class="section-title">Tour of the Generated Project</div>
-          <div class="section-desc">Walk through every file that <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; color:rgba(255,255,255,0.9);">dotnet new webapi</code> creates and understand what each one does before writing a single line of your own code</div>
+          <div class="section-title">Variables &amp;<br>Data Types</div>
+          <div class="section-desc">C# is statically typed — every variable has a fixed type set at compile time.</div>
         </div>
         <div class="section-right">
-          <div class="section-right-label">In this section</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>The project file structure</li>
-            <li><code class="inline">Program.cs</code> — the entry point</li>
-            <li><code class="inline">appsettings.json</code> and <code class="inline">launchSettings.json</code></li>
-            <li>The sample controller to delete</li>
+          <div class="section-right-label">You will learn</div>
+          <ul style="padding-left:1rem;">
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">Value types vs reference types</li>
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">Type inference with <code class="inline">var</code></li>
+            <li style="font-size:0.92rem;">String interpolation &amp; verbatim strings</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 5 — Project File Structure (Layout 5)                 -->
+      <!-- SLIDE 5 — Value Types (Layout 3 with table)                 -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">The Generated File Structure</div>
+        <div class="slide-heading">Value Types</div>
         <div class="slide-rule"></div>
-        <div class="file-path-label">dotnet new webapi -n TaskManagerApi.Api</div>
-        <pre><code class="language-bash" style="font-size:0.88rem;">TaskManagerApi.Api/
-├── Controllers/
-│   └── WeatherForecastController.cs   # delete this — sample only
-├── Properties/
-│   └── launchSettings.json            # controls how the app starts locally
-├── appsettings.json                   # configuration values
-├── appsettings.Development.json       # dev overrides (gitignored by default)
-├── Program.cs                         # entry point — services + pipeline wired here
-└── TaskManagerApi.Api.csproj          # project file, NuGet package references</code></pre>
-        <div class="callout warning" style="margin-top:0.9rem;">
-          <div class="callout-label">First thing to do</div>
-          Delete <code class="inline">WeatherForecastController.cs</code> and its model. It is a scaffold sample with no relation to your project.
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:1rem;">Stored directly on the stack. Each variable holds its own copy of the data.</p>
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code class="inline">int</code></td><td>32-bit integer</td><td><code class="inline">int age = 25;</code></td></tr>
+            <tr><td><code class="inline">long</code></td><td>64-bit integer</td><td><code class="inline">long pop = 8_000_000_000L;</code></td></tr>
+            <tr><td><code class="inline">double</code></td><td>64-bit floating point</td><td><code class="inline">double price = 9.99;</code></td></tr>
+            <tr><td><code class="inline">decimal</code></td><td>128-bit high-precision</td><td><code class="inline">decimal tax = 0.15m;</code></td></tr>
+            <tr><td><code class="inline">bool</code></td><td>true or false</td><td><code class="inline">bool isActive = true;</code></td></tr>
+            <tr><td><code class="inline">char</code></td><td>Single Unicode character</td><td><code class="inline">char grade = 'A';</code></td></tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Tip</div>
+          Use <code class="inline">decimal</code> for money and financial calculations — <code class="inline">double</code> has floating-point rounding errors.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 6 — Program.cs Walkthrough (Layout 4)                 -->
+      <!-- SLIDE 6 — Reference Types & var (Layout 4)                  -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Program.cs — The Entry Point</div>
+        <div class="slide-heading">Reference Types &amp; Type Inference</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <ul>
-              <li><strong>Builder phase</strong> — register all services into the DI container before the app starts</li>
-              <li><strong>Pipeline phase</strong> — add middleware in the exact order requests should flow through</li>
-              <li><code class="inline">app.MapControllers()</code> — connects incoming URLs to controller action methods</li>
-              <li><code class="inline">app.Run()</code> — starts the HTTP server and blocks until the process exits</li>
-            </ul>
-            <div class="callout info" style="margin-top:1rem;">
-              <div class="callout-label">Minimal hosting model</div>
-              .NET 6+ uses a top-level <code class="inline">Program.cs</code> with no <code class="inline">Startup</code> class. Everything is in one file.
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;"><strong>Reference types</strong> — stored on the heap; the variable holds a reference, not the value itself.</p>
+            <table style="margin-bottom:1rem;">
+              <thead><tr><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code class="inline">string</code></td><td>Sequence of characters</td></tr>
+                <tr><td><code class="inline">object</code></td><td>Base of every .NET type</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:0.92rem;"><strong><code class="inline">var</code></strong> — the compiler infers the type. The type is still fixed at compile time.</p>
+            <div class="callout warning" style="margin-top:0.8rem;">
+              <div class="callout-label">Remember</div>
+              <code class="inline">var</code> is not dynamic. You cannot change the type after assignment.
             </div>
           </div>
           <div class="col-right">
-            <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="3-5,15-17">var builder = WebApplication.CreateBuilder(args);
+            <pre><code class="language-csharp" style="font-size:0.88rem;">// Reference types
+string name = "Alice";
+object anything = 42;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Type inference with var
+var count = 10;        // int
+var price = 9.99m;     // decimal
+var label = "Hello";   // string
 
-var app = builder.Build();
+// This would be a compile error:
+// var x = 1;
+// x = "hello";  // cannot change type</code></pre>
+          </div>
+        </div>
+      </section>
 
-if (app.Environment.IsDevelopment())
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — String Interpolation (Layout 5)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Strings: Interpolation &amp; Verbatim</div>
+        <div class="slide-rule"></div>
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="1-4,7-9">// String interpolation — embed expressions with $""
+string firstName = "Alice";
+int year = 2025;
+string message = $"Hello, {firstName}! Born in {year - 25}.";
+// → "Hello, Alice! Born in 2000."
+
+// Verbatim string — backslashes are treated literally, no escape needed
+string path = @"C:\Users\Alice\Documents\notes.txt";
+string multiLine = @"Line one
+Line two
+Line three";</code></pre>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Note</div>
+          You can combine both: <code class="inline">$@"C:\Users\{userName}\files"</code> gives interpolation inside a verbatim string.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Section Divider: Type Conversion                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Type Conversion</div>
+          <div class="section-desc">Moving data between types safely — and knowing when it can go wrong.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">You will learn</div>
+          <ul style="padding-left:1rem;">
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">Implicit vs explicit conversion</li>
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">The <code class="inline">Convert</code> class</li>
+            <li style="font-size:0.92rem;"><code class="inline">Parse</code> and <code class="inline">TryParse</code></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Implicit vs Explicit (Layout 4)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Implicit vs Explicit Conversion</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;"><strong>Implicit</strong> — safe, no data loss. The compiler does it automatically when the destination type can hold all values of the source type.</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">int x = 100;
+long y = x;      // int → long
+double d = x;    // int → double</code></pre>
+            <p style="font-size:0.92rem; margin: 0.9rem 0 0.5rem;"><strong>Explicit cast</strong> — possible data loss. You must declare it with <code class="inline">(type)</code>.</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">double pi = 3.14159;
+int truncated = (int)pi;
+// truncated = 3 — decimal part lost!</code></pre>
+          </div>
+          <div class="col-right">
+            <div class="callout warning" style="margin-bottom:1rem;">
+              <div class="callout-label">Caution</div>
+              Casting a <code class="inline">long</code> to <code class="inline">int</code> will silently overflow if the value is too large. The compiler will not warn you.
+            </div>
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;"><strong><code class="inline">Convert</code> class</strong> — converts between unrelated types. Throws on failure.</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">int n = Convert.ToInt32("42");
+bool b = Convert.ToBoolean("true");
+double d = Convert.ToDouble("3.14");</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Parse & TryParse (Layout 5)                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Parse &amp; TryParse</div>
+        <div class="slide-rule"></div>
+        <pre><code class="language-csharp" style="font-size:0.9rem;" data-line-numbers="1-2,5-13">// Parse — throws FormatException if the string is not a valid number
+int a = int.Parse("100");   // fine
+int b = int.Parse("abc");   // throws!
+
+// TryParse — returns false instead of throwing; always prefer for user input
+string userInput = Console.ReadLine();
+
+if (int.TryParse(userInput, out int result))
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Console.WriteLine($"You entered: {result}");
+}
+else
+{
+    Console.WriteLine("That is not a valid integer.");
+}</code></pre>
+        <div class="callout success" style="margin-top:0.8rem;">
+          <div class="callout-label">Best Practice</div>
+          Always use <code class="inline">TryParse</code> when handling any input you did not create yourself — user input, file reads, API responses.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Section Divider: Conditions                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Conditions</div>
+          <div class="section-desc">Branching based on values — the foundation of every decision in code.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">You will learn</div>
+          <ul style="padding-left:1rem;">
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;"><code class="inline">if</code> / <code class="inline">else if</code> / <code class="inline">else</code></li>
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">Ternary operator <code class="inline">? :</code></li>
+            <li style="font-size:0.92rem;"><code class="inline">switch</code> statement &amp; switch expression</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — if/else & Ternary (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">if / else &amp; Ternary Operator</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Multi-branch with <code class="inline">if</code></p>
+            <pre><code class="language-csharp" style="font-size:0.85rem;">int score = 75;
+
+if (score >= 90)
+{
+    Console.WriteLine("A");
+}
+else if (score >= 75)
+{
+    Console.WriteLine("B");
+}
+else
+{
+    Console.WriteLine("C or below");
+}</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Ternary — single-expression two-branch</p>
+            <pre><code class="language-csharp" style="font-size:0.85rem;">// condition ? valueIfTrue : valueIfFalse
+string label = score >= 50 ? "Pass" : "Fail";
+
+// Useful for assignments and return values
+bool isAdult = age >= 18;
+string message = isAdult
+    ? "Access granted"
+    : "Access denied";</code></pre>
+            <div class="callout warning" style="margin-top:0.8rem;">
+              <div class="callout-label">Tip</div>
+              Keep ternary expressions simple. If the branches are complex, use a full <code class="inline">if</code> statement instead.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — switch statement & expression (Layout 4)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">switch Statement &amp; switch Expression</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Classic <code class="inline">switch</code> statement</p>
+            <pre><code class="language-csharp" style="font-size:0.82rem;">string day = "Saturday";
+
+switch (day)
+{
+    case "Saturday":
+    case "Sunday":
+        Console.WriteLine("Weekend");
+        break;
+    case "Monday":
+        Console.WriteLine("Back to work");
+        break;
+    default:
+        Console.WriteLine("Weekday");
+        break;
+}</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">switch expression (C# 8+) — returns a value</p>
+            <pre><code class="language-csharp" style="font-size:0.82rem;">string type = day switch
+{
+    "Saturday" or "Sunday" => "Weekend",
+    "Monday"               => "Back to work",
+    _                      => "Weekday"
+};
+
+// Works great for mapping enums too:
+string label = status switch
+{
+    TaskStatus.Pending    => "Not started",
+    TaskStatus.Completed  => "Done",
+    _                     => "In progress"
+};</code></pre>
+            <div class="callout error" style="margin-top:0.6rem;">
+              <div class="callout-label">Common Mistake</div>
+              Forgetting <code class="inline">break</code> in a <code class="inline">switch</code> statement causes fall-through to the next case.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Section Divider: Loops                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Loops</div>
+          <div class="section-desc">Repeating operations — the engine behind iteration, data processing, and control flow.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">You will learn</div>
+          <ul style="padding-left:1rem;">
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;"><code class="inline">for</code>, <code class="inline">while</code>, <code class="inline">do-while</code></li>
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;"><code class="inline">foreach</code> for collections</li>
+            <li style="font-size:0.92rem;"><code class="inline">break</code> and <code class="inline">continue</code></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — for & while (Layout 4)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">for &amp; while Loops</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;"><code class="inline">for</code> — when you know the number of iterations</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">// init ; condition ; update
+for (int i = 0; i &lt; 5; i++)
+{
+    Console.WriteLine(i);
+}
+// Prints: 0 1 2 3 4
+
+// Nested — multiplication table
+for (int i = 1; i &lt;= 3; i++)
+    for (int j = 1; j &lt;= 3; j++)
+        Console.WriteLine($"{i}x{j}={i*j}");</code></pre>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;"><code class="inline">while</code> — check condition before each iteration</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">int count = 0;
+while (count &lt; 5)
+{
+    Console.WriteLine(count);
+    count++;
 }
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();</code></pre>
+// do-while — body runs at least once
+int input;
+do
+{
+    Console.Write("Enter a positive number: ");
+    input = int.Parse(Console.ReadLine());
+} while (input &lt;= 0);</code></pre>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 7 — Section Divider: Middleware (Layout 2)            -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="section-divider">
-        <div class="section-left">
-          <div class="section-label">Section 2 of 6</div>
-          <div class="section-rule"></div>
-          <div class="section-title">Middleware Pipeline</div>
-          <div class="section-desc">Every incoming HTTP request travels through a chain of middleware components before reaching your controller. Understanding this chain is essential for adding auth, logging, and error handling.</div>
-        </div>
-        <div class="section-right">
-          <div class="section-right-label">In this section</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>What middleware is</li>
-            <li>The request / response pipeline</li>
-            <li>Short-circuiting the pipeline</li>
-            <li>Order matters</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 8 — Middleware Pipeline Diagram (Layout 3 + SVG)      -->
+      <!-- SLIDE 16 — foreach & break/continue (Layout 4)              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">The Middleware Pipeline</div>
-        <div class="slide-rule"></div>
-
-        <!-- Inline SVG pipeline diagram -->
-        <svg viewBox="0 0 820 142" style="width:100%; height:auto; max-height:128px; margin-bottom:1rem;">
-          <!-- Request pill -->
-          <rect x="0" y="43" width="80" height="36" rx="18" fill="#E0D5CF" stroke="#B8694E" stroke-width="1.5"/>
-          <text x="40" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#2A1F1A">Request</text>
-          <!-- Arrow 1 -->
-          <line x1="80" y1="61" x2="97" y2="61" stroke="#B8694E" stroke-width="1.5"/>
-          <polygon points="97,57 106,61 97,65" fill="#B8694E"/>
-          <!-- HTTPS box -->
-          <rect x="106" y="36" width="126" height="50" rx="4" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
-          <text x="169" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">HTTPS</text>
-          <text x="169" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Redirection</text>
-          <!-- Arrow 2 -->
-          <line x1="232" y1="61" x2="249" y2="61" stroke="#B8694E" stroke-width="1.5"/>
-          <polygon points="249,57 258,61 249,65" fill="#B8694E"/>
-          <!-- Authorization box (warning-tinted) -->
-          <rect x="258" y="36" width="126" height="50" rx="4" fill="#FBF4E3" stroke="#8A5C00" stroke-width="1.5"/>
-          <text x="321" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Authorization</text>
-          <text x="321" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8A5C00">may return 401</text>
-          <!-- Short-circuit arrow down from Auth -->
-          <line x1="321" y1="86" x2="321" y2="108" stroke="#8A5C00" stroke-width="1.2" stroke-dasharray="3,3"/>
-          <polygon points="317,108 321,116 325,108" fill="#8A5C00"/>
-          <text x="321" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8A5C00">short-circuit</text>
-          <!-- Arrow 3 -->
-          <line x1="384" y1="61" x2="401" y2="61" stroke="#B8694E" stroke-width="1.5"/>
-          <polygon points="401,57 410,61 401,65" fill="#B8694E"/>
-          <!-- Routing box -->
-          <rect x="410" y="36" width="108" height="50" rx="4" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
-          <text x="464" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Routing</text>
-          <!-- Arrow 4 -->
-          <line x1="518" y1="61" x2="535" y2="61" stroke="#B8694E" stroke-width="1.5"/>
-          <polygon points="535,57 544,61 535,65" fill="#B8694E"/>
-          <!-- Controller box (brand-highlighted) -->
-          <rect x="544" y="31" width="136" height="60" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="2"/>
-          <text x="612" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#8F4A34">Controller</text>
-          <text x="612" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#8F4A34">your code runs here</text>
-          <!-- Arrow 5 (success green) -->
-          <line x1="680" y1="61" x2="697" y2="61" stroke="#2E6B4F" stroke-width="1.5"/>
-          <polygon points="697,57 706,61 697,65" fill="#2E6B4F"/>
-          <!-- Response pill (green) -->
-          <rect x="706" y="43" width="90" height="36" rx="18" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
-          <text x="751" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#2E6B4F">Response</text>
-        </svg>
-
-        <ul style="font-size:0.95rem;">
-          <li>Middleware is code that runs on <strong>every request</strong> in a defined order</li>
-          <li>Each component can inspect, modify, or <strong>short-circuit</strong> the pipeline — returning a response before reaching the next step</li>
-          <li>The order you call <code class="inline">app.UseXxx()</code> in <code class="inline">Program.cs</code> is the order they execute</li>
-          <li>You will add custom middleware in Session 05 (error handling) and Session 16 (rate limiting, CORS)</li>
-        </ul>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 9 — Section Divider: Layered Architecture (Layout 2)  -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="section-divider">
-        <div class="section-left">
-          <div class="section-label">Section 3 of 6</div>
-          <div class="section-rule"></div>
-          <div class="section-title">Layered Architecture</div>
-          <div class="section-desc">All projects in this course follow a three-layer structure. Learning it now pays off in every session from Session 09 onwards.</div>
-        </div>
-        <div class="section-right">
-          <div class="section-right-label">In this section</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Controllers, Services, Repositories</li>
-            <li>Responsibility of each layer</li>
-            <li>Why separation matters</li>
-            <li>The folder structure to adopt now</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 10 — Three Layers (Layout 4 + SVG)                    -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Controllers &rarr; Services &rarr; Repositories</div>
+        <div class="slide-heading">foreach &amp; Loop Control</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <ul style="font-size:0.97rem;">
-              <li><strong>Controllers</strong> — handle HTTP in and out. Receive a request, call a service, return a response. No business logic lives here.</li>
-              <li><strong>Services</strong> — all business logic. No knowledge of HTTP, no knowledge of the database. Pure decision-making.</li>
-              <li><strong>Repositories</strong> — data access only. Issue queries, return entities. No business rules live here.</li>
-            </ul>
-            <div class="callout info" style="margin-top:1rem;">
-              <div class="callout-label">React analogy</div>
-              This mirrors separating your components (Controllers), hooks (Services), and API calls (Repositories) in a React app.
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;"><code class="inline">foreach</code> — cleanest way to iterate over a collection</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">string[] names = { "Alice", "Bob", "Carol" };
+
+foreach (string name in names)
+{
+    Console.WriteLine(name);
+}
+
+// Works on any IEnumerable — arrays,
+// lists, query results, and more.</code></pre>
+            <div class="callout info" style="margin-top:0.8rem;">
+              <div class="callout-label">Note</div>
+              Prefer <code class="inline">foreach</code> over index-based <code class="inline">for</code> whenever you do not need the index.
             </div>
           </div>
           <div class="col-right">
-            <svg viewBox="0 0 280 234" style="width:100%; height:auto; max-height:230px;">
-              <!-- Controllers layer -->
-              <rect x="10" y="0" width="260" height="58" rx="5" fill="#F2E0D8" stroke="#B8694E" stroke-width="2"/>
-              <text x="140" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#8F4A34">Controllers</text>
-              <text x="140" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#8F4A34">HTTP in / out &middot; no business logic</text>
-              <!-- Arrow 1 -->
-              <line x1="140" y1="58" x2="140" y2="78" stroke="#B8694E" stroke-width="1.5" stroke-dasharray="4,3"/>
-              <polygon points="135,78 140,87 145,78" fill="#B8694E"/>
-              <!-- Services layer -->
-              <rect x="10" y="87" width="260" height="58" rx="5" fill="#2E4057" stroke="#2E4057" stroke-width="2"/>
-              <text x="140" y="111" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Services</text>
-              <text x="140" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Business logic &middot; no HTTP knowledge</text>
-              <!-- Arrow 2 -->
-              <line x1="140" y1="145" x2="140" y2="165" stroke="#B8694E" stroke-width="1.5" stroke-dasharray="4,3"/>
-              <polygon points="135,165 140,174 145,165" fill="#B8694E"/>
-              <!-- Repositories layer -->
-              <rect x="10" y="174" width="260" height="58" rx="5" fill="#1B2A3B" stroke="#1B2A3B" stroke-width="2"/>
-              <text x="140" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Repositories</text>
-              <text x="140" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Data access only &middot; no business rules</text>
-            </svg>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;"><code class="inline">break</code> and <code class="inline">continue</code></p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="3,5">for (int i = 0; i &lt; 10; i++)
+{
+    if (i == 3) continue;  // skip 3
+    if (i == 7) break;     // stop at 7
+    Console.WriteLine(i);
+}
+// Prints: 0 1 2 4 5 6</code></pre>
+            <ul style="margin-top:0.8rem; font-size:0.9rem;">
+              <li><code class="inline">break</code> — exits the loop immediately</li>
+              <li><code class="inline">continue</code> — skips to the next iteration</li>
+            </ul>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 11 — Why Layered Architecture? (Layout 3)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Why Separate the Layers?</div>
-        <div class="slide-rule"></div>
-        <ul>
-          <li><strong>Testability</strong> — you can unit-test a <code class="inline">TaskService</code> without an HTTP server or a database. This is covered fully in Session 17.</li>
-          <li><strong>Replaceability</strong> — swap the database (e.g. SQL Server for PostgreSQL) by rewriting only the Repository layer. The Service layer never changes.</li>
-          <li><strong>Readability</strong> — a controller that is 20 lines long and only delegates is easy to understand. A controller with SQL queries buried in it is not.</li>
-          <li><strong>Team scaling</strong> — developers can own different layers independently without stepping on each other.</li>
-        </ul>
-        <div class="callout success" style="margin-top:1rem;">
-          <div class="callout-label">Rule of thumb</div>
-          If you can answer "what does this class do?" in one sentence using only one of the words <em>receive</em>, <em>decide</em>, or <em>query</em>, the layer is correct.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 12 — Recommended Folder Structure (Layout 5)          -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Adopt This Folder Structure Now</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">TaskManagerApi.Api/</div>
-        <pre><code class="language-bash" style="font-size:0.88rem;">TaskManagerApi.Api/
-├── Controllers/            # HTTP layer — one file per resource
-├── Services/
-│   └── Interfaces/         # ITaskService.cs lives here
-├── Repositories/
-│   └── Interfaces/         # ITaskRepository.cs lives here
-├── Models/
-│   ├── Entities/           # TaskItem.cs — the database model
-│   └── DTOs/               # request / response shapes (introduced in Session 11)
-└── Program.cs</code></pre>
-        <div class="callout info" style="margin-top:0.9rem;">
-          <div class="callout-label">Create the DTOs folder now</div>
-          You will not use it until Session 11, but establishing the structure early avoids a larger reorganisation mid-course.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 13 — Section Divider: Dependency Injection (Layout 2) -->
+      <!-- SLIDE 17 — Section Divider: Arrays                          -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
-          <div class="section-label">Section 4 of 6</div>
+          <div class="section-label">Section 5 of 5</div>
           <div class="section-rule"></div>
-          <div class="section-title">Dependency Injection in .NET</div>
-          <div class="section-desc">DI is the mechanism that connects your three layers together. .NET has a first-class DI container built in — no third-party library required.</div>
+          <div class="section-title">Arrays</div>
+          <div class="section-desc">Fixed-size, ordered collections of a single type. The simplest data structure in C#.</div>
         </div>
         <div class="section-right">
-          <div class="section-right-label">In this section</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>What dependency injection is</li>
-            <li>The three service lifetimes</li>
-            <li>Registering services in <code class="inline">Program.cs</code></li>
-            <li>Constructor injection in a controller</li>
+          <div class="section-right-label">You will learn</div>
+          <ul style="padding-left:1rem;">
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">Declaring and initializing arrays</li>
+            <li style="font-size:0.92rem; margin-bottom:0.5rem;">Indexing and the <code class="inline">Length</code> property</li>
+            <li style="font-size:0.92rem;"><code class="inline">Array.Sort</code>, <code class="inline">Reverse</code>, <code class="inline">IndexOf</code></li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 14 — What is DI? (Layout 3)                           -->
+      <!-- SLIDE 18 — Declaring & Using Arrays (Layout 4)              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">What is Dependency Injection?</div>
-        <div class="slide-rule"></div>
-        <ul>
-          <li><strong>The problem without DI:</strong> a class creates its own dependencies with <code class="inline">new TaskService()</code> — it is tightly coupled, impossible to swap, and impossible to test in isolation</li>
-          <li><strong>DI inverts this:</strong> objects declare what they need (via constructor parameters) and a container provides it — the class never calls <code class="inline">new</code></li>
-          <li><strong>The container</strong> is <code class="inline">IServiceCollection</code> — you describe every service once in <code class="inline">Program.cs</code>, then the framework resolves them automatically</li>
-          <li><strong>Why interfaces?</strong> Depending on <code class="inline">ITaskService</code> rather than <code class="inline">TaskService</code> means you can substitute a different implementation (e.g. a test double) without touching the controller</li>
-        </ul>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 15 — Service Lifetimes (Layout 3 + cards)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Service Lifetimes</div>
-        <div class="slide-rule"></div>
-        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:0;">How long does the container keep an instance alive?</p>
-        <div class="lifetime-grid">
-          <div class="lifetime-card highlight">
-            <div class="lifetime-tag">Your default</div>
-            <div class="lifetime-card-name">Scoped</div>
-            <div class="lifetime-card-desc">One instance per HTTP request. Created at the start of a request, disposed at the end. Use this for services and repositories.</div>
-          </div>
-          <div class="lifetime-card">
-            <div class="lifetime-card-name">Singleton</div>
-            <div class="lifetime-card-desc">One instance for the entire application lifetime. Use for stateless utilities — a cache wrapper, a logger adapter. Never inject a Scoped into a Singleton.</div>
-          </div>
-          <div class="lifetime-card">
-            <div class="lifetime-card-name">Transient</div>
-            <div class="lifetime-card-desc">New instance every time the container resolves it. Rarely needed. Use only for very lightweight, stateless operations.</div>
-          </div>
-        </div>
-        <div class="callout warning" style="margin-top:0.8rem;">
-          <div class="callout-label">Captive dependency trap</div>
-          Never inject a shorter-lived service into a longer-lived one (e.g. a Scoped into a Singleton). The container will warn you at startup.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 16 — Registering Services (Layout 5)                  -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Registering Services in Program.cs</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Program.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="4-5">var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
-builder.Services.AddScoped&lt;ITaskService, TaskService&gt;();
-builder.Services.AddScoped&lt;ITaskRepository, TaskRepository&gt;();
-
-var app = builder.Build();
-// ... pipeline config below</code></pre>
-        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.95rem; color:var(--color-brand-dark); margin-top:0.9rem;">
-          The pattern is always: <code class="inline">AddScoped&lt;IInterface, ConcreteClass&gt;()</code>. The container maps the interface to the implementation — callers only ever see the interface.
-        </p>
-        <div class="callout info" style="margin-top:0.7rem;">
-          <div class="callout-label">Registration order</div>
-          Register services before calling <code class="inline">builder.Build()</code>. After that the container is sealed and no further registrations are possible.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 17 — Constructor Injection (Layout 5)                 -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Constructor Injection</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Controllers/TasksController.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="3,5-8">public class TasksController : ControllerBase
-{
-    private readonly ITaskService _taskService;
-
-    public TasksController(ITaskService taskService)
-    {
-        _taskService = taskService;
-    }
-}</code></pre>
-        <ul style="font-size:0.93rem; margin-top:0.9rem;">
-          <li>Declare the dependency as a <strong>private readonly field</strong> typed to the interface</li>
-          <li>Accept it as a <strong>constructor parameter</strong> — the container injects the concrete instance automatically</li>
-          <li>The controller never calls <code class="inline">new TaskService()</code> — it does not know the concrete type exists</li>
-        </ul>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 18 — Section Divider: Lab (Layout 2)                  -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="section-divider">
-        <div class="section-left">
-          <div class="section-label">Section 5 of 6</div>
-          <div class="section-rule"></div>
-          <div class="section-title">Lab — First TasksController</div>
-          <div class="section-desc">Build a <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; color:rgba(255,255,255,0.9);">TasksController</code> with in-memory data. No database yet — that arrives in Session 09.</div>
-        </div>
-        <div class="section-right">
-          <div class="section-right-label">What you will build</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>A <code class="inline">TaskItem</code> entity</li>
-            <li><code class="inline">GET /api/tasks</code> — return all tasks</li>
-            <li><code class="inline">GET /api/tasks/{id}</code> — 404 if not found</li>
-            <li><code class="inline">POST /api/tasks</code> — 201 with Location header</li>
-            <li>Verified end-to-end in Postman</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 19 — TaskItem Entity (Layout 5)                       -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">The TaskItem Entity</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Models/Entities/TaskItem.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.95rem;">public class TaskItem
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public bool IsCompleted { get; set; }
-    public DateTime CreatedAt { get; set; }
-}</code></pre>
-        <div class="callout info" style="margin-top:1rem;">
-          <div class="callout-label">In-memory storage for now</div>
-          Store instances in a <code class="inline">static List&lt;TaskItem&gt;</code> inside your service for this session. This is replaced by Entity Framework Core and a real database in Session 09.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 20 — Endpoints to Build (Layout 3 + cards)            -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Endpoints to Implement</div>
-        <div class="slide-rule"></div>
-        <div class="endpoint-list">
-          <div class="endpoint-card">
-            <span class="endpoint-method">GET</span>
-            <span class="endpoint-path">/api/tasks</span>
-            <span class="endpoint-desc">Return all tasks as a JSON array &mdash; respond 200 OK</span>
-          </div>
-          <div class="endpoint-card">
-            <span class="endpoint-method">GET</span>
-            <span class="endpoint-path">/api/tasks/{id}</span>
-            <span class="endpoint-desc">Return a single task by id &mdash; respond 200 OK or 404 Not Found</span>
-          </div>
-          <div class="endpoint-card">
-            <span class="endpoint-method">POST</span>
-            <span class="endpoint-path">/api/tasks</span>
-            <span class="endpoint-desc">Create a new task from the request body &mdash; respond 201 Created with a <code class="inline">Location</code> header pointing to the new resource</span>
-          </div>
-        </div>
-        <div class="callout success" style="margin-top:0.9rem;">
-          <div class="callout-label">Acceptance criteria</div>
-          All three endpoints tested in Postman &nbsp;&middot;&nbsp; 404 returns for a missing id &nbsp;&middot;&nbsp; POST returns <code class="inline">201</code> with <code class="inline">Location: /api/tasks/{newId}</code>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 21 — Status Code Helpers (Layout 5)                   -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Returning Correct HTTP Status Codes</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Controllers/TasksController.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="4-5,7-8,10-11">// 200 OK — body serialised to JSON automatically
-return Ok(tasks);
-
-// 201 Created — sets Location header to /api/tasks/{id}
-return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
-
-// 404 Not Found — empty body
-return NotFound();
-
-// 400 Bad Request — empty body or custom message
-return BadRequest();</code></pre>
-        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.93rem; color:var(--color-brand-dark); margin-top:0.9rem;">
-          All these helper methods live on <code class="inline">ControllerBase</code> — your controller inherits them automatically.
-        </p>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 22 — Route & Action Attributes (Layout 4)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Controller &amp; Route Attributes</div>
+        <div class="slide-heading">Declaring &amp; Using Arrays</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <ul style="font-size:0.95rem;">
-              <li><code class="inline">[ApiController]</code> — enables automatic model validation, binding, and problem-detail error responses</li>
-              <li><code class="inline">[Route("api/[controller]")]</code> — sets the base URL; <code class="inline">[controller]</code> resolves to the class name minus the <em>Controller</em> suffix</li>
-              <li><code class="inline">[HttpGet]</code> / <code class="inline">[HttpPost]</code> — bind an action to an HTTP method</li>
-              <li><code class="inline">"{id}"</code> in the route template maps to the <code class="inline">int id</code> parameter by name</li>
-            </ul>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Declaration and initialization</p>
+            <pre><code class="language-csharp" style="font-size:0.85rem;">// Fixed size, zero-initialized
+int[] scores = new int[5];
+// → [0, 0, 0, 0, 0]
+
+// Initialize with values
+int[] primes = { 2, 3, 5, 7, 11 };
+
+// Equivalent long form
+string[] names = new string[] { "Alice", "Bob" };
+
+// Access by index (zero-based)
+Console.WriteLine(primes[0]);  // 2
+primes[2] = 99;                // replace 5 with 99
+Console.WriteLine(primes.Length); // 5</code></pre>
           </div>
           <div class="col-right">
-            <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1-2,7-8,11-12,15-16">[ApiController]
-[Route("api/[controller]")]
-public class TasksController : ControllerBase
-{
-    // GET /api/tasks
-    [HttpGet]
-    public IActionResult GetAll() { ... }
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Common operations</p>
+            <pre><code class="language-csharp" style="font-size:0.85rem;">int[] numbers = { 5, 2, 8, 1, 9 };
 
-    // GET /api/tasks/42
-    [HttpGet("{id}")]
-    public IActionResult GetById(int id) { ... }
+Array.Sort(numbers);
+// → [1, 2, 5, 8, 9]
 
-    // POST /api/tasks
-    [HttpPost]
-    public IActionResult Create([FromBody] TaskItem task) { ... }
-}</code></pre>
+Array.Reverse(numbers);
+// → [9, 8, 5, 2, 1]
+
+int pos = Array.IndexOf(numbers, 5);
+// → 2  (index of value 5)
+
+// Iterate with foreach
+foreach (int n in numbers)
+    Console.Write(n + " ");</code></pre>
+            <div class="callout error" style="margin-top:0.7rem;">
+              <div class="callout-label">Common Mistake</div>
+              Accessing index <code class="inline">arr[arr.Length]</code> throws <code class="inline">IndexOutOfRangeException</code>. Valid indices are <code class="inline">0</code> to <code class="inline">Length - 1</code>.
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 23 — Section Divider: Code Review (Layout 2)          -->
+      <!-- SLIDE 19 — Multi-dimensional Arrays (Layout 5)              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="section-divider">
-        <div class="section-left">
-          <div class="section-label">Section 6 of 6</div>
-          <div class="section-rule"></div>
-          <div class="section-title">Code Review &amp; Discussion</div>
-          <div class="section-desc">Step back from the code. Think about the decisions made and challenge assumptions before they become habits.</div>
+      <section class="content-slide">
+        <div class="slide-heading">Multi-dimensional Arrays</div>
+        <div class="slide-rule"></div>
+        <pre><code class="language-csharp" style="font-size:0.9rem;" data-line-numbers="1-4,7-12">// 2D array — rows × columns
+int[,] grid = new int[3, 3];
+grid[0, 0] = 1;
+grid[1, 2] = 7;
+
+// Initialize inline
+int[,] matrix = {
+    { 1, 2, 3 },
+    { 4, 5, 6 },
+    { 7, 8, 9 }
+};
+Console.WriteLine(matrix[1, 1]);  // 5 (row 1, column 1)
+
+// Iterate with nested loops
+for (int row = 0; row &lt; matrix.GetLength(0); row++)
+    for (int col = 0; col &lt; matrix.GetLength(1); col++)
+        Console.Write(matrix[row, col] + " ");</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Common Mistakes (Layout 3)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Common Mistakes to Avoid</div>
+        <div class="slide-rule"></div>
+        <div class="callout error" style="margin-bottom:0.8rem;">
+          <div class="callout-label">Mistake 1 — Float Comparison</div>
+          Never use <code class="inline">==</code> to compare <code class="inline">double</code> or <code class="inline">float</code>. Use <code class="inline">Math.Abs(a - b) &lt; 0.0001</code> instead — floating-point arithmetic is imprecise.
         </div>
-        <div class="section-right">
-          <div class="section-right-label">Prompts</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>What breaks if you put database code in the controller?</li>
-            <li>Why depend on an interface rather than the concrete class?</li>
-          </ul>
+        <div class="callout error" style="margin-bottom:0.8rem;">
+          <div class="callout-label">Mistake 2 — Missing break in switch</div>
+          Forgetting <code class="inline">break</code> causes fall-through: execution continues into the next <code class="inline">case</code> block, producing unexpected results.
+        </div>
+        <div class="callout error" style="margin-bottom:0.8rem;">
+          <div class="callout-label">Mistake 3 — Off-by-One in for loops</div>
+          Decide once: upper bound is <code class="inline">&lt; Length</code> or <code class="inline">&lt;= Length - 1</code>. Mixed usage causes skipped or out-of-bounds elements.
+        </div>
+        <div class="callout error">
+          <div class="callout-label">Mistake 4 — Array Index Out of Range</div>
+          Accessing <code class="inline">arr[arr.Length]</code> throws at runtime. Arrays are zero-based: valid indices are <code class="inline">0</code> to <code class="inline">arr.Length - 1</code>.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 24 — Discussion Prompts (Layout 3)                    -->
+      <!-- SLIDE 21 — Summary (Layout 3)                               -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Discussion Prompts</div>
+        <div class="slide-heading">Summary</div>
         <div class="slide-rule"></div>
         <ul>
-          <li style="margin-bottom:1.2rem;">
-            <strong>"What would break if you put database code directly in your controller?"</strong>
-            <br><span style="font-size:0.92rem; color:var(--color-text-muted);">Think about testing, readability, and what happens when you need to change the query.</span>
-          </li>
-          <li style="margin-bottom:1.2rem;">
-            <strong>"Why would you want an interface (<code class="inline">ITaskService</code>) rather than depending directly on <code class="inline">TaskService</code>?"</strong>
-            <br><span style="font-size:0.92rem; color:var(--color-text-muted);">Think about what happens in tests, and what happens if you need a second implementation later.</span>
-          </li>
+          <li>C# is <strong>statically typed</strong> — every variable has a fixed type set at compile time</li>
+          <li><strong>Value types</strong> (<code class="inline">int</code>, <code class="inline">bool</code>, <code class="inline">double</code>) live on the stack; <strong>reference types</strong> (<code class="inline">string</code>, objects) live on the heap</li>
+          <li>Use <code class="inline">TryParse</code> — not <code class="inline">Parse</code> — whenever the input comes from outside your code</li>
+          <li><strong>switch expressions</strong> (C# 8+) are more concise than <code class="inline">switch</code> statements and always return a value</li>
+          <li>Prefer <code class="inline">foreach</code> over index-based <code class="inline">for</code> when you do not need the index</li>
+          <li>Arrays have a <strong>fixed size</strong>; valid indices run from <code class="inline">0</code> to <code class="inline">Length - 1</code></li>
         </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 25 — Session Summary (Layout 3)                       -->
+      <!-- SLIDE 22 — What's Next (Layout 3)                           -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Session Summary</div>
+        <div class="slide-heading">What's Next</div>
         <div class="slide-rule"></div>
+        <p style="margin-bottom:1.2rem;"><strong>Session 04 — C# Methods, Strings &amp; Exception Handling</strong></p>
         <ul>
-          <li><code class="inline">dotnet new webapi</code> scaffolds a working project — <code class="inline">Program.cs</code> is the single entry point where services are registered and the middleware pipeline is configured</li>
-          <li>Every HTTP request passes through the middleware pipeline in the exact order the middleware was registered</li>
-          <li>Layered architecture (Controllers &rarr; Services &rarr; Repositories) separates HTTP handling, business logic, and data access into distinct, testable units</li>
-          <li>Dependency injection lets classes declare their dependencies as constructor parameters; the DI container resolves and provides them automatically</li>
-          <li>Use <strong>Scoped</strong> lifetime for services and repositories unless you have a specific reason for Singleton or Transient</li>
-          <li><code class="inline">Ok()</code>, <code class="inline">NotFound()</code>, <code class="inline">CreatedAtAction()</code> are helper methods on <code class="inline">ControllerBase</code> that produce semantically correct HTTP responses</li>
-        </ul>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 26 — What's Next (Layout 3)                           -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">What's Next: Session 04</div>
-        <div class="slide-rule"></div>
-        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>HTTP Methods &amp; Status Codes</strong></p>
-        <ul>
-          <li>A full tour of GET, POST, PUT, PATCH, and DELETE — when to use each and why</li>
-          <li>The complete HTTP status code vocabulary: 2xx, 3xx, 4xx, 5xx</li>
-          <li>Idempotency and safety — properties that constrain how clients and proxies may behave</li>
-          <li>Expanding the <code class="inline">TasksController</code> with PUT, PATCH, and DELETE endpoints</li>
+          <li>Defining and calling methods with various parameter types</li>
+          <li>Method overloading, optional and named parameters</li>
+          <li>String manipulation and <code class="inline">StringBuilder</code></li>
+          <li>Handling <code class="inline">null</code> safely — nullable types, <code class="inline">??</code>, <code class="inline">?.</code></li>
+          <li>Exception handling with <code class="inline">try</code> / <code class="inline">catch</code> / <code class="inline">finally</code></li>
         </ul>
         <div class="callout info" style="margin-top:1.2rem;">
           <div class="callout-label">Before next session</div>
-          Complete today's assignment. Make sure your <code class="inline">TasksController</code> GET and POST endpoints pass all acceptance criteria before Session 04.
+          Complete the exercises on the next slide before Session 04.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 27 — Assignment (Layout 3)                            -->
+      <!-- SLIDE 23 — Assignment (Layout 3)                            -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Take-Home Assignment</div>
+        <div class="slide-heading">Assignment</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.97rem; margin-bottom:0.9rem;">Create a new .NET Web API project called <code class="inline">BooksApi</code> that applies the layered architecture and dependency injection patterns from this session.</p>
-        <ul style="font-size:0.93rem;">
-          <li>Project follows the four-folder structure: <code class="inline">Controllers/</code>, <code class="inline">Services/Interfaces/</code>, <code class="inline">Repositories/Interfaces/</code>, <code class="inline">Models/Entities/</code></li>
-          <li>A <code class="inline">Book</code> entity with <code class="inline">Id</code> (int), <code class="inline">Title</code> (string), <code class="inline">Author</code> (string), and <code class="inline">Year</code> (int)</li>
-          <li>An <code class="inline">IBooksService</code> interface with <code class="inline">GetAll()</code> and <code class="inline">GetById(int id)</code>, and a concrete in-memory <code class="inline">BooksService</code> implementation</li>
-          <li>A <code class="inline">BooksController</code> with <code class="inline">GET /api/books</code> and <code class="inline">GET /api/books/{id}</code> (404 if not found)</li>
-          <li><code class="inline">BooksService</code> registered as Scoped in <code class="inline">Program.cs</code> and injected into the controller via constructor</li>
+        <p style="font-size:0.95rem; margin-bottom:0.8rem;"><strong>Build a small C# console program</strong> that demonstrates your understanding of types, control flow, and arrays.</p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.92rem;">
+          <li>Accept an integer from the user and print whether it is even or odd — use <code class="inline">TryParse</code> to handle invalid input gracefully</li>
+          <li>Print the multiplication table (1 to 10) for the entered number using a <code class="inline">for</code> loop</li>
+          <li>Declare an array of 5 integers, fill it with user input, then print the minimum and maximum values without using <code class="inline">Array.Sort</code></li>
+          <li>Use a <code class="inline">switch</code> expression to map the maximum value to a label: &lt;10 = "Low", 10–99 = "Medium", &ge;100 = "High"</li>
+          <li>All output must be clearly labeled so the user knows what each line means</li>
         </ul>
         <div class="callout success" style="margin-top:0.8rem;">
           <div class="callout-label">Bonus</div>
-          Add a <code class="inline">POST /api/books</code> endpoint that creates a new book and returns <code class="inline">201 Created</code> with a <code class="inline">Location</code> header pointing to the new resource.
+          Extend the program to accept a second array of integers and print only the values that appear in both arrays (without using any collection classes — arrays only).
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 28 — Q&A                                              -->
+      <!-- SLIDE 24 — Q&A                                              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="qa-slide">
         <div class="qa-heading">Questions?</div>
-        <div class="qa-sub">Session 03 &nbsp;&middot;&nbsp; First .NET Web API &amp; Project Architecture</div>
+        <div class="qa-sub">Session 03 &nbsp;&middot;&nbsp; C# Fundamentals: Types, Control Flow &amp; Arrays</div>
       </section>
 
     </div><!-- /.slides -->
   </div><!-- /.reveal -->
 
-  <!-- ── Persistent Footer ── -->
+  <!-- Persistent Footer -->
   <div class="slide-footer">
-    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
     <span class="footer-slide-num" id="slide-num"></span>
     <div></div>
   </div>

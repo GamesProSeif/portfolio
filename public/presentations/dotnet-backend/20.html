@@ -1,0 +1,1285 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 20 — Authorization: Roles &amp; Policies</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+    .section-right-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .section-right-item {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.5rem 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 5: Full-Width Code Slide ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+    .code-callout {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--color-brand-dark);
+      margin-top: 0.8rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways / summary) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+
+    /* ── Comparison table (roles vs claims vs policies) ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .compare-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-top: 3px solid var(--color-brand);
+      border-radius: 0 0 6px 6px;
+      padding: 1rem;
+    }
+    .compare-card-title {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+    }
+    .compare-card-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.55;
+    }
+    .compare-card-example {
+      margin-top: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-brand-dark);
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      padding: 0.4rem 0.6rem;
+    }
+
+    /* ── 401 vs 403 badge ── */
+    .status-row {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.8rem;
+    }
+    .status-badge {
+      flex: 1;
+      border-radius: 6px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .status-badge.s401 {
+      background: #FAE8E8;
+      border: 1px solid var(--color-error);
+    }
+    .status-badge.s403 {
+      background: #FBF4E3;
+      border: 1px solid var(--color-warning);
+    }
+    .status-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 500;
+    }
+    .s401 .status-code { color: var(--color-error); }
+    .s403 .status-code { color: var(--color-warning); }
+    .status-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .s401 .status-name { color: var(--color-error); }
+    .s403 .status-name { color: var(--color-warning); }
+    .status-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+    .s401 .status-desc { color: var(--color-error); }
+    .s403 .status-desc { color: var(--color-warning); }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 20</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Authorization: Roles &amp; Policies</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 8 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Implement role-based authorization using <code class="inline">[Authorize(Roles="Admin")]</code></li>
+          <li>Create custom policy-based authorization requirements in <code class="inline">Program.cs</code></li>
+          <li>Implement resource-based authorization so users can only access their own data</li>
+          <li>Explain the difference between role-based and claim-based authorization</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda / Timeline (Layout 3)                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Roles vs claims vs policies</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:15</td><td>Role-based authorization</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>0:35</td><td>Policy-based authorization</td><td>Demo</td><td>25 min</td></tr>
+            <tr><td>1:00</td><td>Resource-based authorization</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>1:25</td><td>Lab — protect admin endpoints</td><td>Lab</td><td>30 min</td></tr>
+            <tr><td>1:55</td><td>Wrap-up</td><td>Discussion</td><td>5 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SECTION DIVIDER 1 — Roles, Claims &amp; Policies             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Roles, Claims &amp; Policies</div>
+          <div class="section-desc">Understanding the three authorization building blocks in ASP.NET Core</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <div class="section-right-items">
+            <div class="section-right-item">What a role is and when to use it</div>
+            <div class="section-right-item">What a claim represents</div>
+            <div class="section-right-item">How policies compose both</div>
+            <div class="section-right-item">401 Unauthorized vs 403 Forbidden</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Roles vs Claims vs Policies                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Roles, Claims &amp; Policies</div>
+        <div class="slide-rule"></div>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <div class="compare-card-title">Role</div>
+            <div class="compare-card-body">Coarse-grained group membership. Tells you <em>who</em> the user is in the system.</div>
+            <div class="compare-card-example">Admin, Member, Guest</div>
+          </div>
+          <div class="compare-card">
+            <div class="compare-card-title">Claim</div>
+            <div class="compare-card-body">Fine-grained fact about the user. A key-value pair stored inside the JWT.</div>
+            <div class="compare-card-example">department=Engineering<br>canDeleteTasks=true</div>
+          </div>
+          <div class="compare-card">
+            <div class="compare-card-title">Policy</div>
+            <div class="compare-card-body">Named rule that combines one or more requirements. Evaluated at runtime.</div>
+            <div class="compare-card-example">"SeniorStaff": role Admin<br>AND claim experience &ge; 5</div>
+          </div>
+        </div>
+        <div class="callout info" style="margin-top:1.2rem;">
+          <div class="callout-label">Rule of thumb</div>
+          Use <strong>roles</strong> for broad access tiers, <strong>claims</strong> for attribute-based decisions, and <strong>policies</strong> when you need to combine both into a reusable rule.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — 401 vs 403                                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">401 vs 403 — Know the Difference</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:0.5rem;">ASP.NET Core returns different HTTP status codes depending on why access was denied.</p>
+        <div class="status-row">
+          <div class="status-badge s401">
+            <div class="status-code">401</div>
+            <div class="status-name">Unauthorized</div>
+            <div class="status-desc">No valid token was provided. The request has not been authenticated. The user is anonymous.</div>
+          </div>
+          <div class="status-badge s403">
+            <div class="status-code">403</div>
+            <div class="status-name">Forbidden</div>
+            <div class="status-desc">A valid token was provided but the user lacks the required role or policy. Authentication passed; authorization failed.</div>
+          </div>
+        </div>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">Common mistake</div>
+          Do not return 401 when you mean 403. Returning 401 misleads clients into thinking they need to re-authenticate, not that they are simply not permitted.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SECTION DIVIDER 2 — Role-Based Authorization                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Role-Based Authorization</div>
+          <div class="section-desc">Using <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em;">[Authorize]</code> attributes to restrict endpoints by role</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <div class="section-right-items">
+            <div class="section-right-item">Attaching the Role claim during token generation</div>
+            <div class="section-right-item">[Authorize] vs [Authorize(Roles="...")]</div>
+            <div class="section-right-item">Allowing multiple roles on one endpoint</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — How Roles Enter the Token                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">How Roles Enter the Token</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:0.8rem;">The role must be added as a claim when the JWT is issued (Session 19). ASP.NET Core reads <code class="inline">ClaimTypes.Role</code> from the token automatically.</p>
+        <div class="file-path-label">Services/TokenService.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="3-5">var claims = new List&lt;Claim&gt;
+{
+    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+    new Claim(ClaimTypes.Email, user.Email),
+    new Claim(ClaimTypes.Role, user.Role)   // e.g. "Admin" or "Member"
+};
+</code></pre>
+        <div class="callout info" style="margin-top:0.8rem;">
+          <div class="callout-label">Important</div>
+          The value assigned to <code class="inline">ClaimTypes.Role</code> must exactly match the string you pass to <code class="inline">[Authorize(Roles="...")]</code> — it is case-sensitive.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — [Authorize] Attribute Variants (Layout 4)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The [Authorize] Attribute</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Without parameters: requires any authenticated user (valid JWT, any role)</li>
+              <li>With <code class="inline">Roles</code>: only users whose role claim matches are permitted</li>
+              <li>Comma-separated roles: the user must have <em>at least one</em> of the listed roles</li>
+              <li>Apply to a controller class to protect all its actions at once</li>
+              <li>Override with <code class="inline">[AllowAnonymous]</code> on individual actions when needed</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,4,7">// Any authenticated user
+[Authorize]
+public IActionResult GetAll() { ... }
+
+// Admin only
+[Authorize(Roles = "Admin")]
+public IActionResult Delete(int id) { ... }
+
+// Admin or Manager
+[Authorize(Roles = "Admin,Manager")]
+public IActionResult Approve(int id) { ... }
+
+// Public — no token needed
+[AllowAnonymous]
+public IActionResult Health() { ... }</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Controller-Level Authorization (Layout 5)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Controller-Level Role Guard</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/AdminController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,2,11,15">[ApiController]
+[Authorize(Roles = "Admin")]        // applies to all actions below
+[Route("api/admin")]
+public class AdminController : ControllerBase
+{
+    [HttpGet("users")]
+    public IActionResult GetAllUsers() { ... }
+
+    [HttpDelete("users/{id}")]
+    public IActionResult DeleteUser(int id) { ... }
+
+    // Override: allow any authenticated user to see stats
+    [AllowAnonymous]
+    [HttpGet("stats/public")]
+    public IActionResult PublicStats() { ... }
+}
+</code></pre>
+        <div class="code-callout">Placing <code class="inline">[Authorize]</code> on the class locks every action by default — use <code class="inline">[AllowAnonymous]</code> to carve out public exceptions.</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SECTION DIVIDER 3 — Policy-Based Authorization              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Policy-Based Authorization</div>
+          <div class="section-desc">Composing reusable named rules from roles, claims, and custom requirements</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <div class="section-right-items">
+            <div class="section-right-item">Defining policies in Program.cs</div>
+            <div class="section-right-item">RequireRole, RequireClaim, RequireAssertion</div>
+            <div class="section-right-item">Custom IAuthorizationRequirement</div>
+            <div class="section-right-item">Using [Authorize(Policy="...")] on endpoints</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Defining Policies in Program.cs (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Defining Policies</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1,3,7,12">builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CanManageTasks", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireRole("Admin", "Manager"));
+
+    options.AddPolicy("PremiumUser", policy =>
+        policy.RequireClaim("subscription", "premium"));
+
+    options.AddPolicy("AtLeast18", policy =>
+        policy.RequireAssertion(ctx =>
+            ctx.User.HasClaim(c =>
+                c.Type == "age" &amp;&amp; int.Parse(c.Value) >= 18)));
+});
+</code></pre>
+        <div class="code-callout">Policies are registered once and referenced by name anywhere in the application — no repetition needed.</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Using Policies on Endpoints (Layout 4)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Using Policies on Endpoints</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Reference a policy by its registered name in <code class="inline">[Authorize(Policy="...")]</code></li>
+              <li>Works on controllers, actions, and Minimal API route handlers</li>
+              <li>Policies are evaluated <em>after</em> authentication — a missing token still returns 401</li>
+              <li>Multiple <code class="inline">[Authorize]</code> attributes on the same action are AND-ed together</li>
+            </ul>
+            <div class="callout success" style="margin-top:0.8rem;">
+              <div class="callout-label">Advantage over roles</div>
+              Policies keep authorization logic in one place. When requirements change, update the policy definition — not every controller.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,5">[Authorize(Policy = "CanManageTasks")]
+[HttpDelete("{id}")]
+public IActionResult Delete(int id) { ... }
+
+[Authorize(Policy = "PremiumUser")]
+[HttpGet("export")]
+public IActionResult Export() { ... }
+
+// Minimal API style
+app.MapGet("/reports", () => Results.Ok())
+   .RequireAuthorization("PremiumUser");</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Custom IAuthorizationRequirement (Layout 5)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Custom Authorization Requirement</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.6rem;">When built-in helpers are not enough, implement <code class="inline">IAuthorizationRequirement</code> and a matching handler.</p>
+        <div class="file-path-label">Authorization/MinimumExperienceRequirement.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1,8,13-16">public class MinimumExperienceRequirement : IAuthorizationRequirement
+{
+    public int Years { get; }
+    public MinimumExperienceRequirement(int years) => Years = years;
+}
+
+public class MinimumExperienceHandler
+    : AuthorizationHandler&lt;MinimumExperienceRequirement&gt;
+{
+    protected override Task HandleRequirementAsync(
+        AuthorizationHandlerContext context,
+        MinimumExperienceRequirement requirement)
+    {
+        var claim = context.User.FindFirst("yearsOfExperience");
+        if (claim != null &amp;&amp; int.Parse(claim.Value) >= requirement.Years)
+            context.Succeed(requirement);
+        return Task.CompletedTask;
+    }
+}
+</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Registering Custom Requirement (Layout 4)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering a Custom Requirement</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Register the handler with the DI container as a singleton or scoped service</li>
+              <li>Add the policy referencing the requirement instance</li>
+              <li>ASP.NET Core discovers all registered <code class="inline">IAuthorizationHandler</code> implementations automatically</li>
+              <li>A single requirement can have multiple handlers — any one succeeding is enough</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,4-6">// Program.cs
+builder.Services.AddSingleton&lt;
+    IAuthorizationHandler,
+    MinimumExperienceHandler&gt;();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("SeniorStaff", policy =>
+        policy.Requirements.Add(
+            new MinimumExperienceRequirement(5)));
+});</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SECTION DIVIDER 4 — Resource-Based Authorization            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Resource-Based Authorization</div>
+          <div class="section-desc">"Can this specific user access this specific record?"</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <div class="section-right-items">
+            <div class="section-right-item">Why role-based auth is not enough for ownership</div>
+            <div class="section-right-item">AuthorizationHandler with a resource type</div>
+            <div class="section-right-item">Injecting IAuthorizationService</div>
+            <div class="section-right-item">Returning 403 when ownership check fails</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Why Resource-Based Auth? (Layout 3)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Role-Based Auth Is Not Enough</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Role-based auth answers: "can <strong>Admins</strong> delete tasks?" — yes or no for a whole group</li>
+          <li>Resource-based auth answers: "can <strong>Ahmed</strong> delete <em>this specific task</em>?" — depends on ownership</li>
+          <li>Without it, any authenticated Member can delete another Member's tasks by guessing the ID</li>
+          <li>The resource (the task record) must be loaded first, then the authorization check runs against it</li>
+          <li><code class="inline">IAuthorizationService</code> is injected into the controller and called imperatively</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Security note</div>
+          Attribute-based checks run before the action executes. Resource-based checks run inside the action, after loading the record. Both are needed for complete protection.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — TaskAuthorizationHandler (Layout 5, Part 1)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Resource Authorization Handler</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Authorization/TaskAuthorizationHandler.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1,2,11,14,15">public class TaskAuthorizationHandler
+    : AuthorizationHandler&lt;OperationAuthorizationRequirement, TaskItem&gt;
+{
+    protected override Task HandleRequirementAsync(
+        AuthorizationHandlerContext context,
+        OperationAuthorizationRequirement requirement,
+        TaskItem resource)
+    {
+        var userId = context.User
+            .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (resource.UserId.ToString() == userId
+            || context.User.IsInRole("Admin"))
+        {
+            context.Succeed(requirement);
+        }
+
+        return Task.CompletedTask;
+    }
+}
+</code></pre>
+        <div class="code-callout">Admins bypass the ownership check. Everyone else must own the resource to proceed.</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Using IAuthorizationService in a Controller (L5)    -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Calling the Handler from a Controller</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/TasksController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1,8,10,13-15">private readonly IAuthorizationService _authz;
+
+public TasksController(IAuthorizationService authz) =>
+    _authz = authz;
+
+[Authorize]
+[HttpDelete("{id}")]
+public async Task&lt;IActionResult&gt; Delete(int id)
+{
+    var task = await _repo.GetByIdAsync(id);
+    if (task is null) return NotFound();
+
+    var result = await _authz.AuthorizeAsync(
+        User, task, Operations.Delete);
+    if (!result.Succeeded) return Forbid();
+
+    await _repo.DeleteAsync(task);
+    return NoContent();
+}
+</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Operations Constants (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Named Operations</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Use <code class="inline">OperationAuthorizationRequirement</code> to define named CRUD operations</li>
+              <li>Each operation is a singleton requirement — reuse them across multiple handlers</li>
+              <li>The same handler can branch on the operation name to apply different rules per action</li>
+              <li>Kept in a static class for easy, typo-free referencing throughout the codebase</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;">public static class Operations
+{
+    public static readonly
+        OperationAuthorizationRequirement
+        Create = new() { Name = "Create" };
+
+    public static readonly
+        OperationAuthorizationRequirement
+        Read = new() { Name = "Read" };
+
+    public static readonly
+        OperationAuthorizationRequirement
+        Update = new() { Name = "Update" };
+
+    public static readonly
+        OperationAuthorizationRequirement
+        Delete = new() { Name = "Delete" };
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- KEY CONCEPT SLIDE (Layout 6)                                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">"Authentication asks who you are. Authorization asks what you are allowed to do — and to whom."</div>
+        <div class="callout-slide-attribution">— Session 20</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Lab (Layout 3)                                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Protect Admin Endpoints</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Work through these steps on your Task Management API project:</p>
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-num">01</div>
+            <div class="step-desc">Add <code class="inline">[Authorize(Roles = "Admin")]</code> to the DELETE task endpoint and verify a Member JWT receives <strong>403</strong></div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">02</div>
+            <div class="step-desc">Create a <code class="inline">"CanCreateTasks"</code> policy requiring role <code class="inline">Member</code> or <code class="inline">Admin</code>; apply it to the POST endpoint</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">03</div>
+            <div class="step-desc">Implement <code class="inline">TaskAuthorizationHandler</code> and register it, then add an ownership check inside the PUT and DELETE actions</div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">04</div>
+            <div class="step-desc">Test in Postman: log in as a Member and try to delete another user's task — expect <strong>403 Forbidden</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Summary (Layout 3)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <div class="rule-list">
+          <div class="rule-item">
+            <div class="rule-num">1</div>
+            <div class="rule-desc"><strong>Roles</strong> are coarse-grained; <strong>claims</strong> are fine-grained; <strong>policies</strong> compose both into reusable, named rules</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">2</div>
+            <div class="rule-desc"><code class="inline">[Authorize(Roles="Admin")]</code> is the fastest way to restrict an endpoint — no configuration needed</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">3</div>
+            <div class="rule-desc">Policies defined once in <code class="inline">Program.cs</code> keep authorization logic centralized and easy to update</div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">4</div>
+            <div class="rule-desc">Resource-based authorization is essential for ownership checks — load the record first, then call <code class="inline">IAuthorizationService.AuthorizeAsync</code></div>
+          </div>
+          <div class="rule-item">
+            <div class="rule-num">5</div>
+            <div class="rule-desc">401 means unauthenticated; 403 means authenticated but not permitted — never confuse the two</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — What's Next (Layout 3)                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 21 — API Security: Rate Limiting, CORS &amp; HTTPS</strong></p>
+        <ul>
+          <li>Configuring rate limiting to prevent abuse and denial-of-service</li>
+          <li>Understanding CORS and setting up allowed origins for your frontend</li>
+          <li>Enforcing HTTPS and configuring HSTS in production</li>
+          <li>Security headers and what each one protects against</li>
+        </ul>
+        <div class="callout info" style="margin-top:1.2rem;">
+          <div class="callout-label">Before next session</div>
+          Ensure your Task Management API has all three authorization layers working: role-based on admin endpoints, a custom policy on create, and ownership checks on update/delete.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Assignment (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text); margin-bottom:0.8rem;">Extend your Task Management API with a complete authorization layer.</p>
+        <ul>
+          <li>Add <code class="inline">[Authorize(Roles = "Admin")]</code> to a dedicated admin endpoint (e.g., <code class="inline">GET /api/admin/users</code>)</li>
+          <li>Define a <code class="inline">"CanManageTasks"</code> policy in <code class="inline">Program.cs</code> and apply it to DELETE and PUT task endpoints</li>
+          <li>Implement <code class="inline">TaskAuthorizationHandler</code> so users can only edit or delete tasks they own; Admins bypass this check</li>
+          <li>Return <code class="inline">403 Forbidden</code> (not 404) when ownership check fails so the client knows the resource exists but is off-limits</li>
+        </ul>
+        <div class="callout success" style="margin-top:0.8rem;">
+          <div class="callout-label">Bonus</div>
+          Create a second role — <strong>Moderator</strong> — that can edit any task but cannot delete tasks owned by Admins. Add the necessary logic to <code class="inline">TaskAuthorizationHandler</code> and write at least two Postman requests that demonstrate the difference.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE — Q&A                                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 20 — Authorization: Roles &amp; Policies</div>
+      </section>
+
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      var currentSlide = Reveal.getCurrentSlide();
+      var footer = document.querySelector('.slide-footer');
+      var isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        var indices = Reveal.getIndices();
+        var total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent =
+          (indices.h + 1) + ' / ' + total;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

@@ -1,0 +1,1183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 14 — Entity Framework Core Intro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Step list (Lab) ── */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .step-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.6rem 1rem;
+    }
+    .step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .step-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    /* ── Rule list (Key takeaways) ── */
+    .rule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+    .rule-item {
+      display: flex;
+      gap: 1rem;
+      align-items: baseline;
+      background: var(--color-brand-light);
+      border-left: 4px solid var(--color-brand);
+      border-radius: 0 6px 6px 0;
+      padding: 0.7rem 1rem;
+    }
+    .rule-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-brand-dark);
+      flex-shrink: 0;
+      width: 1.5rem;
+    }
+    .rule-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--color-brand-dark);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 14</div>
+          <div class="title-rule"></div>
+          <div class="title-main">Entity Framework Core<br>Intro</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 5 &nbsp;&middot;&nbsp; 2.5 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Explain what an ORM is and why Entity Framework Core is the .NET standard for database access</li>
+          <li>Distinguish between the code-first and database-first approaches, and choose the right one for a new project</li>
+          <li>Set up a <code class="inline">DbContext</code> with a PostgreSQL or SQL Server connection string</li>
+          <li>Define entity classes and configure their properties and relationships using the Fluent API</li>
+          <li>Register <code class="inline">DbContext</code> in <code class="inline">Program.cs</code> and verify the application starts cleanly against a real database</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3 + table)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Agenda</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Segment</th>
+              <th>Type</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>What is an ORM?</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:15</td><td>Code-first vs database-first</td><td>Theory</td><td>10 min</td></tr>
+            <tr><td>0:25</td><td>Install EF Core &amp; configure DbContext</td><td>Demo</td><td>30 min</td></tr>
+            <tr><td>0:55</td><td>Entity configuration</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>1:15</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:25</td><td>Lab — wire up the Task entity</td><td>Lab</td><td>45 min</td></tr>
+            <tr><td>2:10</td><td>Review &amp; Q&amp;A</td><td>Discussion</td><td>20 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: What is an ORM?                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">What is an ORM?</div>
+          <div class="section-desc">An Object-Relational Mapper bridges the gap between C# objects and relational database tables. Instead of writing raw SQL, you work with strongly-typed C# classes and let the framework handle the translation — queries, inserts, updates, and deletes included.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>The impedance mismatch problem between objects and tables</li>
+            <li>What EF Core does at runtime</li>
+            <li>The EF Core pipeline: LINQ to SQL</li>
+            <li>When an ORM fits and when raw SQL is better</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — What is an ORM? (Layout 3)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What is an ORM?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>An <strong>Object-Relational Mapper (ORM)</strong> maps C# classes to database tables and class properties to columns — eliminating manual SQL strings for routine operations</li>
+          <li><strong>Entity Framework Core</strong> is Microsoft's official ORM for .NET — it is cross-platform, open-source, and supports PostgreSQL, SQL Server, SQLite, and more through provider packages</li>
+          <li>At runtime, EF Core translates <strong>LINQ queries</strong> written in C# into provider-specific SQL and executes them against the database</li>
+          <li>Results are returned as <strong>tracked C# objects</strong> — EF Core watches them for changes, and a single <code class="inline">SaveChanges()</code> call flushes all changes to the database in one transaction</li>
+          <li>EF Core also handles <strong>schema generation and migrations</strong> — C# class definitions become the source of truth for the database schema</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Mental model</div>
+          Think of EF Core as a translator. You speak C# and LINQ; the database speaks SQL. EF Core sits in the middle and handles the conversation so you rarely need to write SQL by hand.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — When to Use an ORM (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">ORM vs Raw SQL — Choosing the Right Tool</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">EF Core is a strong fit when:</p>
+            <ul style="font-size:0.92rem;">
+              <li>You own the schema and want C# classes to drive it</li>
+              <li>CRUD operations dominate the access pattern</li>
+              <li>You want compile-time safety on queries and column names</li>
+              <li>Migrations and schema versioning are part of the workflow</li>
+              <li>You work across multiple database providers and want portability</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">Raw SQL or Dapper fits better when:</p>
+            <ul style="font-size:0.92rem;">
+              <li>Queries are complex aggregations or multi-join reports that the ORM translates poorly</li>
+              <li>Performance is critical and EF Core's generated SQL is too expensive</li>
+              <li>The schema is legacy and cannot be changed to match C# conventions</li>
+              <li>Stored procedures are the mandated data access layer</li>
+            </ul>
+            <div class="callout success" style="margin-top:0.8rem; font-size:0.85rem;">
+              <div class="callout-label">Best practice</div>
+              EF Core and raw SQL are not mutually exclusive. Use <code class="inline">FromSqlRaw</code> or Dapper for complex queries, and EF Core for everything else — even in the same project.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Section Divider: Code-First vs Database-First      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Code-First vs Database-First</div>
+          <div class="section-desc">EF Core supports two primary workflows. Code-first treats C# classes as the source of truth and generates the database schema from them. Database-first starts from an existing schema and generates the C# classes. For new projects, code-first is almost always the right choice.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Code-first: C# defines the schema</li>
+            <li>Database-first: scaffolding from an existing database</li>
+            <li>Why code-first is the standard for new .NET projects</li>
+            <li>The role of migrations in the code-first workflow</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Code-First vs Database-First (Layout 3 + table)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Code-First vs Database-First</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>Code-First</th>
+              <th>Database-First</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Source of truth</td>
+              <td>C# entity classes</td>
+              <td>Existing database schema</td>
+            </tr>
+            <tr>
+              <td>Schema changes</td>
+              <td>Edit C# class, run migration</td>
+              <td>Alter table, re-scaffold classes</td>
+            </tr>
+            <tr>
+              <td>Version control</td>
+              <td>Migration files in Git</td>
+              <td>Schema scripts managed separately</td>
+            </tr>
+            <tr>
+              <td>Best for</td>
+              <td>New projects, greenfield development</td>
+              <td>Integrating with a legacy database</td>
+            </tr>
+            <tr>
+              <td>This course uses</td>
+              <td style="color:var(--color-success); font-weight:600;">Yes — always code-first</td>
+              <td>Not covered</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Migrations</div>
+          In code-first, a migration is a C# file that records exactly how to move the database schema from one version to the next — and how to roll it back. Migrations are covered in Session 15.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Why Code-First for New Projects (Layout 3)        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Code-First for New Projects</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Single source of truth</strong> — the C# entity classes define the schema. There is no separate SQL script to keep in sync with the code</li>
+          <li><strong>Version control integration</strong> — every schema change produces a migration file checked into Git alongside the code that required the change</li>
+          <li><strong>Reproducible environments</strong> — any developer can clone the repo, run <code class="inline">dotnet ef database update</code>, and have an identical database in minutes</li>
+          <li><strong>Refactoring safety</strong> — renaming a property in C# produces a migration that renames the column; the change is atomic and tracked</li>
+          <li><strong>Team-friendly</strong> — pull requests contain both the feature code and its migration, so reviewers see exactly what the schema impact is</li>
+        </ul>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">One exception</div>
+          If you must integrate with a database that another team owns and you cannot change its schema, use <code class="inline">dotnet ef dbcontext scaffold</code> to generate classes from the existing tables. This is the database-first path and is the only justified use of it on a new project.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Section Divider: Install EF Core & DbContext      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Install EF Core &amp; Configure DbContext</div>
+          <div class="section-desc">DbContext is the central class in EF Core. It represents a session with the database, exposes DbSet properties for each entity, and coordinates change tracking and transaction management. Getting it wired up correctly is the foundation for everything that follows.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Which NuGet packages to install</li>
+            <li>What DbContext does and why it is a unit of work</li>
+            <li>Writing the AppDbContext class with DbSet properties</li>
+            <li>Registering DbContext in Program.cs with a connection string</li>
+            <li>Keeping connection strings out of source control</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Installing EF Core Packages (Layout 5)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Installing EF Core Packages</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Three packages are needed — the core library, the design-time tooling, and the database provider:</p>
+        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package Microsoft.EntityFrameworkCore
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL</code></pre>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Using SQL Server instead? Replace the provider:</p>
+        <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package Microsoft.EntityFrameworkCore.SqlServer</code></pre>
+        <div class="callout info" style="margin-top:0.9rem;">
+          <div class="callout-label">Package roles</div>
+          <strong>Microsoft.EntityFrameworkCore</strong> is the runtime — change tracking, LINQ translation, migrations. <strong>Design</strong> is needed for <code class="inline">dotnet ef</code> CLI commands. The <strong>provider</strong> package (Npgsql or SqlServer) handles the dialect-specific SQL generation and the ADO.NET connection.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — DbContext: the Unit of Work (Layout 4)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">DbContext — the Unit of Work</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;"><code class="inline">DbContext</code> is the entry point to the database in EF Core. One instance represents one database session:</p>
+            <ul style="font-size:0.92rem;">
+              <li><strong>DbSet&lt;T&gt;</strong> — one property per entity type, representing the corresponding table</li>
+              <li><strong>Change tracker</strong> — monitors loaded entities for modifications; flushes them all on <code class="inline">SaveChanges()</code></li>
+              <li><strong>OnModelCreating</strong> — the hook where Fluent API configuration is applied (constraints, indexes, relationships)</li>
+              <li><strong>Scoped lifetime</strong> — in ASP.NET Core, each HTTP request gets its own DbContext instance, created by DI and disposed at request end</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <!-- EF Core pipeline diagram using inline SVG -->
+            <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-width:340px;">
+              <!-- Controller box -->
+              <rect x="10" y="10" width="140" height="44" rx="6" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+              <text x="80" y="28" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2A1F1A">Controller</text>
+              <text x="80" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">LINQ query via DbSet</text>
+              <!-- Arrow down -->
+              <line x1="80" y1="54" x2="80" y2="84" stroke="#B8694E" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <!-- DbContext box -->
+              <rect x="10" y="84" width="140" height="44" rx="6" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+              <text x="80" y="102" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2A1F1A">DbContext</text>
+              <text x="80" y="118" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Change tracker + SaveChanges</text>
+              <!-- Arrow down -->
+              <line x1="80" y1="128" x2="80" y2="158" stroke="#B8694E" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <!-- EF Core provider box -->
+              <rect x="10" y="158" width="140" height="44" rx="6" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+              <text x="80" y="176" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#2A1F1A">EF Core Provider</text>
+              <text x="80" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">LINQ → SQL translation</text>
+              <!-- Arrow down -->
+              <line x1="80" y1="202" x2="80" y2="232" stroke="#B8694E" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <!-- Database box -->
+              <rect x="10" y="232" width="140" height="44" rx="6" fill="#1B2A3B" stroke="#1B2A3B" stroke-width="1.5"/>
+              <text x="80" y="250" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">Database</text>
+              <text x="80" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">PostgreSQL / SQL Server</text>
+              <!-- Arrow marker -->
+              <defs>
+                <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+                  <path d="M0,0 L0,8 L8,4 Z" fill="#B8694E"/>
+                </marker>
+              </defs>
+              <!-- Side label -->
+              <text x="200" y="60" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Tracked objects</text>
+              <text x="200" y="130" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">SQL statement</text>
+              <text x="200" y="210" font-family="Inter,sans-serif" font-size="10" fill="#6B5248">Result rows</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Writing AppDbContext (Layout 5)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Writing AppDbContext</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Data/AppDbContext.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="1,5-6,8-16">public class AppDbContext : DbContext
+{
+    public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options) : base(options) { }
+
+    public DbSet&lt;TaskItem&gt; Tasks =&gt; Set&lt;TaskItem&gt;();
+    public DbSet&lt;User&gt; Users =&gt; Set&lt;User&gt;();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity&lt;TaskItem&gt;(entity =&gt;
+        {
+            entity.HasKey(t =&gt; t.Id);
+            entity.Property(t =&gt; t.Title).IsRequired().HasMaxLength(200);
+            entity.Property(t =&gt; t.CreatedAt).HasDefaultValueSql("NOW()");
+        });
+    }
+}</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">
+          <code class="inline">DbSet&lt;T&gt;</code> properties expose each table as a queryable collection.
+          <code class="inline">OnModelCreating</code> is called once at startup — this is where Fluent API configuration lives.
+          The constructor receives <code class="inline">DbContextOptions</code> from DI, which carries the connection string and provider.
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Registering DbContext in Program.cs (Layout 4)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering DbContext in Program.cs</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;">One call in <code class="inline">Program.cs</code> registers <code class="inline">AppDbContext</code> in the DI container with the Npgsql provider:</p>
+            <div class="file-path-label">Program.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.9rem;">builder.Services.AddDbContext&lt;AppDbContext&gt;(options =&gt;
+    options.UseNpgsql(
+        builder.Configuration
+               .GetConnectionString("Default")));
+</code></pre>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.7rem;">For SQL Server, replace <code class="inline">UseNpgsql</code> with <code class="inline">UseSqlServer</code> — the rest of the code stays identical.</p>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.92rem; margin-bottom:0.6rem;">What <code class="inline">AddDbContext</code> does:</p>
+            <ul style="font-size:0.92rem;">
+              <li>Registers <code class="inline">AppDbContext</code> as a <strong>scoped</strong> service — one instance per HTTP request</li>
+              <li>Creates a connection pool shared across all instances so database connections are not opened and closed for every query</li>
+              <li>Configures the provider (Npgsql) and passes it the connection string read from configuration</li>
+              <li>Makes <code class="inline">AppDbContext</code> available for constructor injection in controllers, services, and repositories</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Connection String Setup (Layout 4)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Connection String Setup</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.7rem;">Store the connection string in <code class="inline">appsettings.Development.json</code> — not in the committed <code class="inline">appsettings.json</code>:</p>
+            <div class="file-path-label">appsettings.Development.json</div>
+            <pre><code class="language-json" style="font-size:0.9rem;">{
+  "ConnectionStrings": {
+    "Default": "Host=localhost;Database=taskmanager;Username=postgres;Password=yourpassword"
+  }
+}</code></pre>
+            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:0.7rem;">The file name <code class="inline">appsettings.Development.json</code> is loaded automatically when <code class="inline">ASPNETCORE_ENVIRONMENT=Development</code>. It overrides values from <code class="inline">appsettings.json</code>.</p>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.92rem; margin-bottom:0.6rem;">Add the file to <code class="inline">.gitignore</code> immediately:</p>
+            <div class="file-path-label">.gitignore</div>
+            <pre><code class="language-bash" style="font-size:0.9rem;">appsettings.Development.json
+appsettings.*.json
+!appsettings.json</code></pre>
+            <div class="callout error" style="margin-top:0.9rem;">
+              <div class="callout-label">Never commit credentials</div>
+              A connection string with a password pushed to a public repository is a security incident. Add the file to <code class="inline">.gitignore</code> before the first commit. Use environment variables or a secrets manager (Azure Key Vault, AWS Secrets Manager) in production.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Key Principle (Layout 6)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Principle</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">
+          "Configuration that changes between environments must never be compiled into the binary or committed to source control."
+        </div>
+        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:680px; text-align:center; color:rgba(255,255,255,0.85);">
+          Connection strings, API keys, and passwords are environment-specific secrets. They belong in environment variables, user secrets, or a secrets manager — not in appsettings.json files committed to Git. This rule applies from day one, not just when a project goes to production.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Section Divider: Entity Configuration            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Entity Configuration</div>
+          <div class="section-desc">Entities are plain C# classes that EF Core maps to tables. Configuration — constraints, default values, max lengths, indexes, and relationships — can be expressed through conventions, data annotations, or the Fluent API. The Fluent API in OnModelCreating is the most expressive and least intrusive option.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>Writing a well-structured entity class</li>
+            <li>Fluent API: required, max length, defaults</li>
+            <li>Configuring indexes for frequent query columns</li>
+            <li>Defining a one-to-many relationship</li>
+            <li>Entity configuration best practices</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Writing the TaskItem Entity (Layout 4)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Writing the TaskItem Entity</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; margin-bottom:0.8rem;">An entity is a plain C# class. EF Core discovers it through the <code class="inline">DbSet&lt;T&gt;</code> property on <code class="inline">AppDbContext</code>:</p>
+            <ul style="font-size:0.92rem;">
+              <li>By convention, a property named <code class="inline">Id</code> or <code class="inline">TaskItemId</code> becomes the primary key</li>
+              <li>Non-nullable value types (int, DateTime) map to NOT NULL columns automatically</li>
+              <li>Nullable reference types (<code class="inline">string?</code>) map to nullable columns when nullable reference types are enabled</li>
+              <li>Navigation properties represent foreign-key relationships — EF Core uses them to generate <code class="inline">JOIN</code> queries</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="file-path-label">Models/TaskItem.cs</div>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">public class TaskItem
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public bool IsCompleted { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    // Foreign key
+    public int UserId { get; set; }
+
+    // Navigation property
+    public User User { get; set; } = null!;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Fluent API Configuration (Layout 5)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Fluent API Configuration</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Data/AppDbContext.cs — OnModelCreating</div>
+        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="3-4,5,6,8-12">modelBuilder.Entity&lt;TaskItem&gt;(entity =&gt;
+{
+    entity.HasKey(t =&gt; t.Id);
+    entity.Property(t =&gt; t.Title).IsRequired().HasMaxLength(200);
+    entity.Property(t =&gt; t.Description).HasMaxLength(2000);
+    entity.Property(t =&gt; t.CreatedAt).HasDefaultValueSql("NOW()");
+
+    entity.HasOne(t =&gt; t.User)
+          .WithMany(u =&gt; u.Tasks)
+          .HasForeignKey(t =&gt; t.UserId)
+          .OnDelete(DeleteBehavior.Cascade);
+});</code></pre>
+        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">
+          <code class="inline">IsRequired()</code> adds a NOT NULL constraint.
+          <code class="inline">HasMaxLength(200)</code> sets <code class="inline">varchar(200)</code> in the database — without it, EF Core defaults to <code class="inline">text</code> (Postgres) or <code class="inline">nvarchar(max)</code> (SQL Server), which cannot be indexed efficiently.
+          <code class="inline">HasDefaultValueSql("NOW()")</code> lets the database populate the timestamp automatically.
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Indexes and Best Practices (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Indexes and Entity Configuration Best Practices</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">Add indexes for columns you filter on frequently:</p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">entity.HasIndex(t =&gt; t.UserId);
+entity.HasIndex(t =&gt; t.IsCompleted);
+entity.HasIndex(t =&gt; t.CreatedAt);</code></pre>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.7rem;">Foreign key columns should almost always have an index — EF Core does not create them automatically for non-primary-key foreign keys.</p>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.92rem; font-weight:600; color:var(--color-navy); margin-bottom:0.6rem;">Best practices summary:</p>
+            <ul style="font-size:0.92rem;">
+              <li>Always call <code class="inline">HasMaxLength()</code> on string columns — avoid unbounded columns</li>
+              <li>Use <code class="inline">HasDefaultValueSql()</code> for server-side timestamps so the database clock is authoritative</li>
+              <li>Define <code class="inline">OnDelete</code> behavior explicitly — do not rely on the provider default</li>
+              <li>Keep all Fluent API configuration in <code class="inline">OnModelCreating</code> or in dedicated <code class="inline">IEntityTypeConfiguration&lt;T&gt;</code> classes for large models</li>
+            </ul>
+            <div class="callout info" style="margin-top:0.8rem; font-size:0.85rem;">
+              <div class="callout-label">EF Core 8</div>
+              With nullable reference types enabled, EF Core 8 infers <code class="inline">IsRequired()</code> automatically for non-nullable <code class="inline">string</code> properties. You still need <code class="inline">HasMaxLength()</code> — nullability does not imply a length constraint.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Lab: Wire Up the Task Entity (Lab)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — Wire Up the Task Entity</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Connect the Task Manager API to a real database. By the end of this lab, the application will start cleanly against a running PostgreSQL or SQL Server instance.</p>
+        <div class="step-list">
+          <div class="step-item">
+            <span class="step-num">1</span>
+            <span class="step-desc">Install <code class="inline">Microsoft.EntityFrameworkCore</code>, <code class="inline">Microsoft.EntityFrameworkCore.Design</code>, and <code class="inline">Npgsql.EntityFrameworkCore.PostgreSQL</code> (or the SQL Server provider)</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">2</span>
+            <span class="step-desc">Create a <code class="inline">TaskItem</code> entity class with <code class="inline">Id</code>, <code class="inline">Title</code>, <code class="inline">Description</code>, <code class="inline">IsCompleted</code>, <code class="inline">CreatedAt</code>, and a <code class="inline">UserId</code> foreign key</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">3</span>
+            <span class="step-desc">Create <code class="inline">AppDbContext</code> with a <code class="inline">DbSet&lt;TaskItem&gt;</code> property and configure the entity in <code class="inline">OnModelCreating</code> with <code class="inline">IsRequired()</code>, <code class="inline">HasMaxLength()</code>, and <code class="inline">HasDefaultValueSql()</code></span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">4</span>
+            <span class="step-desc">Add the connection string to <code class="inline">appsettings.Development.json</code> and add that file to <code class="inline">.gitignore</code> before committing</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">5</span>
+            <span class="step-desc">Register <code class="inline">AppDbContext</code> in <code class="inline">Program.cs</code> with <code class="inline">AddDbContext</code> and <code class="inline">UseNpgsql</code> (or <code class="inline">UseSqlServer</code>)</span>
+          </div>
+          <div class="step-item">
+            <span class="step-num">6</span>
+            <span class="step-desc">Run the application with <code class="inline">dotnet run</code> and confirm no startup errors. Migrations and actual database creation are covered in Session 15</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>EF Core is an ORM</strong> — it maps C# classes to database tables and translates LINQ queries into provider-specific SQL, eliminating manual SQL strings for routine operations</li>
+          <li><strong>Code-first is the standard approach</strong> — C# entity classes are the source of truth; migrations translate class changes into schema changes tracked in version control</li>
+          <li><strong>DbContext is the central class</strong> — it exposes <code class="inline">DbSet&lt;T&gt;</code> properties per table, manages change tracking, and is registered as a scoped service in DI</li>
+          <li><strong>Fluent API in OnModelCreating</strong> is the recommended way to configure constraints, indexes, default values, and relationships without polluting entity classes with attributes</li>
+          <li><strong>Connection strings are secrets</strong> — store them in <code class="inline">appsettings.Development.json</code>, add that file to <code class="inline">.gitignore</code>, and use environment variables or a secrets manager in production</li>
+          <li><strong>Migrations come next</strong> — Session 15 covers creating and applying migrations to generate and evolve the real database schema from these entity definitions</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 15 — Migrations, CRUD &amp; LINQ</strong></p>
+        <ul>
+          <li>The <code class="inline">AppDbContext</code> and entity classes set up in this session are the foundation — Session 15 picks up exactly where this lab ends</li>
+          <li>You will install the <code class="inline">dotnet ef</code> CLI tool, create your first migration with <code class="inline">dotnet ef migrations add</code>, and apply it to generate the real tables with <code class="inline">dotnet ef database update</code></li>
+          <li>The in-memory lists currently backing the Task API endpoints will be replaced with real <code class="inline">DbSet</code> queries — <code class="inline">ToListAsync()</code>, <code class="inline">FindAsync()</code>, <code class="inline">AddAsync()</code>, and <code class="inline">SaveChangesAsync()</code></li>
+          <li>LINQ filtering, ordering, and pagination will be pushed to the database layer so the SQL is efficient from the start</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the assignment and make sure <code class="inline">dotnet run</code> starts the application without errors against a live database instance. The Session 15 demo builds directly on top of this working setup.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
+          <strong>Wire up Entity Framework Core for the Task Manager API and connect it to a real database.</strong>
+        </p>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
+        <ul style="font-size:0.92rem;">
+          <li>Install the EF Core packages and the appropriate database provider, then create <code class="inline">AppDbContext</code> with <code class="inline">DbSet&lt;TaskItem&gt;</code> and <code class="inline">DbSet&lt;User&gt;</code></li>
+          <li>Configure both entities using the Fluent API in <code class="inline">OnModelCreating</code>: required fields, max lengths, default values, and the foreign key relationship between <code class="inline">TaskItem</code> and <code class="inline">User</code></li>
+          <li>Register <code class="inline">AppDbContext</code> in <code class="inline">Program.cs</code> and store the connection string in <code class="inline">appsettings.Development.json</code>, adding it to <code class="inline">.gitignore</code></li>
+        </ul>
+        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
+        <ul style="font-size:0.88rem; margin-top:0.2rem;">
+          <li><code class="inline">dotnet run</code> starts the application without any EF Core-related startup exceptions</li>
+          <li><code class="inline">AppDbContext</code> has <code class="inline">DbSet</code> properties for both <code class="inline">TaskItem</code> and <code class="inline">User</code>, configured via the Fluent API</li>
+          <li>All string columns have explicit <code class="inline">HasMaxLength()</code> calls and no column is left as unbounded text</li>
+          <li><code class="inline">appsettings.Development.json</code> is listed in <code class="inline">.gitignore</code> and is not committed to the repository</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.7rem;">
+          <div class="callout-label">Bonus</div>
+          Extract the entity configuration into a dedicated <code class="inline">TaskItemConfiguration : IEntityTypeConfiguration&lt;TaskItem&gt;</code> class and register it in <code class="inline">OnModelCreating</code> using <code class="inline">modelBuilder.ApplyConfiguration(new TaskItemConfiguration())</code>. This keeps <code class="inline">AppDbContext</code> clean as the model grows.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 14 — Entity Framework Core Intro</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent = `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>

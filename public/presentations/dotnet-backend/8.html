@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Session 08 — API Documentation &amp; Swagger</title>
+  <title>Session 08 — First .NET Web API &amp; Project Architecture</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,66 +427,115 @@
       margin-bottom: 0.4rem;
     }
 
-    /* ── Step list (Lab) ── */
-    .step-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    .step-item {
-      display: flex;
+    /* ── Lifetime cards ── */
+    .lifetime-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
-      align-items: baseline;
+      margin-top: 1rem;
+    }
+    .lifetime-card {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 6px;
-      padding: 0.6rem 1rem;
+      padding: 1.1rem;
     }
-    .step-num {
+    .lifetime-card.highlight {
+      background: var(--color-brand-light);
+      border-color: var(--color-brand);
+    }
+    .lifetime-card-name {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
       font-weight: 500;
-      color: var(--color-brand);
-      flex-shrink: 0;
-      width: 1.5rem;
+      font-size: 1rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--color-border);
     }
-    .step-desc {
+    .lifetime-card.highlight .lifetime-card-name {
+      color: var(--color-brand-dark);
+      border-bottom-color: var(--color-brand);
+    }
+    .lifetime-card-desc {
       font-family: 'Inter', sans-serif;
       font-size: 0.88rem;
-      color: var(--color-text);
-      line-height: 1.5;
+      color: var(--color-text-muted);
+      line-height: 1.55;
+    }
+    .lifetime-card.highlight .lifetime-card-desc {
+      color: var(--color-brand-dark);
+    }
+    .lifetime-tag {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--color-brand);
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-bottom: 0.5rem;
     }
 
-    /* ── Rule list (Key takeaways) ── */
-    .rule-list {
+    /* ── Endpoint cards ── */
+    .endpoint-list {
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 0.8rem;
       margin-top: 0.5rem;
     }
-    .rule-item {
+    .endpoint-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 0.9rem 1.1rem;
       display: flex;
-      gap: 1rem;
       align-items: baseline;
-      background: var(--color-brand-light);
-      border-left: 4px solid var(--color-brand);
-      border-radius: 0 6px 6px 0;
-      padding: 0.7rem 1rem;
+      gap: 1rem;
     }
-    .rule-num {
+    .endpoint-method {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 500;
-      color: var(--color-brand-dark);
+      color: #FFFFFF;
+      background: var(--color-navy-mid);
+      border-radius: 3px;
+      padding: 2px 8px;
       flex-shrink: 0;
-      width: 1.5rem;
     }
-    .rule-desc {
-      font-family: 'Inter', sans-serif;
-      font-size: 0.92rem;
+    .endpoint-path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
       color: var(--color-brand-dark);
-      line-height: 1.5;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .endpoint-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Placeholder ── */
+    .placeholder {
+      border: 2px dashed var(--color-brand);
+      background: var(--color-brand-light);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-brand-dark);
+    }
+    .placeholder-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
     }
   </style>
 </head>
@@ -500,14 +549,14 @@
       <section class="title-slide">
         <div class="title-top-bar"></div>
         <div class="title-content">
-          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
           <div class="title-course-name">Backend Development with .NET</div>
           <div class="title-session-label">Session 08</div>
           <div class="title-rule"></div>
-          <div class="title-main">API Documentation<br>&amp; Swagger</div>
+          <div class="title-main">First .NET Web API<br>&amp; Project Architecture</div>
           <div class="title-meta">
             Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
-            Week 4 &nbsp;&middot;&nbsp; 2.5 hours
+            Week 2 &nbsp;&middot;&nbsp; 2.5 hours
           </div>
         </div>
         <div class="title-bottom-bar"></div>
@@ -521,10 +570,11 @@
         <div class="slide-rule"></div>
         <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
         <ul>
-          <li>Set up Swagger/OpenAPI in a .NET Web API using Swashbuckle</li>
-          <li>Document endpoints with XML doc comments and <code class="inline">[ProducesResponseType]</code> decorators</li>
-          <li>Show versioned API groups as separate tabs in Swagger UI</li>
-          <li>Generate a typed TypeScript client for a React frontend from the OpenAPI spec</li>
+          <li>Create and run a .NET Web API project from scratch using the CLI</li>
+          <li>Navigate and explain every file produced by <code class="inline">dotnet new webapi</code></li>
+          <li>Describe the layered architecture — Controllers, Services, and Repositories — and explain why each layer exists</li>
+          <li>Understand what dependency injection is, how .NET's container works, and the three service lifetimes</li>
+          <li>Write a working <code class="inline">TasksController</code> with GET and POST endpoints using in-memory data</li>
         </ul>
       </section>
 
@@ -544,624 +594,634 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>0:00</td><td>Why documentation matters</td><td>Discussion</td><td>10 min</td></tr>
-            <tr><td>0:10</td><td>OpenAPI spec overview</td><td>Theory</td><td>15 min</td></tr>
-            <tr><td>0:25</td><td>Swashbuckle setup</td><td>Demo</td><td>25 min</td></tr>
-            <tr><td>0:50</td><td>XML comments &amp; decorators</td><td>Demo</td><td>20 min</td></tr>
-            <tr><td>1:10</td><td>Break</td><td>—</td><td>10 min</td></tr>
-            <tr><td>1:20</td><td>Versioned Swagger UI</td><td>Demo</td><td>20 min</td></tr>
-            <tr><td>1:40</td><td>Lab — document the Task API</td><td>Lab</td><td>35 min</td></tr>
-            <tr><td>2:15</td><td>Generating a typed client</td><td>Demo</td><td>15 min</td></tr>
+            <tr><td>0:00</td><td>Tour of the generated project</td><td>Demo</td><td>20 min</td></tr>
+            <tr><td>0:20</td><td>Middleware pipeline explained</td><td>Theory</td><td>15 min</td></tr>
+            <tr><td>0:35</td><td>Layered architecture — the why</td><td>Theory</td><td>20 min</td></tr>
+            <tr><td>0:55</td><td>Dependency injection in .NET</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>1:20</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:30</td><td>Build the first TasksController</td><td>Lab</td><td>40 min</td></tr>
+            <tr><td>2:10</td><td>Code review &amp; discussion</td><td>Discussion</td><td>20 min</td></tr>
           </tbody>
         </table>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 4 — Section Divider: Why Documentation Matters        -->
+      <!-- SLIDE 4 — Section Divider: Tour (Layout 2)                  -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
-          <div class="section-label">Section 1 of 4</div>
+          <div class="section-label">Section 1 of 6</div>
           <div class="section-rule"></div>
-          <div class="section-title">Why Documentation Matters</div>
-          <div class="section-desc">An API without documentation is a contract nobody can read. Every caller — whether a teammate, a React developer, or your future self — must read the source code to understand how to use it. Documentation is not optional; it is part of the API surface.</div>
+          <div class="section-title">Tour of the Generated Project</div>
+          <div class="section-desc">Walk through every file that <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; color:rgba(255,255,255,0.9);">dotnet new webapi</code> creates and understand what each one does before writing a single line of your own code</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>The hidden cost of undocumented APIs</li>
-            <li>What API consumers actually need</li>
-            <li>Why Swagger is the industry standard</li>
+            <li>The project file structure</li>
+            <li><code class="inline">Program.cs</code> — the entry point</li>
+            <li><code class="inline">appsettings.json</code> and <code class="inline">launchSettings.json</code></li>
+            <li>The sample controller to delete</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 5 — The Hidden Cost of Undocumented APIs (Layout 3)   -->
+      <!-- SLIDE 5 — Project File Structure (Layout 5)                 -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">The Hidden Cost of Undocumented APIs</div>
+        <div class="slide-heading">The Generated File Structure</div>
         <div class="slide-rule"></div>
-        <ul>
-          <li><strong>Integration time multiplies</strong> — every consumer must read and reverse-engineer source code instead of reading a clear contract</li>
-          <li><strong>Mistakes become invisible</strong> — callers guess at optional parameters, omit required fields, and only discover errors at runtime</li>
-          <li><strong>Breaking changes go unnoticed</strong> — without a spec, renaming a field or changing a response shape has no visible warning for consumers</li>
-          <li><strong>Testing is harder</strong> — without documented request and response schemas, writing accurate tests requires digging through controllers and services</li>
-          <li><strong>Frontend becomes tightly coupled to implementation</strong> — React developers end up hard-coding request shapes discovered by trial and error</li>
-        </ul>
-        <div class="callout error" style="margin-top:1rem;">
-          <div class="callout-label">Rule</div>
-          If a consumer of your API cannot understand how to use an endpoint without reading the implementation, the API is incomplete — regardless of whether the code works.
+        <div class="file-path-label">dotnet new webapi -n TaskManagerApi.Api</div>
+        <pre><code class="language-bash" style="font-size:0.88rem;">TaskManagerApi.Api/
+├── Controllers/
+│   └── WeatherForecastController.cs   # delete this — sample only
+├── Properties/
+│   └── launchSettings.json            # controls how the app starts locally
+├── appsettings.json                   # configuration values
+├── appsettings.Development.json       # dev overrides (gitignored by default)
+├── Program.cs                         # entry point — services + pipeline wired here
+└── TaskManagerApi.Api.csproj          # project file, NuGet package references</code></pre>
+        <div class="callout warning" style="margin-top:0.9rem;">
+          <div class="callout-label">First thing to do</div>
+          Delete <code class="inline">WeatherForecastController.cs</code> and its model. It is a scaffold sample with no relation to your project.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 6 — What Consumers Need (Layout 4)                    -->
+      <!-- SLIDE 6 — Program.cs Walkthrough (Layout 4)                 -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">What API Consumers Actually Need</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.9rem;">Every caller of your API needs to know — without reading source code:</p>
-            <ul style="font-size:0.93rem;">
-              <li>The HTTP method and URL for each endpoint</li>
-              <li>Which parameters are required vs optional, and their types</li>
-              <li>The exact shape of the request body, if any</li>
-              <li>Every possible response code and the shape of each response body</li>
-              <li>Authentication requirements for the endpoint</li>
-            </ul>
-          </div>
-          <div class="col-right">
-            <div class="callout success" style="margin-top:0;">
-              <div class="callout-label">Swagger gives all of this</div>
-              Swagger UI generates an interactive web page from your API's OpenAPI spec. Consumers can read parameter descriptions, see response schemas, and test endpoints directly in the browser — without touching your code.
-            </div>
-            <div class="callout info" style="margin-top:0.9rem;">
-              <div class="callout-label">Relevant to you</div>
-              As React developers, you have consumed third-party APIs with good documentation. Swagger gives your own API that same professional, self-service interface.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 7 — Section Divider: OpenAPI & Swashbuckle            -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="section-divider">
-        <div class="section-left">
-          <div class="section-label">Section 2 of 4</div>
-          <div class="section-rule"></div>
-          <div class="section-title">OpenAPI &amp; Swashbuckle</div>
-          <div class="section-desc">OpenAPI is the specification. Swagger is the tooling built on top of it. Swashbuckle is the .NET library that generates an OpenAPI document from your controllers at runtime — with no manual file maintenance required.</div>
-        </div>
-        <div class="section-right">
-          <div class="section-right-label">In this section</div>
-          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>What OpenAPI is and what it describes</li>
-            <li>The structure of an OpenAPI document</li>
-            <li>Installing and configuring Swashbuckle</li>
-            <li>What Swagger UI gives you in the browser</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 8 — What is OpenAPI? (Layout 3)                       -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">What is OpenAPI?</div>
-        <div class="slide-rule"></div>
-        <ul>
-          <li><strong>OpenAPI (formerly Swagger Spec)</strong> is a language-agnostic standard for describing REST APIs as a structured JSON or YAML document</li>
-          <li>The spec describes <strong>endpoints, HTTP methods, parameters, request bodies, response schemas, and authentication</strong> in a machine-readable format</li>
-          <li><strong>Tools consume the spec</strong> — Swagger UI renders it as an interactive page; Postman imports it; code generators produce typed clients from it</li>
-          <li>In .NET, <strong>Swashbuckle</strong> inspects your controllers using reflection and generates the OpenAPI document at runtime — no manual editing required</li>
-          <li>The generated spec is served at <code class="inline">/swagger/v1/swagger.json</code> and Swagger UI reads it to build the visual interface</li>
-        </ul>
-        <div class="callout info" style="margin-top:1rem;">
-          <div class="callout-label">Terminology note</div>
-          "OpenAPI" is the specification standard. "Swagger" originally referred to the spec itself before it was donated to the OpenAPI Initiative — now "Swagger" refers to the suite of tools (Swagger UI, Swagger Editor, Swashbuckle). In .NET projects you will see both names used interchangeably.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 9 — Inside an OpenAPI Document (Layout 4)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Inside an OpenAPI Document</div>
+        <div class="slide-heading">Program.cs — The Entry Point</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.92rem; margin-bottom:0.8rem;">An OpenAPI document is a JSON file with three key sections:</p>
-            <ul style="font-size:0.92rem;">
-              <li><code class="inline">info</code> — title, version, and description of the API</li>
-              <li><code class="inline">paths</code> — every endpoint, its HTTP methods, parameters, request bodies, and all possible responses</li>
-              <li><code class="inline">components</code> — reusable schema definitions (your DTOs) referenced throughout <code class="inline">paths</code></li>
+            <ul>
+              <li><strong>Builder phase</strong> — register all services into the DI container before the app starts</li>
+              <li><strong>Pipeline phase</strong> — add middleware in the exact order requests should flow through</li>
+              <li><code class="inline">app.MapControllers()</code> — connects incoming URLs to controller action methods</li>
+              <li><code class="inline">app.Run()</code> — starts the HTTP server and blocks until the process exits</li>
             </ul>
-            <p style="font-size:0.88rem; margin-top:0.9rem; color:var(--color-text-muted);">Swashbuckle generates this entire document automatically from your controllers. You only annotate your actions — the serialization is handled for you.</p>
-          </div>
-          <div class="col-right">
-            <div class="file-path-label">GET /swagger/v1/swagger.json</div>
-            <pre><code class="language-json" style="font-size:0.82rem;">{
-  "openapi": "3.0.1",
-  "info": {
-    "title": "Task Manager API",
-    "version": "v1"
-  },
-  "paths": {
-    "/api/tasks/{id}": {
-      "get": {
-        "summary": "Returns a single task by ID.",
-        "parameters": [
-          { "name": "id", "in": "path", "required": true }
-        ],
-        "responses": {
-          "200": { "description": "Task found." },
-          "404": { "description": "Task not found." }
-        }
-      }
-    }
-  }
-}</code></pre>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 10 — Installing Swashbuckle (Layout 4)                -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Installing Swashbuckle</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">One NuGet package brings in everything needed:</p>
-            <pre><code class="language-bash" style="font-size:0.95rem;">dotnet add package Swashbuckle.AspNetCore</code></pre>
-            <p style="font-size:0.9rem; margin-top:0.9rem; color:var(--color-text-muted);">This installs three sub-packages:</p>
-            <ul style="font-size:0.9rem;">
-              <li><code class="inline">Swashbuckle.AspNetCore.Swagger</code> — serializes the spec to JSON</li>
-              <li><code class="inline">Swashbuckle.AspNetCore.SwaggerGen</code> — reflects over controllers to build the spec</li>
-              <li><code class="inline">Swashbuckle.AspNetCore.SwaggerUI</code> — serves the interactive web interface</li>
-            </ul>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Enable XML documentation output so comments appear in the spec:</p>
-            <div class="file-path-label">TaskManagerApi.csproj</div>
-            <pre><code class="language-xml" style="font-size:0.95rem;">&lt;PropertyGroup&gt;
-  &lt;GenerateDocumentationFile&gt;true&lt;/GenerateDocumentationFile&gt;
-  &lt;NoWarn&gt;$(NoWarn);1591&lt;/NoWarn&gt;
-&lt;/PropertyGroup&gt;</code></pre>
-            <div class="callout warning" style="margin-top:0.9rem;">
-              <div class="callout-label">Warning 1591</div>
-              This warning fires on every public member that has no XML comment. Suppressing it lets you add documentation incrementally without the build flooding with warnings on undocumented members.
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Minimal hosting model</div>
+              .NET 6+ uses a top-level <code class="inline">Program.cs</code> with no <code class="inline">Startup</code> class. Everything is in one file.
             </div>
           </div>
-        </div>
-      </section>
+          <div class="col-right">
+            <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="3-5,15-17">var builder = WebApplication.CreateBuilder(args);
 
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 11 — Registering Swagger Services (Layout 5)          -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Registering Swagger Services</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Program.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="7-12,14-16">using System.Reflection;
-using Microsoft.OpenApi.Models;
-
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title       = "Task Manager API",
-        Version     = "v1",
-        Description = "RESTful API for managing tasks"
-    });
+builder.Services.AddSwaggerGen();
 
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-});</code></pre>
-        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;"><code class="inline">IncludeXmlComments</code> wires the XML documentation file into Swashbuckle so your <code class="inline">/// &lt;summary&gt;</code> and <code class="inline">/// &lt;response&gt;</code> tags appear in Swagger UI.</p>
-      </section>
+var app = builder.Build();
 
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 12 — Wiring Swagger Middleware (Layout 4)             -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Wiring Swagger Middleware</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Two middleware calls activate Swagger — both gated to development only:</p>
-            <div class="file-path-label">Program.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.9rem;">if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint(
-            "/swagger/v1/swagger.json",
-            "Task Manager API v1");
-    });
-}</code></pre>
-          </div>
-          <div class="col-right">
-            <p style="font-size:0.9rem; margin-bottom:0.7rem;">What this gives you in development:</p>
-            <ul style="font-size:0.9rem;">
-              <li><code class="inline">/swagger/v1/swagger.json</code> — the raw OpenAPI document</li>
-              <li><code class="inline">/swagger</code> — the Swagger UI web page</li>
-              <li>Every controller action listed with its method, path, and description</li>
-              <li>Interactive "Try it out" to call the API directly from the browser</li>
-              <li>Request and response schema panels generated from your DTOs</li>
-            </ul>
-            <div class="callout warning" style="margin-top:0.9rem; font-size:0.88rem;">
-              <div class="callout-label">Production</div>
-              Never expose Swagger UI in production. The <code class="inline">IsDevelopment()</code> guard ensures it only runs locally. Leaking it in production exposes your full API surface to anyone who finds the URL.
-            </div>
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();</code></pre>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 13 — Section Divider: XML Comments & Decorators        -->
+      <!-- SLIDE 7 — Section Divider: Middleware (Layout 2)            -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
-          <div class="section-label">Section 3 of 4</div>
+          <div class="section-label">Section 2 of 6</div>
           <div class="section-rule"></div>
-          <div class="section-title">XML Comments &amp; Response Decorators</div>
-          <div class="section-desc">Swashbuckle infers the request shape from your models automatically. The parts it cannot infer — human-readable descriptions and which response codes each action can produce — must be supplied with XML doc comments and ProducesResponseType attributes.</div>
+          <div class="section-title">Middleware Pipeline</div>
+          <div class="section-desc">Every incoming HTTP request travels through a chain of middleware components before reaching your controller. Understanding this chain is essential for adding auth, logging, and error handling.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>XML summary, param, and response tags</li>
-            <li>ProducesResponseType — linking codes to DTO types</li>
-            <li>Documenting a GET endpoint</li>
-            <li>Documenting a POST endpoint with multiple response codes</li>
+            <li>What middleware is</li>
+            <li>The request / response pipeline</li>
+            <li>Short-circuiting the pipeline</li>
+            <li>Order matters</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 14 — XML Documentation Comments (Layout 4)            -->
+      <!-- SLIDE 8 — Middleware Pipeline Diagram (Layout 3 + SVG)      -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">XML Documentation Comments</div>
+        <div class="slide-heading">The Middleware Pipeline</div>
         <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Three XML tags matter for Swagger:</p>
-            <ul style="font-size:0.93rem;">
-              <li><code class="inline">&lt;summary&gt;</code> — one-line description shown as the endpoint title in Swagger UI</li>
-              <li><code class="inline">&lt;param name="x"&gt;</code> — description of a parameter, shown in the Parameters panel</li>
-              <li><code class="inline">&lt;response code="N"&gt;</code> — human-readable description of a specific HTTP response code</li>
-            </ul>
-            <div class="callout info" style="margin-top:0.9rem; font-size:0.88rem;">
-              <div class="callout-label">Triple-slash</div>
-              XML doc comments begin with <code class="inline">///</code>. Visual Studio and Rider auto-generate the tag scaffolding when you type <code class="inline">///</code> directly above a method signature.
-            </div>
-          </div>
-          <div class="col-right">
-            <pre><code class="language-csharp" style="font-size:0.88rem;">/// &lt;summary&gt;Returns a single task by ID.&lt;/summary&gt;
-/// &lt;param name="id"&gt;The task identifier.&lt;/param&gt;
-/// &lt;response code="200"&gt;Task found and returned.&lt;/response&gt;
-/// &lt;response code="404"&gt;No task with this ID exists.&lt;/response&gt;
-[HttpGet("{id}")]
-public IActionResult GetById(int id)
-    => Ok(_taskService.GetById(id));</code></pre>
-            <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:0.7rem;">Without the XML comments, Swagger UI shows only the method and path. With them, it shows a description, parameter labels, and a response code table with meanings.</p>
-          </div>
-        </div>
+
+        <!-- Inline SVG pipeline diagram -->
+        <svg viewBox="0 0 820 142" style="width:100%; height:auto; max-height:128px; margin-bottom:1rem;">
+          <!-- Request pill -->
+          <rect x="0" y="43" width="80" height="36" rx="18" fill="#E0D5CF" stroke="#B8694E" stroke-width="1.5"/>
+          <text x="40" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#2A1F1A">Request</text>
+          <!-- Arrow 1 -->
+          <line x1="80" y1="61" x2="97" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="97,57 106,61 97,65" fill="#B8694E"/>
+          <!-- HTTPS box -->
+          <rect x="106" y="36" width="126" height="50" rx="4" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+          <text x="169" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">HTTPS</text>
+          <text x="169" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Redirection</text>
+          <!-- Arrow 2 -->
+          <line x1="232" y1="61" x2="249" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="249,57 258,61 249,65" fill="#B8694E"/>
+          <!-- Authorization box (warning-tinted) -->
+          <rect x="258" y="36" width="126" height="50" rx="4" fill="#FBF4E3" stroke="#8A5C00" stroke-width="1.5"/>
+          <text x="321" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Authorization</text>
+          <text x="321" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8A5C00">may return 401</text>
+          <!-- Short-circuit arrow down from Auth -->
+          <line x1="321" y1="86" x2="321" y2="108" stroke="#8A5C00" stroke-width="1.2" stroke-dasharray="3,3"/>
+          <polygon points="317,108 321,116 325,108" fill="#8A5C00"/>
+          <text x="321" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#8A5C00">short-circuit</text>
+          <!-- Arrow 3 -->
+          <line x1="384" y1="61" x2="401" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="401,57 410,61 401,65" fill="#B8694E"/>
+          <!-- Routing box -->
+          <rect x="410" y="36" width="108" height="50" rx="4" fill="#F8F4F1" stroke="#E0D5CF" stroke-width="1.5"/>
+          <text x="464" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#1B2A3B">Routing</text>
+          <!-- Arrow 4 -->
+          <line x1="518" y1="61" x2="535" y2="61" stroke="#B8694E" stroke-width="1.5"/>
+          <polygon points="535,57 544,61 535,65" fill="#B8694E"/>
+          <!-- Controller box (brand-highlighted) -->
+          <rect x="544" y="31" width="136" height="60" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="2"/>
+          <text x="612" y="57" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#8F4A34">Controller</text>
+          <text x="612" y="74" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#8F4A34">your code runs here</text>
+          <!-- Arrow 5 (success green) -->
+          <line x1="680" y1="61" x2="697" y2="61" stroke="#2E6B4F" stroke-width="1.5"/>
+          <polygon points="697,57 706,61 697,65" fill="#2E6B4F"/>
+          <!-- Response pill (green) -->
+          <rect x="706" y="43" width="90" height="36" rx="18" fill="#E5F3EC" stroke="#2E6B4F" stroke-width="1.5"/>
+          <text x="751" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="500" fill="#2E6B4F">Response</text>
+        </svg>
+
+        <ul style="font-size:0.95rem;">
+          <li>Middleware is code that runs on <strong>every request</strong> in a defined order</li>
+          <li>Each component can inspect, modify, or <strong>short-circuit</strong> the pipeline — returning a response before reaching the next step</li>
+          <li>The order you call <code class="inline">app.UseXxx()</code> in <code class="inline">Program.cs</code> is the order they execute</li>
+          <li>You will add custom middleware in Session 10 (error handling) and Session 21 (rate limiting, CORS)</li>
+        </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 15 — ProducesResponseType (Layout 4)                  -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">ProducesResponseType — Linking Codes to Schemas</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;"><code class="inline">[ProducesResponseType]</code> tells Swashbuckle which DTO type is returned for each response code. Without it, Swagger only knows the code exists — not the shape of the body.</p>
-            <ul style="font-size:0.93rem;">
-              <li>First argument: the DTO type that populates the response schema panel</li>
-              <li>Second argument: the <code class="inline">StatusCodes</code> constant for the HTTP code</li>
-              <li>Use <code class="inline">ProblemDetails</code> for error responses — it matches the RFC 7807 shape your API already returns from Session 05</li>
-            </ul>
-          </div>
-          <div class="col-right">
-            <pre><code class="language-csharp" style="font-size:0.88rem;" data-line-numbers="6-7">/// &lt;summary&gt;Returns a single task by ID.&lt;/summary&gt;
-/// &lt;param name="id"&gt;The task identifier.&lt;/param&gt;
-/// &lt;response code="200"&gt;Task found and returned.&lt;/response&gt;
-/// &lt;response code="404"&gt;No task with this ID exists.&lt;/response&gt;
-[HttpGet("{id}")]
-[ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status200OK)]
-[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-public IActionResult GetById(int id)
-    => Ok(_taskService.GetById(id));</code></pre>
-            <div class="callout success" style="margin-top:0.8rem; font-size:0.85rem;">
-              <div class="callout-label">Result</div>
-              Swagger UI now renders the <code class="inline">TaskItemDto</code> schema in the 200 panel and the <code class="inline">ProblemDetails</code> schema in the 404 panel — consumers see the exact shape of both outcomes.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 16 — Documenting a POST Endpoint (Layout 5)           -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Documenting a POST Endpoint</div>
-        <div class="slide-rule"></div>
-        <div class="file-path-label">Controllers/TasksController.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="7-9">/// &lt;summary&gt;Creates a new task.&lt;/summary&gt;
-/// &lt;param name="dto"&gt;The task data.&lt;/param&gt;
-/// &lt;response code="201"&gt;Task created successfully.&lt;/response&gt;
-/// &lt;response code="400"&gt;Validation failed — see errors in the response body.&lt;/response&gt;
-/// &lt;response code="409"&gt;A task with this title already exists.&lt;/response&gt;
-[HttpPost]
-[ProducesResponseType(typeof(TaskItemDto), StatusCodes.Status201Created)]
-[ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
-public IActionResult Create([FromBody] CreateTaskDto dto)
-{
-    var created = _taskService.Create(dto);
-    return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-}</code></pre>
-        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Use <code class="inline">ValidationProblemDetails</code> for 400 responses — it has the same shape as the validation errors ASP.NET Core returns automatically, so the schema in Swagger UI will be accurate.</p>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 17 — Section Divider: Versioned Swagger & Typed Client -->
+      <!-- SLIDE 9 — Section Divider: Layered Architecture (Layout 2)  -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="section-divider">
         <div class="section-left">
-          <div class="section-label">Section 4 of 4</div>
+          <div class="section-label">Section 3 of 6</div>
           <div class="section-rule"></div>
-          <div class="section-title">Versioned Swagger UI &amp; Typed Clients</div>
-          <div class="section-desc">When an API has multiple versions, Swagger UI can show each version as its own tab with its own spec. After the session, a TypeScript client generated from that spec closes the loop back to your React frontend — turning your documented API into a typed library.</div>
+          <div class="section-title">Layered Architecture</div>
+          <div class="section-desc">All projects in this course follow a three-layer structure. Learning it now pays off in every session from Session 14 onwards.</div>
         </div>
         <div class="section-right">
           <div class="section-right-label">In this section</div>
           <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
-            <li>Registering multiple spec documents in SwaggerGen</li>
-            <li>Grouping controller versions with ApiExplorerSettings</li>
-            <li>Generating a TypeScript client with NSwag</li>
-            <li>Using the generated client in React</li>
+            <li>Controllers, Services, Repositories</li>
+            <li>Responsibility of each layer</li>
+            <li>Why separation matters</li>
+            <li>The folder structure to adopt now</li>
           </ul>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 18 — Registering Multiple API Docs (Layout 5)         -->
+      <!-- SLIDE 10 — Three Layers (Layout 4 + SVG)                    -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Registering Multiple API Docs</div>
+        <div class="slide-heading">Controllers &rarr; Services &rarr; Repositories</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul style="font-size:0.97rem;">
+              <li><strong>Controllers</strong> — handle HTTP in and out. Receive a request, call a service, return a response. No business logic lives here.</li>
+              <li><strong>Services</strong> — all business logic. No knowledge of HTTP, no knowledge of the database. Pure decision-making.</li>
+              <li><strong>Repositories</strong> — data access only. Issue queries, return entities. No business rules live here.</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">React analogy</div>
+              This mirrors separating your components (Controllers), hooks (Services), and API calls (Repositories) in a React app.
+            </div>
+          </div>
+          <div class="col-right">
+            <svg viewBox="0 0 280 234" style="width:100%; height:auto; max-height:230px;">
+              <!-- Controllers layer -->
+              <rect x="10" y="0" width="260" height="58" rx="5" fill="#F2E0D8" stroke="#B8694E" stroke-width="2"/>
+              <text x="140" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#8F4A34">Controllers</text>
+              <text x="140" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#8F4A34">HTTP in / out &middot; no business logic</text>
+              <!-- Arrow 1 -->
+              <line x1="140" y1="58" x2="140" y2="78" stroke="#B8694E" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <polygon points="135,78 140,87 145,78" fill="#B8694E"/>
+              <!-- Services layer -->
+              <rect x="10" y="87" width="260" height="58" rx="5" fill="#2E4057" stroke="#2E4057" stroke-width="2"/>
+              <text x="140" y="111" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Services</text>
+              <text x="140" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Business logic &middot; no HTTP knowledge</text>
+              <!-- Arrow 2 -->
+              <line x1="140" y1="145" x2="140" y2="165" stroke="#B8694E" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <polygon points="135,165 140,174 145,165" fill="#B8694E"/>
+              <!-- Repositories layer -->
+              <rect x="10" y="174" width="260" height="58" rx="5" fill="#1B2A3B" stroke="#1B2A3B" stroke-width="2"/>
+              <text x="140" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">Repositories</text>
+              <text x="140" y="218" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="rgba(255,255,255,0.85)">Data access only &middot; no business rules</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Why Layered Architecture? (Layout 3)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Why Separate the Layers?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Testability</strong> — you can unit-test a <code class="inline">TaskService</code> without an HTTP server or a database. This is covered fully in Session 22.</li>
+          <li><strong>Replaceability</strong> — swap the database (e.g. SQL Server for PostgreSQL) by rewriting only the Repository layer. The Service layer never changes.</li>
+          <li><strong>Readability</strong> — a controller that is 20 lines long and only delegates is easy to understand. A controller with SQL queries buried in it is not.</li>
+          <li><strong>Team scaling</strong> — developers can own different layers independently without stepping on each other.</li>
+        </ul>
+        <div class="callout success" style="margin-top:1rem;">
+          <div class="callout-label">Rule of thumb</div>
+          If you can answer "what does this class do?" in one sentence using only one of the words <em>receive</em>, <em>decide</em>, or <em>query</em>, the layer is correct.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Recommended Folder Structure (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Adopt This Folder Structure Now</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">TaskManagerApi.Api/</div>
+        <pre><code class="language-bash" style="font-size:0.88rem;">TaskManagerApi.Api/
+├── Controllers/            # HTTP layer — one file per resource
+├── Services/
+│   └── Interfaces/         # ITaskService.cs lives here
+├── Repositories/
+│   └── Interfaces/         # ITaskRepository.cs lives here
+├── Models/
+│   ├── Entities/           # TaskItem.cs — the database model
+│   └── DTOs/               # request / response shapes (introduced in Session 16)
+└── Program.cs</code></pre>
+        <div class="callout info" style="margin-top:0.9rem;">
+          <div class="callout-label">Create the DTOs folder now</div>
+          You will not use it until Session 16, but establishing the structure early avoids a larger reorganisation mid-course.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Section Divider: Dependency Injection (Layout 2) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Dependency Injection in .NET</div>
+          <div class="section-desc">DI is the mechanism that connects your three layers together. .NET has a first-class DI container built in — no third-party library required.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What dependency injection is</li>
+            <li>The three service lifetimes</li>
+            <li>Registering services in <code class="inline">Program.cs</code></li>
+            <li>Constructor injection in a controller</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — What is DI? (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What is Dependency Injection?</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>The problem without DI:</strong> a class creates its own dependencies with <code class="inline">new TaskService()</code> — it is tightly coupled, impossible to swap, and impossible to test in isolation</li>
+          <li><strong>DI inverts this:</strong> objects declare what they need (via constructor parameters) and a container provides it — the class never calls <code class="inline">new</code></li>
+          <li><strong>The container</strong> is <code class="inline">IServiceCollection</code> — you describe every service once in <code class="inline">Program.cs</code>, then the framework resolves them automatically</li>
+          <li><strong>Why interfaces?</strong> Depending on <code class="inline">ITaskService</code> rather than <code class="inline">TaskService</code> means you can substitute a different implementation (e.g. a test double) without touching the controller</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Service Lifetimes (Layout 3 + cards)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Service Lifetimes</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:0;">How long does the container keep an instance alive?</p>
+        <div class="lifetime-grid">
+          <div class="lifetime-card highlight">
+            <div class="lifetime-tag">Your default</div>
+            <div class="lifetime-card-name">Scoped</div>
+            <div class="lifetime-card-desc">One instance per HTTP request. Created at the start of a request, disposed at the end. Use this for services and repositories.</div>
+          </div>
+          <div class="lifetime-card">
+            <div class="lifetime-card-name">Singleton</div>
+            <div class="lifetime-card-desc">One instance for the entire application lifetime. Use for stateless utilities — a cache wrapper, a logger adapter. Never inject a Scoped into a Singleton.</div>
+          </div>
+          <div class="lifetime-card">
+            <div class="lifetime-card-name">Transient</div>
+            <div class="lifetime-card-desc">New instance every time the container resolves it. Rarely needed. Use only for very lightweight, stateless operations.</div>
+          </div>
+        </div>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Captive dependency trap</div>
+          Never inject a shorter-lived service into a longer-lived one (e.g. a Scoped into a Singleton). The container will warn you at startup.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Registering Services (Layout 5)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Registering Services in Program.cs</div>
         <div class="slide-rule"></div>
         <div class="file-path-label">Program.cs</div>
-        <pre><code class="language-csharp" style="font-size:0.85rem;" data-line-numbers="3-4,12-13">builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Manager API", Version = "v1" });
-    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Task Manager API", Version = "v2" });
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="4-5">var builder = WebApplication.CreateBuilder(args);
 
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddControllers();
+builder.Services.AddScoped&lt;ITaskService, TaskService&gt;();
+builder.Services.AddScoped&lt;ITaskRepository, TaskRepository&gt;();
 
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    c.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
-});</code></pre>
-        <p style="font-size:0.85rem; color:var(--color-brand-dark); margin-top:0.6rem;">Each <code class="inline">SwaggerDoc</code> call creates a separate tab in Swagger UI. The matching <code class="inline">SwaggerEndpoint</code> calls tell the UI where to load each spec. Both the name passed to <code class="inline">SwaggerDoc</code> and the JSON path must use the same version string.</p>
+var app = builder.Build();
+// ... pipeline config below</code></pre>
+        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.95rem; color:var(--color-brand-dark); margin-top:0.9rem;">
+          The pattern is always: <code class="inline">AddScoped&lt;IInterface, ConcreteClass&gt;()</code>. The container maps the interface to the implementation — callers only ever see the interface.
+        </p>
+        <div class="callout info" style="margin-top:0.7rem;">
+          <div class="callout-label">Registration order</div>
+          Register services before calling <code class="inline">builder.Build()</code>. After that the container is sealed and no further registrations are possible.
+        </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 19 — Grouping Endpoints by Version (Layout 4)         -->
+      <!-- SLIDE 17 — Constructor Injection (Layout 5)                 -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Grouping Endpoints by Version</div>
+        <div class="slide-heading">Constructor Injection</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/TasksController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="3,5-8">public class TasksController : ControllerBase
+{
+    private readonly ITaskService _taskService;
+
+    public TasksController(ITaskService taskService)
+    {
+        _taskService = taskService;
+    }
+}</code></pre>
+        <ul style="font-size:0.93rem; margin-top:0.9rem;">
+          <li>Declare the dependency as a <strong>private readonly field</strong> typed to the interface</li>
+          <li>Accept it as a <strong>constructor parameter</strong> — the container injects the concrete instance automatically</li>
+          <li>The controller never calls <code class="inline">new TaskService()</code> — it does not know the concrete type exists</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Section Divider: Lab (Layout 2)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 5 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Lab — First TasksController</div>
+          <div class="section-desc">Build a <code style="font-family:'JetBrains Mono',monospace; font-size:0.9em; color:rgba(255,255,255,0.9);">TasksController</code> with in-memory data. No database yet — that arrives in Session 14.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">What you will build</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>A <code class="inline">TaskItem</code> entity</li>
+            <li><code class="inline">GET /api/tasks</code> — return all tasks</li>
+            <li><code class="inline">GET /api/tasks/{id}</code> — 404 if not found</li>
+            <li><code class="inline">POST /api/tasks</code> — 201 with Location header</li>
+            <li>Verified end-to-end in Postman</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — TaskItem Entity (Layout 5)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The TaskItem Entity</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/Entities/TaskItem.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.95rem;">public class TaskItem
+{
+    public int Id { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public bool IsCompleted { get; set; }
+    public DateTime CreatedAt { get; set; }
+}</code></pre>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">In-memory storage for now</div>
+          Store instances in a <code class="inline">static List&lt;TaskItem&gt;</code> inside your service for this session. This is replaced by Entity Framework Core and a real database in Session 14.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Endpoints to Build (Layout 3 + cards)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Endpoints to Implement</div>
+        <div class="slide-rule"></div>
+        <div class="endpoint-list">
+          <div class="endpoint-card">
+            <span class="endpoint-method">GET</span>
+            <span class="endpoint-path">/api/tasks</span>
+            <span class="endpoint-desc">Return all tasks as a JSON array &mdash; respond 200 OK</span>
+          </div>
+          <div class="endpoint-card">
+            <span class="endpoint-method">GET</span>
+            <span class="endpoint-path">/api/tasks/{id}</span>
+            <span class="endpoint-desc">Return a single task by id &mdash; respond 200 OK or 404 Not Found</span>
+          </div>
+          <div class="endpoint-card">
+            <span class="endpoint-method">POST</span>
+            <span class="endpoint-path">/api/tasks</span>
+            <span class="endpoint-desc">Create a new task from the request body &mdash; respond 201 Created with a <code class="inline">Location</code> header pointing to the new resource</span>
+          </div>
+        </div>
+        <div class="callout success" style="margin-top:0.9rem;">
+          <div class="callout-label">Acceptance criteria</div>
+          All three endpoints tested in Postman &nbsp;&middot;&nbsp; 404 returns for a missing id &nbsp;&middot;&nbsp; POST returns <code class="inline">201</code> with <code class="inline">Location: /api/tasks/{newId}</code>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Status Code Helpers (Layout 5)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Returning Correct HTTP Status Codes</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Controllers/TasksController.cs</div>
+        <pre><code class="language-csharp" style="font-size:0.92rem;" data-line-numbers="4-5,7-8,10-11">// 200 OK — body serialised to JSON automatically
+return Ok(tasks);
+
+// 201 Created — sets Location header to /api/tasks/{id}
+return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
+
+// 404 Not Found — empty body
+return NotFound();
+
+// 400 Bad Request — empty body or custom message
+return BadRequest();</code></pre>
+        <p style="font-family:'Inter',sans-serif; font-weight:500; font-size:0.93rem; color:var(--color-brand-dark); margin-top:0.9rem;">
+          All these helper methods live on <code class="inline">ControllerBase</code> — your controller inherits them automatically.
+        </p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Route & Action Attributes (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Controller &amp; Route Attributes</div>
         <div class="slide-rule"></div>
         <div class="two-col">
           <div class="col-left">
-            <p style="font-size:0.93rem; margin-bottom:0.8rem;">Swashbuckle decides which spec document an action belongs to by reading its <code class="inline">ApiExplorerSettings.GroupName</code>. The value must match the document name passed to <code class="inline">SwaggerDoc</code>.</p>
-            <ul style="font-size:0.93rem;">
-              <li>Actions with no <code class="inline">GroupName</code> appear in all specs</li>
-              <li>Setting <code class="inline">GroupName = "v2"</code> restricts the action to the v2 tab only</li>
-              <li>This works alongside the API versioning from Session 06 — the route template, <code class="inline">[ApiVersion]</code>, and <code class="inline">GroupName</code> all use the same version identifier</li>
+            <ul style="font-size:0.95rem;">
+              <li><code class="inline">[ApiController]</code> — enables automatic model validation, binding, and problem-detail error responses</li>
+              <li><code class="inline">[Route("api/[controller]")]</code> — sets the base URL; <code class="inline">[controller]</code> resolves to the class name minus the <em>Controller</em> suffix</li>
+              <li><code class="inline">[HttpGet]</code> / <code class="inline">[HttpPost]</code> — bind an action to an HTTP method</li>
+              <li><code class="inline">"{id}"</code> in the route template maps to the <code class="inline">int id</code> parameter by name</li>
             </ul>
           </div>
           <div class="col-right">
-            <div class="file-path-label">Controllers/TasksV2Controller.cs</div>
-            <pre><code class="language-csharp" style="font-size:0.92rem;">[ApiVersion("2.0")]
-[Route("api/v{version:apiVersion}/tasks")]
-[ApiExplorerSettings(GroupName = "v2")]
-public class TasksV2Controller : ControllerBase
+            <pre><code class="language-csharp" style="font-size:0.82rem;" data-line-numbers="1-2,7-8,11-12,15-16">[ApiController]
+[Route("api/[controller]")]
+public class TasksController : ControllerBase
 {
-    // Actions here appear only in the v2 tab
+    // GET /api/tasks
+    [HttpGet]
+    public IActionResult GetAll() { ... }
+
+    // GET /api/tasks/42
+    [HttpGet("{id}")]
+    public IActionResult GetById(int id) { ... }
+
+    // POST /api/tasks
+    [HttpPost]
+    public IActionResult Create([FromBody] TaskItem task) { ... }
 }</code></pre>
-            <div class="callout info" style="margin-top:0.9rem; font-size:0.85rem;">
-              <div class="callout-label">Connects to Session 06</div>
-              The <code class="inline">AddApiVersioning</code> setup and route templates from Session 06 are the prerequisite. <code class="inline">GroupName</code> is a Swagger-only hint — it does not change how the router dispatches requests.
-            </div>
           </div>
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 20 — Generating a TypeScript Client (Layout 4)        -->
+      <!-- SLIDE 23 — Section Divider: Code Review (Layout 2)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 6 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Code Review &amp; Discussion</div>
+          <div class="section-desc">Step back from the code. Think about the decisions made and challenge assumptions before they become habits.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">Prompts</div>
+          <ul style="color:var(--color-text); font-size:0.95rem; line-height:1.7; padding-left:1.2rem;">
+            <li>What breaks if you put database code in the controller?</li>
+            <li>Why depend on an interface rather than the concrete class?</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Discussion Prompts (Layout 3)                    -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Generating a Typed TypeScript Client</div>
-        <div class="slide-rule"></div>
-        <div class="two-col">
-          <div class="col-left">
-            <p style="font-size:0.92rem; margin-bottom:0.7rem;">NSwag reads your OpenAPI spec and generates a fully typed TypeScript client. Every endpoint becomes a method; every DTO becomes an interface.</p>
-            <pre><code class="language-bash" style="font-size:0.85rem;">dotnet tool install --global NSwag.ConsoleCore
-
-nswag openapi2tsclient \
-  /input:swagger.json \
-  /output:src/api/taskApiClient.ts</code></pre>
-            <p style="font-size:0.85rem; margin-top:0.7rem; color:var(--color-text-muted);">Download <code class="inline">swagger.json</code> from <code class="inline">/swagger/v1/swagger.json</code> while the API is running locally, then run NSwag against that file.</p>
-          </div>
-          <div class="col-right">
-            <div class="file-path-label">src/components/TaskList.tsx</div>
-            <pre><code class="language-javascript" style="font-size:0.85rem;">import { TasksClient } from '../api/taskApiClient';
-
-const client = new TasksClient("https://localhost:5001");
-
-// Autocomplete works for all parameters and return types
-const result = await client.getAll(
-    1,         // page
-    20,        // pageSize
-    "meeting"  // search
-);
-
-console.log(result.data);        // TaskItemDto[]
-console.log(result.totalCount);  // number</code></pre>
-          </div>
-        </div>
-        <div class="callout success" style="margin-top:0.8rem;">
-          <div class="callout-label">The payoff</div>
-          Rename a field in the API response, re-generate the client, and TypeScript immediately flags every call site in React that accessed the old name. The documentation and the type system enforce the contract together.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 21 — Lab: Document the Task API (Layout 3)            -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Lab — Document the Task API</div>
-        <div class="slide-rule"></div>
-        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.8rem;">Add full Swagger documentation to the Task API built in previous sessions. Every action must have XML comments and response type decorators.</p>
-        <div class="step-list">
-          <div class="step-item">
-            <span class="step-num">1</span>
-            <span class="step-desc">Install <code class="inline">Swashbuckle.AspNetCore</code> and add <code class="inline">GenerateDocumentationFile</code> to the <code class="inline">.csproj</code></span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">2</span>
-            <span class="step-desc">Register <code class="inline">AddEndpointsApiExplorer</code>, <code class="inline">AddSwaggerGen</code> with <code class="inline">OpenApiInfo</code> and <code class="inline">IncludeXmlComments</code> in <code class="inline">Program.cs</code></span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">3</span>
-            <span class="step-desc">Wire <code class="inline">UseSwagger</code> and <code class="inline">UseSwaggerUI</code> inside the <code class="inline">IsDevelopment()</code> guard</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">4</span>
-            <span class="step-desc">Add <code class="inline">/// &lt;summary&gt;</code>, <code class="inline">/// &lt;param&gt;</code>, and <code class="inline">/// &lt;response&gt;</code> XML comments to every controller action</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">5</span>
-            <span class="step-desc">Add <code class="inline">[ProducesResponseType]</code> for every possible response code, linking each to the correct DTO or <code class="inline">ProblemDetails</code> type</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">6</span>
-            <span class="step-desc">Navigate to <code class="inline">/swagger</code> and verify each endpoint shows its description, parameter labels, and response schemas</span>
-          </div>
-          <div class="step-item">
-            <span class="step-num">7</span>
-            <span class="step-desc">Use "Try it out" to call <code class="inline">GET /api/tasks?page=1&amp;pageSize=5</code> and confirm the paginated response matches the displayed schema</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 22 — Key Principle (Layout 6)                         -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="callout-slide">
-        <div class="callout-slide-label">Key Principle</div>
-        <div class="callout-slide-rule"></div>
-        <div class="callout-slide-quote">
-          "Documentation is not separate from the API —<br>it is part of the API contract."
-        </div>
-        <div class="callout-slide-attribution" style="font-size:0.95rem; max-width:640px; text-align:center; color:rgba(255,255,255,0.85);">
-          XML comments, ProducesResponseType attributes, and the OpenAPI spec are not optional extras. They are the machine-readable contract that every consumer of your API depends on — the same discipline that makes breaking changes visible before they ship.
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 23 — Summary (Layout 3)                               -->
-      <!-- ═══════════════════════════════════════════════════════════ -->
-      <section class="content-slide">
-        <div class="slide-heading">Summary</div>
+        <div class="slide-heading">Discussion Prompts</div>
         <div class="slide-rule"></div>
         <ul>
-          <li><strong>OpenAPI is the standard</strong> — a language-agnostic, machine-readable description of your API's endpoints, parameters, and response shapes</li>
-          <li><strong>Swashbuckle generates the spec automatically</strong> — it reflects over your controllers at runtime; no manual file maintenance required</li>
-          <li><strong>XML doc comments</strong> supply what Swashbuckle cannot infer: human-readable summaries, parameter labels, and response code meanings</li>
-          <li><strong>ProducesResponseType links response codes to DTO types</strong> — Swagger UI uses this to render accurate schema panels for every possible outcome</li>
-          <li><strong>Multiple API versions appear as separate tabs</strong> — each <code class="inline">SwaggerDoc</code> call creates a named spec; <code class="inline">ApiExplorerSettings</code> routes actions into the correct one</li>
-          <li><strong>NSwag closes the loop to React</strong> — a typed TypeScript client generated from the spec enforces the API contract at compile time in the frontend</li>
+          <li style="margin-bottom:1.2rem;">
+            <strong>"What would break if you put database code directly in your controller?"</strong>
+            <br><span style="font-size:0.92rem; color:var(--color-text-muted);">Think about testing, readability, and what happens when you need to change the query.</span>
+          </li>
+          <li style="margin-bottom:1.2rem;">
+            <strong>"Why would you want an interface (<code class="inline">ITaskService</code>) rather than depending directly on <code class="inline">TaskService</code>?"</strong>
+            <br><span style="font-size:0.92rem; color:var(--color-text-muted);">Think about what happens in tests, and what happens if you need a second implementation later.</span>
+          </li>
         </ul>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 24 — What's Next (Layout 3)                           -->
+      <!-- SLIDE 25 — Session Summary (Layout 3)                       -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">What's Next</div>
+        <div class="slide-heading">Session Summary</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>Session 09 — Entity Framework Core Intro</strong></p>
         <ul>
-          <li>Sessions 04–08 built a fully shaped, versioned, and documented HTTP API layer — but the data lives in in-memory lists. Session 09 introduces <strong>Entity Framework Core</strong> to persist it to a real database</li>
-          <li>You will install EF Core, configure a <code class="inline">DbContext</code>, define entity models, and issue your first migration to generate a database schema from C# code</li>
-          <li>The CRUD endpoints you have already built will be wired to real <code class="inline">DbSet</code> queries — replacing the in-memory collections entirely</li>
-          <li>After Session 09, the Task API will read and write from a persistent SQL database, and the Swagger UI you built today will be the primary tool for testing every EF Core operation live</li>
+          <li><code class="inline">dotnet new webapi</code> scaffolds a working project — <code class="inline">Program.cs</code> is the single entry point where services are registered and the middleware pipeline is configured</li>
+          <li>Every HTTP request passes through the middleware pipeline in the exact order the middleware was registered</li>
+          <li>Layered architecture (Controllers &rarr; Services &rarr; Repositories) separates HTTP handling, business logic, and data access into distinct, testable units</li>
+          <li>Dependency injection lets classes declare their dependencies as constructor parameters; the DI container resolves and provides them automatically</li>
+          <li>Use <strong>Scoped</strong> lifetime for services and repositories unless you have a specific reason for Singleton or Transient</li>
+          <li><code class="inline">Ok()</code>, <code class="inline">NotFound()</code>, <code class="inline">CreatedAtAction()</code> are helper methods on <code class="inline">ControllerBase</code> that produce semantically correct HTTP responses</li>
         </ul>
-        <div class="callout info" style="margin-top:1rem;">
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next: Session 09</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;"><strong>HTTP Methods &amp; Status Codes</strong></p>
+        <ul>
+          <li>A full tour of GET, POST, PUT, PATCH, and DELETE — when to use each and why</li>
+          <li>The complete HTTP status code vocabulary: 2xx, 3xx, 4xx, 5xx</li>
+          <li>Idempotency and safety — properties that constrain how clients and proxies may behave</li>
+          <li>Expanding the <code class="inline">TasksController</code> with PUT, PATCH, and DELETE endpoints</li>
+        </ul>
+        <div class="callout info" style="margin-top:1.2rem;">
           <div class="callout-label">Before next session</div>
-          Complete the assignment. Make sure Swagger UI is running and all endpoints are fully documented before Session 09 — you will use "Try it out" to verify each database operation as you wire it up.
+          Complete today's assignment. Make sure your <code class="inline">TasksController</code> GET and POST endpoints pass all acceptance criteria before Session 09.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 25 — Assignment (Layout 3)                            -->
+      <!-- SLIDE 27 — Assignment (Layout 3)                            -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="content-slide">
-        <div class="slide-heading">Assignment</div>
+        <div class="slide-heading">Take-Home Assignment</div>
         <div class="slide-rule"></div>
-        <p style="font-size:0.92rem; margin-bottom:0.8rem;">
-          <strong>Add complete Swagger/OpenAPI documentation to the Task Manager API.</strong>
-        </p>
-        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-bottom:0.5rem;">What to build:</p>
-        <ul style="font-size:0.92rem;">
-          <li>Install Swashbuckle, enable XML documentation output, and register <code class="inline">AddSwaggerGen</code> and the Swagger middleware in <code class="inline">Program.cs</code></li>
-          <li>Add <code class="inline">/// &lt;summary&gt;</code>, <code class="inline">/// &lt;param&gt;</code>, and <code class="inline">/// &lt;response&gt;</code> XML doc comments to every controller action</li>
-          <li>Add <code class="inline">[ProducesResponseType]</code> decorators for all possible response codes, linking each to the correct DTO or <code class="inline">ProblemDetails</code> type</li>
+        <p style="font-size:0.97rem; margin-bottom:0.9rem;">Create a new .NET Web API project called <code class="inline">BooksApi</code> that applies the layered architecture and dependency injection patterns from this session.</p>
+        <ul style="font-size:0.93rem;">
+          <li>Project follows the four-folder structure: <code class="inline">Controllers/</code>, <code class="inline">Services/Interfaces/</code>, <code class="inline">Repositories/Interfaces/</code>, <code class="inline">Models/Entities/</code></li>
+          <li>A <code class="inline">Book</code> entity with <code class="inline">Id</code> (int), <code class="inline">Title</code> (string), <code class="inline">Author</code> (string), and <code class="inline">Year</code> (int)</li>
+          <li>An <code class="inline">IBooksService</code> interface with <code class="inline">GetAll()</code> and <code class="inline">GetById(int id)</code>, and a concrete in-memory <code class="inline">BooksService</code> implementation</li>
+          <li>A <code class="inline">BooksController</code> with <code class="inline">GET /api/books</code> and <code class="inline">GET /api/books/{id}</code> (404 if not found)</li>
+          <li><code class="inline">BooksService</code> registered as Scoped in <code class="inline">Program.cs</code> and injected into the controller via constructor</li>
         </ul>
-        <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Acceptance criteria:</p>
-        <ul style="font-size:0.88rem; margin-top:0.2rem;">
-          <li>Swagger UI is accessible at <code class="inline">/swagger</code> in development and lists all Task API endpoints</li>
-          <li>Every endpoint has a human-readable summary and all parameters are labeled with descriptions</li>
-          <li>Every possible response code has a schema panel showing the DTO or error body shape</li>
-          <li>The raw spec at <code class="inline">/swagger/v1/swagger.json</code> is valid JSON with no missing schema references</li>
-        </ul>
-        <div class="callout warning" style="margin-top:0.7rem;">
+        <div class="callout success" style="margin-top:0.8rem;">
           <div class="callout-label">Bonus</div>
-          Add JWT Bearer authentication to Swagger UI using <code class="inline">AddSecurityDefinition</code> and <code class="inline">AddSecurityRequirement</code> so the "Authorize" button appears and bearer tokens can be passed to protected endpoints directly from the UI. You will use this in Session 14 when JWT auth is implemented.
+          Add a <code class="inline">POST /api/books</code> endpoint that creates a new book and returns <code class="inline">201 Created</code> with a <code class="inline">Location</code> header pointing to the new resource.
         </div>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════ -->
-      <!-- SLIDE 26 — Q&A                                              -->
+      <!-- SLIDE 28 — Q&A                                              -->
       <!-- ═══════════════════════════════════════════════════════════ -->
       <section class="qa-slide">
         <div class="qa-heading">Questions?</div>
-        <div class="qa-sub">Session 08 — API Documentation &amp; Swagger</div>
+        <div class="qa-sub">Session 08 &nbsp;&middot;&nbsp; First .NET Web API &amp; Project Architecture</div>
       </section>
 
-    </div>
-  </div>
+    </div><!-- /.slides -->
+  </div><!-- /.reveal -->
 
   <!-- ── Persistent Footer ── -->
   <div class="slide-footer">
-    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <img src="../assets/andalusia_academy_logo.jpg" alt="Andalusia Academy">
     <span class="footer-slide-num" id="slide-num"></span>
     <div></div>
   </div>
