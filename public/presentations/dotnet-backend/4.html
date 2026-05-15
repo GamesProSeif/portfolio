@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 04 — C# Methods, Strings &amp; Exception Handling</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Agenda table smaller font ── */
+    .agenda-table td, .agenda-table th {
+      font-size: 0.88rem;
+      padding: 0.4rem 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 04</div>
+          <div class="title-rule"></div>
+          <div class="title-main">C# Methods, Strings<br>&amp; Exception Handling</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 2 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Define and call methods with various parameter and return types</li>
+          <li>Manipulate strings using built-in methods and <code class="inline">StringBuilder</code></li>
+          <li>Handle <code class="inline">null</code> safely using nullable types and null operators</li>
+          <li>Catch and throw exceptions, and create custom exception types</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3)                                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Agenda</div>
+        <div class="slide-rule"></div>
+        <table class="agenda-table">
+          <thead>
+            <tr><th>Time</th><th>Segment</th><th>Type</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Methods: definition &amp; overloading</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>0:25</td><td>Strings &amp; StringBuilder</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>0:45</td><td>Null &amp; nullable types</td><td>Theory + Demo</td><td>15 min</td></tr>
+            <tr><td>1:00</td><td>Break</td><td>—</td><td>5 min</td></tr>
+            <tr><td>1:05</td><td>Exception handling</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>1:30</td><td>Exercises</td><td>Exercise</td><td>30 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Methods (Layout 2)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Methods</div>
+          <div class="section-desc">Defining reusable blocks of logic, controlling parameters, and overloading for flexible APIs.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Method structure &amp; return types</li>
+            <li>Expression-bodied methods</li>
+            <li>Overloading</li>
+            <li>Optional &amp; named parameters</li>
+            <li><code class="inline">ref</code> and <code class="inline">out</code> parameters</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Method Structure (Layout 4)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Method Structure</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>A method is a named block of code that performs a task and optionally returns a value</li>
+              <li>Signature: <code class="inline">modifier returnType Name(params)</code></li>
+              <li><code class="inline">void</code> methods perform an action and return nothing</li>
+              <li>Expression-bodied syntax (<code class="inline">=&gt;</code>) for single-expression methods</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">static int Add(int a, int b)
+{
+    return a + b;
+}
+
+int result = Add(3, 4);   // 7
+
+// void — no return value
+static void PrintLine(string message)
+{
+    Console.WriteLine(message);
+}
+
+// Expression-bodied shorthand
+static int Square(int n) => n * n;
+static void Greet(string name)
+    => Console.WriteLine($"Hello, {name}!");</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Method Overloading (Layout 4)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Method Overloading</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Same method name, different parameter lists</li>
+              <li>The compiler picks the right version based on argument types</li>
+              <li>Return type alone is <strong>not</strong> enough to distinguish overloads</li>
+              <li>Useful when the same operation applies to different data types</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Note</div>
+              You already use overloading every time you call <code class="inline">Console.WriteLine</code> — it has overloads for <code class="inline">string</code>, <code class="inline">int</code>, <code class="inline">object</code>, and more.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.9rem;">static int Add(int a, int b)
+    => a + b;
+
+static double Add(double a, double b)
+    => a + b;
+
+static int Add(int a, int b, int c)
+    => a + b + c;
+
+// Compiler picks the correct version:
+Add(1, 2);          // int overload
+Add(1.5, 2.5);      // double overload
+Add(1, 2, 3);       // three-arg overload</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Optional & Named Parameters (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Optional &amp; Named Parameters</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Optional parameters have a default value — callers may omit them</li>
+              <li>Optional parameters must come <strong>after</strong> required ones</li>
+              <li>Named arguments let you skip an optional and set a later one by name</li>
+              <li>Named arguments also improve readability at call sites</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">static void CreateUser(
+    string name,
+    bool isAdmin = false,
+    int age = 18)
+{
+    Console.WriteLine(
+        $"{name}, admin: {isAdmin}, age: {age}");
+}
+
+CreateUser("Alice");
+// isAdmin=false, age=18
+
+CreateUser("Bob", isAdmin: true);
+// skip age, set isAdmin by name
+
+CreateUser("Carol", age: 25);
+// skip isAdmin, set age by name</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — ref and out Parameters (Layout 5)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">ref and out Parameters</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">pass-by-reference</div>
+        <pre><code class="language-csharp" data-line-numbers="1,2,5,8,9,13" style="font-size:0.88rem;">// ref: variable must be initialized before passing
+static void Double(ref int value) => value *= 2;
+
+int x = 5;
+Double(ref x);   // x is now 10
+
+// out: method is responsible for assigning the value
+static bool TryDivide(int a, int b, out double result)
+{
+    if (b == 0) { result = 0; return false; }
+    result = (double)a / b;
+    return true;
+}
+
+if (TryDivide(10, 2, out double quotient))
+    Console.WriteLine(quotient);   // 5</code></pre>
+        <div class="callout info" style="margin-top:0.8rem;">
+          <div class="callout-label">Why this matters</div>
+          <code class="inline">out</code> is exactly how <code class="inline">int.TryParse(s, out int value)</code> works — now you know why the syntax looks that way.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Section Divider: Strings (Layout 2)               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Strings &amp; StringBuilder</div>
+          <div class="section-desc">Working with text — why strings are immutable and when to reach for StringBuilder.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>String immutability</li>
+            <li>Common string methods</li>
+            <li>Case-insensitive comparison</li>
+            <li>StringBuilder for loops</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — String Immutability & Common Methods (Layout 4)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">String Immutability &amp; Common Methods</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Strings in C# are <strong>immutable</strong> — every operation creates a new string</li>
+              <li>Methods like <code class="inline">Trim()</code> return a new value — assign it back or it is lost</li>
+              <li>Use <code class="inline">string.Join</code> to combine collections into a single string</li>
+            </ul>
+            <div class="callout warning" style="margin-top:1rem;">
+              <div class="callout-label">Common mistake</div>
+              <code class="inline">s.Trim()</code> does nothing if you don't assign the result: <code class="inline">s = s.Trim();</code>
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;">string s = "  Hello, World!  ";
+
+s.Length                    // 17
+s.Trim()                    // "Hello, World!"
+s.ToUpper()                 // "  HELLO, WORLD!  "
+s.Contains("World")         // true
+s.StartsWith("  Hello")     // true
+s.Replace("World", "C#")    // "  Hello, C#!  "
+s.Substring(7, 5)           // "World"
+s.IndexOf("World")          // 9
+s.Split(',')                // ["  Hello", " World!  "]
+
+string.Join(", ",
+    new[] { "a", "b", "c" }) // "a, b, c"</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — String Comparison & StringBuilder (Layout 4)     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Comparison &amp; StringBuilder</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.95rem; margin-bottom:0.5rem;"><strong>Case-insensitive comparison</strong></p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">string a = "hello";
+string b = "HELLO";
+
+bool eq = a == b;  // false
+
+bool eqIgnore = string.Equals(
+    a, b,
+    StringComparison.OrdinalIgnoreCase);
+// true</code></pre>
+            <div class="callout info" style="margin-top:0.8rem; font-size:0.88rem;">
+              <div class="callout-label">Best practice</div>
+              Prefer <code class="inline">OrdinalIgnoreCase</code> for identifiers and API parameters; use <code class="inline">CurrentCultureIgnoreCase</code> only for user-facing text.
+            </div>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.95rem; margin-bottom:0.5rem;"><strong>StringBuilder — avoid string thrashing in loops</strong></p>
+            <pre><code class="language-csharp" style="font-size:0.88rem;">var sb = new StringBuilder();
+
+for (int i = 1; i &lt;= 100; i++)
+{
+    sb.Append(i);
+    if (i &lt; 100) sb.Append(", ");
+}
+
+string result = sb.ToString();
+// "1, 2, 3, ..., 100"</code></pre>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.5rem;">Each <code class="inline">+</code> on a string allocates a new object. <code class="inline">StringBuilder</code> mutates a buffer internally — use it whenever building strings in a loop.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Section Divider: Null (Layout 2)                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Null &amp; Nullable Types</div>
+          <div class="section-desc">Handling the absence of a value safely — without <code style="color:rgba(255,255,255,0.9); font-family:'JetBrains Mono',monospace; font-size:0.9em;">NullReferenceException</code>.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Nullable value types (<code class="inline">int?</code>)</li>
+            <li>Null-coalescing operator <code class="inline">??</code></li>
+            <li>Null-conditional operator <code class="inline">?.</code></li>
+            <li>Chaining both operators</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Nullable Types & Operators (Layout 4)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Nullable Types &amp; Null Operators</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Reference types (<code class="inline">string</code>, objects) can be <code class="inline">null</code> by default</li>
+              <li>Value types (<code class="inline">int</code>, <code class="inline">bool</code>) cannot — add <code class="inline">?</code> to allow null</li>
+              <li><code class="inline">??</code> provides a fallback when the left side is null</li>
+              <li><code class="inline">?.</code> accesses a member only if not null — returns null instead of throwing</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">// Nullable value type
+int? age = null;
+bool? isVerified = null;
+
+// ?? — null-coalescing
+int? userAge = null;
+int display = userAge ?? 0;  // 0
+
+// ?. — null-conditional
+string? name = null;
+int? length = name?.Length;      // null
+string? upper = name?.ToUpper(); // null
+
+// Chain both
+int len = user?.Address?.PostalCode?.Length ?? 0;</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Null Check Patterns (Layout 4)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Null Check Patterns</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Always check before dereferencing a nullable reference</li>
+              <li>C# 9+ pattern <code class="inline">is not null</code> is preferred — it reads as plain English and is pattern-match aware</li>
+              <li>Inside an <code class="inline">if (name != null)</code> block, the compiler knows <code class="inline">name</code> is non-null (<em>flow analysis</em>)</li>
+            </ul>
+            <div class="callout success" style="margin-top:1rem;">
+              <div class="callout-label">Tip</div>
+              Enable <code class="inline">&lt;Nullable&gt;enable&lt;/Nullable&gt;</code> in your project file to get compiler warnings whenever you dereference a potentially-null reference.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.9rem;">string? name = GetName();
+
+// Classic null check
+if (name != null)
+{
+    Console.WriteLine(name.Length);
+}
+
+// C# 9+ pattern syntax (preferred)
+if (name is not null)
+{
+    Console.WriteLine(name.Length);
+}
+
+// Inline guard with ??
+string display = name ?? "Unknown";</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Section Divider: Exception Handling (Layout 2)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 4</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Exception Handling</div>
+          <div class="section-desc">Catching, throwing, and designing custom exceptions for predictable failure paths.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li><code class="inline">try</code> / <code class="inline">catch</code> / <code class="inline">finally</code></li>
+            <li>Catch ordering — specific before general</li>
+            <li>Throwing exceptions</li>
+            <li>Re-throwing with bare <code class="inline">throw</code></li>
+            <li>Custom exception types</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — try/catch/finally (Layout 5)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">try / catch / finally</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">exception-handling</div>
+        <pre><code class="language-csharp" data-line-numbers="1,5,9,13" style="font-size:0.9rem;">try
+{
+    int result = 10 / int.Parse(Console.ReadLine());
+    Console.WriteLine(result);
+}
+catch (DivideByZeroException)
+{
+    Console.WriteLine("Cannot divide by zero.");
+}
+catch (FormatException ex)
+{
+    Console.WriteLine($"Invalid input: {ex.Message}");
+}
+finally
+{
+    // Always runs — use to release resources
+    Console.WriteLine("Done.");
+}</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.6rem;"><code class="inline">finally</code> runs whether an exception was thrown or not — ideal for cleanup (closing files, releasing locks).</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Catch Ordering & Throwing (Layout 4)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Catch Ordering &amp; Throwing</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Put <strong>specific</strong> exception types before <strong>general</strong> ones — the first matching catch wins</li>
+              <li>A catch for <code class="inline">Exception</code> at the top swallows everything, including bugs you want to see</li>
+              <li>Use <code class="inline">throw new ...</code> to signal a precondition violation</li>
+              <li><code class="inline">nameof(b)</code> keeps the parameter name refactor-safe</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">// Correct catch order
+catch (FormatException ex)      // specific
+catch (OverflowException ex)    // specific
+catch (Exception ex)            // general — last!
+
+// Throwing with a meaningful message
+static int Divide(int a, int b)
+{
+    if (b == 0)
+        throw new ArgumentException(
+            "Divisor cannot be zero.",
+            nameof(b));
+    return a / b;
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Re-throwing (Layout 4)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Re-throwing Exceptions</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Sometimes you want to log and then let the exception propagate</li>
+              <li>Use bare <code class="inline">throw;</code> — it preserves the original stack trace</li>
+              <li><code class="inline">throw ex;</code> resets the stack trace, making debugging much harder</li>
+            </ul>
+            <div class="callout error" style="margin-top:1rem;">
+              <div class="callout-label">Never do this</div>
+              <code class="inline">throw ex;</code> — always use bare <code class="inline">throw;</code> to re-throw.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" data-line-numbers="4" style="font-size:0.9rem;">try
+{
+    // ... operation that may throw
+}
+catch (Exception ex)
+{
+    Console.WriteLine(
+        $"Logging: {ex.Message}");
+
+    throw;   // preserves stack trace
+    // NOT: throw ex;
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Custom Exceptions (Layout 5)                     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Custom Exception Types</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Exceptions/InsufficientFundsException.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="1,3,5,7" style="font-size:0.88rem;">public class InsufficientFundsException : Exception
+{
+    public decimal Amount { get; }
+
+    public InsufficientFundsException(decimal amount)
+        : base($"Insufficient funds. Attempted to withdraw {amount:C}.")
+    {
+        Amount = amount;
+    }
+}
+
+// Throwing
+throw new InsufficientFundsException(500m);
+
+// Catching
+catch (InsufficientFundsException ex)
+{
+    Console.WriteLine($"Failed: {ex.Message}");
+    Console.WriteLine($"Amount: {ex.Amount}");
+}</code></pre>
+        <p style="font-size:0.88rem; color:var(--color-brand-dark); margin-top:0.5rem;">Custom exceptions become essential in Session 10 — every API error will map to a specific exception type.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Key Concept Callout (Layout 6)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">"Use bare <code style="font-family:'JetBrains Mono',monospace; font-style:normal;">throw;</code> to re-throw — never <code style="font-family:'JetBrains Mono',monospace; font-style:normal;">throw ex;</code>. The stack trace is your only map to the crime scene."</div>
+        <div class="callout-slide-attribution">— Session 04</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Methods encapsulate reusable logic; overloading lets the same name serve different types</li>
+          <li>Optional and named parameters reduce overload clutter and improve call-site clarity</li>
+          <li>Strings are immutable — always capture the result of string methods; use <code class="inline">StringBuilder</code> in loops</li>
+          <li><code class="inline">??</code> provides a fallback; <code class="inline">?.</code> short-circuits null dereferences safely</li>
+          <li>Catch specific exceptions first; bare <code class="inline">throw;</code> preserves the stack trace</li>
+          <li>Custom exception types carry domain-specific data and will become the backbone of API error design</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="margin-bottom:1rem; color:var(--color-text-muted); font-size:0.95rem;">Next session: <strong>Session 05 — OOP I: Classes, Encapsulation &amp; Inheritance</strong></p>
+        <ul>
+          <li>Defining classes with fields, properties, and constructors</li>
+          <li>Access modifiers and encapsulation</li>
+          <li>Inheritance and the <code class="inline">base</code> keyword</li>
+          <li>Method overriding with <code class="inline">virtual</code> and <code class="inline">override</code></li>
+        </ul>
+        <div class="callout info" style="margin-top:1.5rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the four exercises at the end of today's session. Pay particular attention to exercise 4 — it combines exception handling with a real input loop.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; margin-bottom:0.8rem;">Build a <strong>safe calculator console app</strong> that uses methods, strings, nullable types, and exception handling.</p>
+        <ul style="font-size:0.97rem;">
+          <li>Create a method <code class="inline">double? SafeCalculate(string expression)</code> that parses a string like <code class="inline">"10 / 2"</code> and returns the result, or <code class="inline">null</code> if the operation is invalid</li>
+          <li>Support operators: <code class="inline">+</code>, <code class="inline">-</code>, <code class="inline">*</code>, <code class="inline">/</code></li>
+          <li>Throw a custom exception <code class="inline">InvalidExpressionException</code> (with the original input as a property) when the format is unrecognized</li>
+          <li>In <code class="inline">Main</code>, loop until the user types "exit", printing each result or an error message — never let an uncaught exception crash the app</li>
+          <li>Use <code class="inline">StringBuilder</code> to produce a summary of all calculations at the end</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Bonus</div>
+          Add a <code class="inline">history</code> command that prints all previous calculations using your <code class="inline">StringBuilder</code> summary at any point during the session, not just on exit.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 04 &nbsp;&middot;&nbsp; C# Methods, Strings &amp; Exception Handling</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent =
+          `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>
