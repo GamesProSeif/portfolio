@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 05 — OOP I: Classes, Encapsulation &amp; Inheritance</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+    .reveal ol {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+    .reveal ol li {
+      margin-bottom: 0.6rem;
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+    .reveal ol li::marker {
+      color: var(--color-brand);
+      font-weight: 600;
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Agenda table smaller font ── */
+    .agenda-table td, .agenda-table th {
+      font-size: 0.88rem;
+      padding: 0.4rem 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 05</div>
+          <div class="title-rule"></div>
+          <div class="title-main">OOP I: Classes, Encapsulation<br>&amp; Inheritance</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 3 &nbsp;&middot;&nbsp; 2.5 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Define classes with constructors, fields, and properties</li>
+          <li>Apply access modifiers to enforce encapsulation</li>
+          <li>Use static members for shared class-level state and behaviour</li>
+          <li>Build class hierarchies using inheritance</li>
+          <li>Override methods in derived classes correctly</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3)                                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Agenda</div>
+        <div class="slide-rule"></div>
+        <table class="agenda-table">
+          <thead>
+            <tr><th>Time</th><th>Segment</th><th>Type</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Classes &amp; objects</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>0:25</td><td>Constructors &amp; the <code class="inline">this</code> keyword</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>0:45</td><td>Properties &amp; access modifiers</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>1:10</td><td>Break</td><td>—</td><td>10 min</td></tr>
+            <tr><td>1:20</td><td>Static members</td><td>Theory + Demo</td><td>15 min</td></tr>
+            <tr><td>1:35</td><td>Inheritance &amp; the <code class="inline">base</code> keyword</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>2:00</td><td><code class="inline">virtual</code> &amp; <code class="inline">override</code></td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>2:20</td><td>Lab</td><td>Lab</td><td>10 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Classes & Objects (Layout 2)     -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Classes &amp; Objects</div>
+          <div class="section-desc">A class is a blueprint. An object is an instance created from that blueprint — with its own independent copy of the data.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Blueprint vs. instance</li>
+            <li>Fields and methods</li>
+            <li><code class="inline">new</code> keyword</li>
+            <li>Object initializer syntax</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Class Anatomy (Layout 4)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Class Anatomy</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>A class groups <strong>data</strong> (fields) with <strong>behaviour</strong> (methods)</li>
+              <li>Fields hold values that each instance owns — e.g., <code class="inline">Brand</code>, <code class="inline">Year</code></li>
+              <li>Methods define what the object can do — e.g., <code class="inline">StartEngine()</code></li>
+              <li>The <code class="inline">public</code> modifier on the class makes it accessible from other files</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.95rem;">public class Car
+{
+    public string Brand;
+    public int Year;
+
+    public void StartEngine()
+    {
+        Console.WriteLine(
+            $"{Brand} engine started.");
+    }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Creating Objects (Layout 4)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Creating Objects</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li><code class="inline">new ClassName()</code> allocates a fresh instance on the heap</li>
+              <li>Each instance has its <strong>own</strong> copy of instance fields</li>
+              <li>Set fields one by one, or use an <strong>object initializer</strong> to set them in one expression</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">Tip</div>
+              Object initializer syntax is equivalent to setting fields one at a time — it is just more compact and readable at the call site.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.92rem;">Car car1 = new Car();
+car1.Brand = "Toyota";
+car1.Year  = 2022;
+car1.StartEngine();
+// "Toyota engine started."
+
+// Object initializer — same result
+Car car2 = new Car
+{
+    Brand = "BMW",
+    Year  = 2024
+};
+car2.StartEngine();
+// "BMW engine started."</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Section Divider: Constructors & this (Layout 2)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Constructors &amp; the <code style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:0.9em;">this</code> Keyword</div>
+          <div class="section-desc">Constructors guarantee an object starts in a valid state. <code style="color:rgba(255,255,255,0.9);font-family:'JetBrains Mono',monospace;font-size:0.9em;">this</code> refers to the current instance and chains constructors together.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Parameterized constructors</li>
+            <li>Constructor overloading</li>
+            <li>Chaining with <code class="inline">this(...)</code></li>
+            <li><code class="inline">this</code> as current instance reference</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Constructors (Layout 4)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Constructors</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>A constructor runs automatically when an object is created</li>
+              <li>Same name as the class, no return type</li>
+              <li>If you define no constructor, C# provides a parameterless default</li>
+              <li>Use it to guarantee the object starts in a fully-initialised, valid state</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.9rem;">public class Person
+{
+    public string Name;
+    public int Age;
+
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age  = age;
+    }
+}
+
+// Constructor is called here
+Person p = new Person("Alice", 30);</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Constructor Chaining (Layout 5)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Constructor Chaining</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/Person.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="8,12-17" style="font-size:0.85rem;">public class Person
+{
+    public string Name;
+    public int Age;
+    public string Email;
+
+    // Delegates to the three-parameter constructor
+    public Person(string name, int age) : this(name, age, "")
+    {
+    }
+
+    public Person(string name, int age, string email)
+    {
+        Name  = name;
+        Age   = age;
+        Email = email;
+    }
+}</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.6rem;"><code class="inline">this(...)</code> calls another constructor in the same class — avoids duplicating initialisation logic across overloads.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — The this Keyword (Layout 4)                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">The <code style="font-size:1.3rem;font-family:'JetBrains Mono',monospace;color:var(--color-navy);">this</code> Keyword</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li><code class="inline">this</code> refers to the current instance of the class</li>
+              <li>Useful for disambiguating a parameter name from a field of the same name</li>
+              <li>Returning <code class="inline">this</code> from a method enables <strong>method chaining</strong> — calling multiple methods in one expression</li>
+              <li>You already saw <code class="inline">this(...)</code> used to chain constructors in the previous slide</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">public class Counter
+{
+    private int _count;
+
+    public void Increment() => _count++;
+
+    public Counter Reset()
+    {
+        _count = 0;
+        return this;   // same object — enables chaining
+    }
+}
+
+var c = new Counter();
+c.Increment();
+c.Increment();
+c.Reset().Increment();   // chain calls</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Section Divider: Properties & Modifiers          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Properties &amp; Access Modifiers</div>
+          <div class="section-desc">Encapsulation — hide internal data and expose only a controlled interface. Access modifiers enforce the boundary.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Access modifiers table</li>
+            <li>Auto-implemented properties</li>
+            <li>Full properties with backing field</li>
+            <li>Computed read-only properties</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Access Modifiers (Layout 3 with table)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Access Modifiers</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr><th>Modifier</th><th>Accessible from</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code class="inline">public</code></td><td>Anywhere</td></tr>
+            <tr><td><code class="inline">private</code></td><td>Only inside the same class</td></tr>
+            <tr><td><code class="inline">protected</code></td><td>Same class and derived classes</td></tr>
+            <tr><td><code class="inline">internal</code></td><td>Same assembly (project)</td></tr>
+            <tr><td><code class="inline">protected internal</code></td><td>Same assembly or derived classes</td></tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:1.2rem;">
+          <div class="callout-label">Rule of thumb</div>
+          Fields should almost always be <code class="inline">private</code>. Expose data through <strong>properties</strong> — that way you can add validation later without breaking any code that uses the class.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Auto-implemented Properties (Layout 4)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Auto-implemented Properties</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>A property exposes a field through <code class="inline">get</code> and <code class="inline">set</code> accessors</li>
+              <li>Auto-implemented: the compiler creates a hidden backing field automatically</li>
+              <li><code class="inline">private set</code> restricts writes to inside the class</li>
+              <li>Callers stay shielded from the internal representation — you can change it later without breaking them</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">public class Product
+{
+    public string  Name  { get; set; }
+    public decimal Price { get; set; }
+
+    // Only settable from inside this class
+    public int Stock { get; private set; }
+
+    public void Restock(int units)
+    {
+        Stock += units;
+    }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Full Property with Backing Field (Layout 5)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Full Properties with Backing Fields</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/Product.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="8-13" style="font-size:0.88rem;">public class Product
+{
+    private decimal _price;
+
+    public decimal Price
+    {
+        get => _price;
+        set
+        {
+            if (value &lt; 0)
+                throw new ArgumentException(
+                    "Price cannot be negative.");
+            _price = value;
+        }
+    }
+}</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-brand-dark); margin-top:0.6rem;">Use a backing field when you need <strong>validation</strong>, <strong>computed transformations</strong>, or <strong>side effects</strong> inside <code class="inline">get</code> or <code class="inline">set</code>.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Computed Properties (Layout 4)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Computed (Read-only) Properties</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>A property with only <code class="inline">get</code> is read-only from outside the class</li>
+              <li>Expression-bodied <code class="inline">=> expr</code> computes the value on demand — no stored field needed</li>
+              <li>Derived values should be properties, not fields — they stay in sync automatically when dependencies change</li>
+            </ul>
+            <div class="callout success" style="margin-top:1rem;">
+              <div class="callout-label">Tip</div>
+              If a value can always be computed from other properties, do not store it — a read-only property keeps it fresh for free.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">public class Rectangle
+{
+    public double Width  { get; set; }
+    public double Height { get; set; }
+
+    // Computed — no backing field required
+    public double Area
+        => Width * Height;
+
+    public double Perimeter
+        => 2 * (Width + Height);
+}
+
+var r = new Rectangle
+    { Width = 4, Height = 6 };
+
+Console.WriteLine(r.Area);       // 24
+Console.WriteLine(r.Perimeter);  // 20</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Key Concept: Encapsulation (Layout 6)            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">"Hide the data; expose the behaviour. The public surface of a class is a promise — once broken, everything that depends on it breaks too."</div>
+        <div class="callout-slide-attribution">— Encapsulation &nbsp;&middot;&nbsp; Session 05</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Section Divider: Static Members (Layout 2)       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Static Members</div>
+          <div class="section-desc">A static member belongs to the class itself, not to any instance — one shared copy across the entire application.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Static fields and methods</li>
+            <li>Utility / helper classes</li>
+            <li>Shared state across all instances</li>
+            <li>When to use static vs. instance</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Static Utility Methods (Layout 4)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Static Members — Utility Methods</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Accessed through the <strong>class name</strong>, not through an object reference</li>
+              <li>Static methods cannot access instance members — there is no <code class="inline">this</code></li>
+              <li>Useful for stateless helpers that logically belong to a type but need no instance</li>
+            </ul>
+            <div class="callout info" style="margin-top:1rem;">
+              <div class="callout-label">You already use these</div>
+              <code class="inline">Console.WriteLine</code>, <code class="inline">Math.Sqrt</code>, and <code class="inline">string.Join</code> are all static methods.
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.92rem;">public class MathHelper
+{
+    public static double Pi = 3.14159;
+
+    public static int Square(int n) => n * n;
+
+    public static double CircleArea(double r)
+        => Pi * r * r;
+}
+
+// Called on the class, not on an instance
+double pi = MathHelper.Pi;
+int    sq = MathHelper.Square(5);     // 25
+double a  = MathHelper.CircleArea(3); // 28.27...</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Static Shared State (Layout 5)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Static Shared State</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/User.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="3,10,13" style="font-size:0.88rem;">public class User
+{
+    private static int _totalCreated = 0;   // one copy — shared by all instances
+
+    public string Name { get; set; }
+
+    public User(string name)
+    {
+        Name = name;
+        _totalCreated++;                     // every constructor call increments it
+    }
+
+    public static int TotalCreated => _totalCreated;
+}
+
+var u1 = new User("Alice");
+var u2 = new User("Bob");
+
+Console.WriteLine(User.TotalCreated);  // 2</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.6rem;">Static fields are shared — every instance reads and writes the <strong>same memory location</strong>.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Section Divider: Inheritance & base (Layout 2)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 5 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Inheritance &amp; the <code style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:0.9em;">base</code> Keyword</div>
+          <div class="section-desc">A derived class reuses and extends a base class — modelling an IS-A relationship without duplicating code.</div>
+        </div>
+        <div class="section-right" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+          <svg width="180" height="130" viewBox="0 0 180 130" aria-label="Animal to Dog inheritance diagram">
+            <rect x="40" y="10" width="100" height="36" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+            <text x="90" y="32" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" fill="#2A1F1A">Animal</text>
+            <line x1="90" y1="46" x2="90" y2="70" stroke="#B8694E" stroke-width="1.5"/>
+            <polygon points="85,68 95,68 90,80" fill="#B8694E"/>
+            <rect x="40" y="82" width="100" height="36" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+            <text x="90" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" fill="#2A1F1A">Dog</text>
+          </svg>
+          <p style="font-family:'Inter',sans-serif;font-size:0.8rem;color:var(--color-text-muted);margin-top:0.5rem;text-align:center;">Dog IS-A Animal</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Inheritance (Layout 4)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Inheritance</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>The <code class="inline">:</code> syntax declares a derived class</li>
+              <li>All non-<code class="inline">private</code> members of the base class are inherited automatically</li>
+              <li>The derived class can add new fields, properties, and methods</li>
+              <li>Models an <strong>IS-A</strong> relationship — a Dog IS-A Animal</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">public class Animal
+{
+    public string Name { get; set; }
+
+    public Animal(string name)
+    {
+        Name = name;
+    }
+
+    public void Breathe()
+    {
+        Console.WriteLine(
+            $"{Name} is breathing.");
+    }
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Derived Classes & base (Layout 4)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Derived Classes &amp; the <code style="font-size:1.3rem;font-family:'JetBrains Mono',monospace;color:var(--color-navy);">base</code> Keyword</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li><code class="inline">base(args)</code> in a constructor calls the parent's constructor</li>
+              <li>The parent constructor always runs <strong>before</strong> the derived constructor body</li>
+              <li><code class="inline">base.MethodName()</code> inside a method calls the parent's implementation</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" data-line-numbers="5-6" style="font-size:0.85rem;">public class Dog : Animal
+{
+    public string Breed { get; set; }
+
+    public Dog(string name, string breed)
+        : base(name)   // calls Animal(string name)
+    {
+        Breed = breed;
+    }
+
+    public void Bark()
+        => Console.WriteLine($"{Name} says: Woof!");
+}
+
+Dog d = new Dog("Rex", "Labrador");
+d.Breathe();   // inherited — "Rex is breathing."
+d.Bark();      // "Rex says: Woof!"</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — Section Divider: virtual & override (Layout 2)   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 6 of 6</div>
+          <div class="section-rule"></div>
+          <div class="section-title"><code style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:0.85em;">virtual</code> &amp; <code style="font-family:'JetBrains Mono',monospace;font-style:normal;font-size:0.85em;">override</code></div>
+          <div class="section-desc">Mark a method <code style="color:rgba(255,255,255,0.9);font-family:'JetBrains Mono',monospace;font-size:0.9em;">virtual</code> to allow derived classes to replace it. Use <code style="color:rgba(255,255,255,0.9);font-family:'JetBrains Mono',monospace;font-size:0.9em;">override</code> to supply the new implementation.</div>
+        </div>
+        <div class="section-right" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+          <svg width="230" height="145" viewBox="0 0 230 145" aria-label="Shape hierarchy with Circle and Rectangle">
+            <rect x="65" y="8" width="100" height="34" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+            <text x="115" y="29" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" fill="#2A1F1A">Shape</text>
+            <line x1="90" y1="42" x2="50" y2="88" stroke="#B8694E" stroke-width="1.5"/>
+            <polygon points="45,86 55,86 50,98" fill="#B8694E"/>
+            <line x1="140" y1="42" x2="180" y2="88" stroke="#B8694E" stroke-width="1.5"/>
+            <polygon points="175,86 185,86 180,98" fill="#B8694E"/>
+            <rect x="10" y="100" width="80" height="34" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+            <text x="50" y="121" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#2A1F1A">Circle</text>
+            <rect x="140" y="100" width="80" height="34" rx="4" fill="#F2E0D8" stroke="#B8694E" stroke-width="1.5"/>
+            <text x="180" y="121" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#2A1F1A">Rectangle</text>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — virtual & override — Concept (Layout 3)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">virtual &amp; override</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Methods are <strong>non-virtual by default</strong> — a derived class cannot replace them</li>
+          <li><code class="inline">virtual</code> on a base-class method signals "derived classes may supply their own implementation"</li>
+          <li><code class="inline">override</code> in the derived class supplies that implementation — the compiler requires the keyword explicitly, preventing accidental hiding</li>
+          <li>At runtime the <strong>most-derived override</strong> is always called, even when the variable type is the base class</li>
+          <li>This is <strong>runtime polymorphism</strong> — the same call produces different behaviour depending on the actual object type</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — Shape Hierarchy (Layout 5)                       -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Shape Hierarchy</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Models/Shapes.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="3,10-11,20" style="font-size:0.78rem;">public class Shape
+{
+    public virtual double Area() => 0;
+}
+
+public class Circle : Shape
+{
+    public double Radius { get; set; }
+    public Circle(double r) => Radius = r;
+    public override double Area()
+        => Math.PI * Radius * Radius;
+}
+
+public class Rectangle : Shape
+{
+    public double Width  { get; set; }
+    public double Height { get; set; }
+    public Rectangle(double w, double h)
+    { Width = w; Height = h; }
+    public override double Area() => Width * Height;
+}</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — Polymorphism in Action (Layout 5)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Polymorphism in Action</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="9" style="font-size:0.9rem;">Shape[] shapes =
+{
+    new Circle(5),
+    new Rectangle(4, 6)
+};
+
+foreach (Shape s in shapes)
+{
+    Console.WriteLine($"Area: {s.Area():F2}");
+}
+
+// Output:
+// Area: 78.54   (Circle)
+// Area: 24.00   (Rectangle)</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.6rem;">The variable type is <code class="inline">Shape</code>, but the object's actual type decides which <code class="inline">Area()</code> runs.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 27 — sealed (Layout 4)                                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">sealed</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li><code class="inline">sealed</code> on a class prevents any class from inheriting it</li>
+              <li><code class="inline">sealed override</code> on a method stops further overriding down the hierarchy</li>
+              <li>Use sparingly — over-sealing limits future extensibility</li>
+              <li><code class="inline">string</code> and <code class="inline">DateTime</code> in the .NET base library are both sealed</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">// No class may inherit from ImmutablePoint
+public sealed class ImmutablePoint
+{
+    public int X { get; }
+    public int Y { get; }
+
+    public ImmutablePoint(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+}
+
+// Compile error:
+// public class Special : ImmutablePoint { }</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 28 — Lab (Layout 3)                                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — WorkItem Class Hierarchy</div>
+        <div class="slide-rule"></div>
+        <ol>
+          <li>Create a base class <code class="inline">WorkItem</code> with properties <code class="inline">Id</code> (int), <code class="inline">Title</code> (string), <code class="inline">CreatedAt</code> (DateTime), and a <code class="inline">virtual string Summarize()</code> method</li>
+          <li>Derive <code class="inline">TaskItem : WorkItem</code> — add <code class="inline">IsCompleted</code> (bool) and <code class="inline">DueDate</code> (DateTime?). Override <code class="inline">Summarize()</code> to include the completion status</li>
+          <li>Derive <code class="inline">BugReport : WorkItem</code> — add <code class="inline">Severity</code> (string). Override <code class="inline">Summarize()</code> to include the severity level</li>
+          <li>Instantiate both types, store them in a <code class="inline">WorkItem[]</code>, and loop over the array printing each summary</li>
+        </ol>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 29 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>A class is a blueprint — each instance gets its own data; constructors guarantee a valid starting state</li>
+          <li>Fields should be <code class="inline">private</code>; expose them through properties so callers are shielded from internal changes</li>
+          <li>Auto-implemented properties are concise; use a full property with a backing field when you need validation or side effects</li>
+          <li>Static members belong to the class — one shared copy, accessed through the class name, not an instance</li>
+          <li>A derived class inherits all non-private members; <code class="inline">base(args)</code> delegates to the parent constructor</li>
+          <li>Mark methods <code class="inline">virtual</code> to allow overriding — at runtime the most-derived override always wins (polymorphism)</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 30 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="margin-bottom:1rem; color:var(--color-text-muted); font-size:0.95rem;">Next session: <strong>Session 06 — OOP II: Polymorphism, Abstraction &amp; Interfaces</strong></p>
+        <ul>
+          <li>Abstract classes and abstract methods</li>
+          <li>Interfaces and multiple-interface implementation</li>
+          <li>Casting with <code class="inline">is</code> and <code class="inline">as</code></li>
+          <li>Polymorphism patterns used throughout the .NET standard library</li>
+        </ul>
+        <div class="callout info" style="margin-top:1.5rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the lab — the <code class="inline">WorkItem</code> hierarchy will be refactored into an abstract class next session. The assignment below is good preparation.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 31 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; margin-bottom:0.8rem;">Build a <strong>BankAccount class hierarchy</strong> that exercises encapsulation, properties, inheritance, and method overriding.</p>
+        <ul style="font-size:0.97rem;">
+          <li>Create <code class="inline">BankAccount</code> with a <code class="inline">private decimal _balance</code> field, a read-only <code class="inline">Balance</code> property, an <code class="inline">Owner</code> string, and <code class="inline">Deposit</code> / <code class="inline">Withdraw</code> methods that validate their arguments</li>
+          <li>Add a <code class="inline">virtual string GetAccountType()</code> method that returns <code class="inline">"Standard"</code></li>
+          <li>Derive <code class="inline">SavingsAccount : BankAccount</code> — add <code class="inline">InterestRate</code> (decimal) and <code class="inline">ApplyInterest()</code>; override <code class="inline">GetAccountType()</code> to return <code class="inline">"Savings"</code></li>
+          <li>Store a <code class="inline">BankAccount</code> and a <code class="inline">SavingsAccount</code> in a <code class="inline">BankAccount[]</code> and print <code class="inline">GetAccountType()</code> and <code class="inline">Balance</code> for each</li>
+          <li>Attempting to set <code class="inline">Balance</code> directly from outside the class should not compile — demonstrate this in a comment</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Bonus</div>
+          Derive <code class="inline">PremiumSavingsAccount : SavingsAccount</code> that doubles the interest rate on each <code class="inline">ApplyInterest()</code> call and overrides <code class="inline">GetAccountType()</code> to return <code class="inline">"Premium Savings"</code>.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 32 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 05 &nbsp;&middot;&nbsp; OOP I: Classes, Encapsulation &amp; Inheritance</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent =
+          `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>
