@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 06 — OOP II: Polymorphism, Abstraction &amp; Interfaces</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+    .reveal ol {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+    .reveal ol li {
+      margin-bottom: 0.6rem;
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+    .reveal ol li::marker {
+      color: var(--color-brand);
+      font-weight: 600;
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code blocks ── */
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      border-radius: 6px;
+    }
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 6px;
+    }
+
+    /* ── File path label (Layout 5) ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Agenda table smaller font ── */
+    .agenda-table td, .agenda-table th {
+      font-size: 0.88rem;
+      padding: 0.4rem 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 1 — Title (Layout 1)                                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="title-slide">
+        <div class="title-top-bar"></div>
+        <div class="title-content">
+          <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy" class="title-logo">
+          <div class="title-course-name">Backend Development with .NET</div>
+          <div class="title-session-label">Session 06</div>
+          <div class="title-rule"></div>
+          <div class="title-main">OOP II: Polymorphism,<br>Abstraction &amp; Interfaces</div>
+          <div class="title-meta">
+            Eng. Seif Mansour &nbsp;&middot;&nbsp; Andalusia Academy<br>
+            Week 3 &nbsp;&middot;&nbsp; 2 hours
+          </div>
+        </div>
+        <div class="title-bottom-bar"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 2 — Session Goals (Layout 3)                          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Session Goals</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; color:var(--color-text-muted); margin-bottom:1rem;">By the end of this session, you will be able to:</p>
+        <ul>
+          <li>Explain and apply both forms of polymorphism</li>
+          <li>Define and use abstract classes</li>
+          <li>Define and implement interfaces</li>
+          <li>Choose between an abstract class and an interface for a given design problem</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 3 — Agenda (Layout 3)                                 -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Agenda</div>
+        <div class="slide-rule"></div>
+        <table class="agenda-table">
+          <thead>
+            <tr><th>Time</th><th>Segment</th><th>Type</th><th>Duration</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>0:00</td><td>Polymorphism</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>0:20</td><td>Abstract classes</td><td>Theory + Demo</td><td>20 min</td></tr>
+            <tr><td>0:40</td><td>Interfaces</td><td>Theory + Demo</td><td>25 min</td></tr>
+            <tr><td>1:05</td><td>Break</td><td>—</td><td>5 min</td></tr>
+            <tr><td>1:10</td><td>Abstract class vs interface</td><td>Discussion + Demo</td><td>20 min</td></tr>
+            <tr><td>1:30</td><td>Common .NET interfaces</td><td>Theory + Demo</td><td>15 min</td></tr>
+            <tr><td>1:45</td><td>Lab</td><td>Lab</td><td>15 min</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 4 — Section Divider: Polymorphism (Layout 2)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 1 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Polymorphism</div>
+          <div class="section-desc">"Many forms" — the same operation behaves differently depending on the type it acts on. Two kinds: decided at compile time, or at runtime.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Compile-time polymorphism (overloading)</li>
+            <li>Runtime polymorphism (overriding)</li>
+            <li>Type checking with <code class="inline">is</code></li>
+            <li>Safe casting with <code class="inline">as</code></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 5 — Two Forms of Polymorphism (Layout 3)              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Two Forms of Polymorphism</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>Compile-time</strong> — method overloading. The compiler selects which method to call based on the argument types at compile time. You covered this in Session 04.</li>
+          <li><strong>Runtime</strong> — method overriding with <code class="inline">virtual</code> / <code class="inline">override</code>. The runtime selects which implementation to execute based on the object's actual type. Covered in Session 05.</li>
+          <li>Both forms let you write code that works on many types through a single unified interface</li>
+          <li>Runtime polymorphism is the more powerful form — it enables collections of mixed types to be processed uniformly</li>
+        </ul>
+        <div class="callout info" style="margin-top:1.2rem;">
+          <div class="callout-label">Key distinction</div>
+          Overloading is resolved by the <strong>compiler</strong>. Overriding is resolved by the <strong>runtime</strong> — that is why it is called runtime polymorphism.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 6 — Runtime Polymorphism in Action (Layout 5)         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Runtime Polymorphism in Action</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="1,8" style="font-size:0.9rem;">Shape[] shapes = { new Circle(5), new Rectangle(3, 4) };
+
+foreach (Shape s in shapes)
+{
+    Console.WriteLine(s.Area());   // correct override called at runtime
+}
+
+// The variable type is Shape, but the actual object decides which Area() runs</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.7rem;">The array holds <code class="inline">Shape</code> references — but each call to <code class="inline">Area()</code> dispatches to the override in the actual concrete type.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 7 — Type Checking & Casting (Layout 4)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Type Checking &amp; Casting</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li><code class="inline">is</code> checks whether an object is of a given type and, with pattern matching, binds it to a typed variable in one step</li>
+              <li><code class="inline">as</code> attempts a cast and returns <code class="inline">null</code> on failure — never throws</li>
+              <li>Prefer the <code class="inline">is</code> pattern — it is safer and more readable than a cast that can throw <code class="inline">InvalidCastException</code></li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">Shape s = new Circle(5);
+
+// Pattern matching — checks and binds in one step
+if (s is Circle c)
+{
+    Console.WriteLine($"Radius: {c.Radius}");
+}
+
+// 'as' operator — returns null instead of throwing
+Circle? circle = s as Circle;
+if (circle != null)
+{
+    Console.WriteLine(circle.Radius);
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 8 — Section Divider: Abstract Classes (Layout 2)      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 2 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Abstract Classes</div>
+          <div class="section-desc">A class that exists only to be a base — it cannot be instantiated directly. It defines what derived classes must implement while sharing reusable logic.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li><code class="inline">abstract</code> keyword</li>
+            <li>Abstract methods — no body, must be overridden</li>
+            <li>Concrete methods — shared logic for all derived classes</li>
+            <li>Polymorphic dispatch through the base type</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 9 — Abstract Classes — Concept (Layout 3)             -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Abstract Classes</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Marked with the <code class="inline">abstract</code> keyword — the compiler prevents direct instantiation</li>
+          <li>Can contain <strong>abstract methods</strong>: declared with no body; every non-abstract derived class must provide an implementation</li>
+          <li>Can also contain <strong>concrete methods</strong>: fully implemented, shared by all derived classes without repetition</li>
+          <li>Can have constructors, fields, and properties — just like a normal class</li>
+          <li>Models an IS-A relationship where the base type is genuinely incomplete on its own</li>
+        </ul>
+        <div class="callout warning" style="margin-top:1rem;">
+          <div class="callout-label">Note</div>
+          <code class="inline">new AbstractClass()</code> is a compile error. Abstract classes live only as base types.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 10 — Abstract Class: Notification (Part 1) (Layout 5) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Abstract Class — Notification (Part 1 of 2)</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Notifications/Notification.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="1,10,14" style="font-size:0.85rem;">public abstract class Notification
+{
+    public string Recipient { get; set; }
+    public string Message   { get; set; }
+
+    public Notification(string recipient, string message)
+    {
+        Recipient = recipient;
+        Message   = message;
+    }
+
+    // No body — derived classes must provide this
+    public abstract void Send();
+
+    // Shared logic — available to all derived classes
+    public void Log()
+    {
+        Console.WriteLine($"[LOG] Sending to {Recipient}: {Message}");
+    }
+}</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 11 — Abstract Class: Notification (Part 2) (Layout 5) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Abstract Class — Notification (Part 2 of 2)</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Notifications/EmailNotification.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="1,8-11" style="font-size:0.85rem;">public class EmailNotification : Notification
+{
+    public EmailNotification(string recipient, string message)
+        : base(recipient, message) { }
+
+    public override void Send()
+        => Console.WriteLine($"Email to {Recipient}: {Message}");
+}
+
+public class SmsNotification : Notification
+{
+    public SmsNotification(string recipient, string message)
+        : base(recipient, message) { }
+
+    public override void Send()
+        => Console.WriteLine($"SMS to {Recipient}: {Message}");
+}</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-brand-dark); margin-top:0.6rem;">Both classes <strong>must</strong> implement <code class="inline">Send()</code> — the compiler enforces it. They inherit <code class="inline">Log()</code> for free.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 12 — Using Abstract Classes (Layout 5)                -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Using Abstract Classes</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Program.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="7,8" style="font-size:0.9rem;">List&lt;Notification&gt; queue = new List&lt;Notification&gt;
+{
+    new EmailNotification("alice@example.com", "Welcome!"),
+    new SmsNotification("+1234567890", "Your code: 9876")
+};
+
+foreach (var n in queue)
+{
+    n.Log();    // concrete — shared method runs for both
+    n.Send();   // abstract — polymorphic dispatch to the correct override
+}</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-text-muted); margin-top:0.7rem;">The list type is <code class="inline">Notification</code>. The runtime dispatches <code class="inline">Send()</code> to the correct subclass — the loop does not need to know which.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 13 — Section Divider: Interfaces (Layout 2)           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 3 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Interfaces</div>
+          <div class="section-desc">A contract — a set of members that any implementing class must provide. No fields, no constructors. A class can implement many interfaces at once.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Defining an interface</li>
+            <li>Implementing an interface</li>
+            <li>Multiple-interface implementation</li>
+            <li>Programming to the interface type</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 14 — Interfaces — Concept (Layout 3)                  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Interfaces</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Declared with the <code class="inline">interface</code> keyword; by convention the name starts with <code class="inline">I</code></li>
+          <li>Contains only <strong>member signatures</strong> — no fields, no constructors, no instance state (by default)</li>
+          <li>A class that implements an interface <strong>must provide all declared members</strong></li>
+          <li>A class can implement <strong>multiple interfaces</strong> — overcoming C#'s single-inheritance limit</li>
+          <li>The caller works through the interface type and never depends on the concrete class</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">C# 8+</div>
+          Interfaces may have default method implementations, but in practice you will rarely use them. Treat interfaces as pure contracts until you have a specific reason otherwise.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 15 — Defining & Implementing an Interface (Layout 4)  -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Defining &amp; Implementing an Interface</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.6rem;">The interface — pure contract:</p>
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">public interface IPaymentProcessor
+{
+    bool   ProcessPayment(decimal amount);
+    void   Refund(decimal amount);
+    string ProviderName { get; }
+}</code></pre>
+            </div>
+            <p style="font-size:0.88rem; color:var(--color-text-muted); margin-top:0.8rem;">Any class implementing this interface must supply all three members.</p>
+          </div>
+          <div class="col-right">
+            <p style="font-size:0.9rem; color:var(--color-text-muted); margin-bottom:0.6rem;">Implementation:</p>
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;">public class StripeProcessor : IPaymentProcessor
+{
+    public string ProviderName => "Stripe";
+
+    public bool ProcessPayment(decimal amount)
+    {
+        Console.WriteLine(
+            $"Processing ${amount} via Stripe");
+        return true;
+    }
+
+    public void Refund(decimal amount)
+        => Console.WriteLine(
+               $"Refunding ${amount} via Stripe");
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 16 — Multiple Interfaces (Layout 4)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Implementing Multiple Interfaces</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>A class separates interface names with commas after the colon</li>
+              <li>All members of every listed interface must be implemented</li>
+              <li>This is how C# achieves the flexibility of multiple inheritance without its ambiguity problems</li>
+            </ul>
+            <div class="callout success" style="margin-top:1rem;">
+              <div class="callout-label">Real-world pattern</div>
+              You will regularly see classes implement both a domain interface (e.g., <code class="inline">IRepository</code>) and a cross-cutting one (e.g., <code class="inline">IDisposable</code>).
+            </div>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.88rem;">public interface ILoggable
+{
+    void LogActivity(string action);
+}
+
+// Implements both interfaces
+public class StripeProcessor
+    : IPaymentProcessor, ILoggable
+{
+    public string ProviderName => "Stripe";
+
+    public bool ProcessPayment(decimal amount)
+    { /* ... */ return true; }
+
+    public void Refund(decimal amount) { /* ... */ }
+
+    public void LogActivity(string action)
+        => Console.WriteLine($"[Stripe] {action}");
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 17 — Programming to the Interface (Layout 5)          -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Programming to the Interface</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">Services/CheckoutService.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="1,7,8" style="font-size:0.9rem;">static void Checkout(IPaymentProcessor processor, decimal amount)
+{
+    processor.ProcessPayment(amount);
+}
+
+// The caller decides which implementation to inject
+Checkout(new StripeProcessor(), 99.99m);
+Checkout(new PayPalProcessor(), 49.50m);</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-brand-dark); margin-top:0.7rem;"><code class="inline">Checkout</code> depends only on the <strong>contract</strong>, never on <code class="inline">StripeProcessor</code> or <code class="inline">PayPalProcessor</code> directly. Swapping providers requires no change to the method.</p>
+        <div class="callout info" style="margin-top:0.8rem;">
+          <div class="callout-label">Preview</div>
+          This is exactly how .NET dependency injection works: you register <code class="inline">IPaymentProcessor &rarr; StripeProcessor</code> in the service container. You will use this from Session 08 onwards.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 18 — Key Concept Callout (Layout 6)                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="callout-slide">
+        <div class="callout-slide-label">Key Concept</div>
+        <div class="callout-slide-rule"></div>
+        <div class="callout-slide-quote">"Depend on abstractions, not on concretions. An interface is a promise — the caller binds to the promise, not to who keeps it."</div>
+        <div class="callout-slide-attribution">— Interfaces &nbsp;&middot;&nbsp; Session 06</div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 19 — Section Divider: Abstract vs Interface (Layout 2) -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 4 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Abstract Class vs Interface</div>
+          <div class="section-desc">Both enforce a contract. Choosing the right one depends on whether you are modelling shared identity and state, or a portable capability.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li>Feature comparison table</li>
+            <li>IS-A vs CAN-DO rule of thumb</li>
+            <li>When each is the right choice</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 20 — Comparison Table (Layout 3)                      -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Abstract Class vs Interface — Features</div>
+        <div class="slide-rule"></div>
+        <table>
+          <thead>
+            <tr><th>Feature</th><th>Abstract class</th><th>Interface</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Can have fields</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Can have constructors</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Can have concrete methods</td><td>Yes</td><td>Yes (C# 8+ default methods)</td></tr>
+            <tr><td>Multiple inheritance</td><td>No — only one base class</td><td>Yes — implement many interfaces</td></tr>
+            <tr><td>Models</td><td>IS-A relationship with shared state</td><td>CAN-DO capability across any type</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 21 — Rule of Thumb (Layout 3)                         -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Rule of Thumb</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li><strong>IS-A relationship with shared state?</strong> Use an abstract class. All <code class="inline">Animal</code> subclasses share a <code class="inline">Name</code> field and a base constructor — that shared identity and data belongs in an abstract class.</li>
+          <li><strong>CAN-DO capability across unrelated types?</strong> Use an interface. Both a <code class="inline">Dog</code> and a <code class="inline">Car</code> can implement <code class="inline">ISerializable</code> — they have nothing in common except the capability.</li>
+          <li>When in doubt: prefer an interface. It imposes no inheritance hierarchy and leaves the implementing class free to inherit from something else.</li>
+        </ul>
+        <div class="callout success" style="margin-top:1.2rem;">
+          <div class="callout-label">Discussion</div>
+          "You have <code class="inline">ILogger</code> and <code class="inline">BaseLogger</code>. Which do you use and why?" — consider what callers need to know and what code can be shared.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 22 — Section Divider: Common .NET Interfaces           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="section-divider">
+        <div class="section-left">
+          <div class="section-label">Section 5 of 5</div>
+          <div class="section-rule"></div>
+          <div class="section-title">Common .NET Interfaces</div>
+          <div class="section-desc">The .NET standard library is built on interfaces. Knowing the most common ones makes it immediately clear why a type behaves the way it does.</div>
+        </div>
+        <div class="section-right">
+          <div class="section-right-label">In this section</div>
+          <ul style="color: var(--color-text); font-size:0.95rem;">
+            <li><code class="inline">IComparable&lt;T&gt;</code> — natural sort order</li>
+            <li><code class="inline">IDisposable</code> — resource cleanup</li>
+            <li><code class="inline">IEnumerable&lt;T&gt;</code> — iteration support</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 23 — IComparable<T> (Layout 4)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">IComparable&lt;T&gt; — Natural Sort Order</div>
+        <div class="slide-rule"></div>
+        <div class="two-col">
+          <div class="col-left">
+            <ul>
+              <li>Implementing <code class="inline">IComparable&lt;T&gt;</code> gives a type a <strong>natural ordering</strong></li>
+              <li><code class="inline">CompareTo</code> returns a negative number, zero, or a positive number to indicate less-than, equal, or greater-than</li>
+              <li><code class="inline">List&lt;T&gt;.Sort()</code> and <code class="inline">Array.Sort()</code> call <code class="inline">CompareTo</code> automatically when the element type implements this interface</li>
+            </ul>
+          </div>
+          <div class="col-right">
+            <div class="code-panel">
+              <pre><code class="language-csharp" style="font-size:0.85rem;">public class Student : IComparable&lt;Student&gt;
+{
+    public string Name { get; set; }
+    public double GPA  { get; set; }
+
+    // Sort ascending by GPA
+    public int CompareTo(Student other)
+        => GPA.CompareTo(other.GPA);
+}
+
+var students = new List&lt;Student&gt; { ... };
+students.Sort();   // uses CompareTo</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 24 — IDisposable (Layout 5)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">IDisposable — Resource Cleanup</div>
+        <div class="slide-rule"></div>
+        <div class="file-path-label">IO/FileWriter.cs</div>
+        <pre><code class="language-csharp" data-line-numbers="1,15,18-21" style="font-size:0.85rem;">public class FileWriter : IDisposable
+{
+    private StreamWriter _writer;
+
+    public FileWriter(string path)
+        => _writer = new StreamWriter(path);
+
+    public void Write(string text)
+        => _writer.WriteLine(text);
+
+    public void Dispose() => _writer?.Dispose();
+}
+
+// The 'using' statement calls Dispose() automatically at the closing brace
+using (var writer = new FileWriter("log.txt"))
+{
+    writer.Write("Hello");
+}   // Dispose() runs here — file handle released even if an exception occurs</code></pre>
+        <p style="font-size:0.9rem; color:var(--color-brand-dark); margin-top:0.6rem;">Implement <code class="inline">IDisposable</code> whenever your class holds unmanaged resources: files, database connections, network sockets.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 25 — IEnumerable<T> (Layout 3)                        -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">IEnumerable&lt;T&gt; — Iteration Support</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Any type that implements <code class="inline">IEnumerable&lt;T&gt;</code> can be used in a <code class="inline">foreach</code> loop</li>
+          <li><code class="inline">List&lt;T&gt;</code>, arrays, <code class="inline">Queue&lt;T&gt;</code>, <code class="inline">Stack&lt;T&gt;</code> — all implement it; that is why <code class="inline">foreach</code> works on all of them uniformly</li>
+          <li>LINQ (<code class="inline">Where</code>, <code class="inline">Select</code>, <code class="inline">OrderBy</code>, ...) operates on <code class="inline">IEnumerable&lt;T&gt;</code> — write it once, works on any collection</li>
+          <li>When a method returns <code class="inline">IEnumerable&lt;T&gt;</code> instead of <code class="inline">List&lt;T&gt;</code>, callers only depend on the ability to iterate — the internal representation can change freely</li>
+        </ul>
+        <div class="callout info" style="margin-top:1rem;">
+          <div class="callout-label">You will see this everywhere</div>
+          EF Core query results, repository method return types, and LINQ chains all use <code class="inline">IEnumerable&lt;T&gt;</code> or its async counterpart <code class="inline">IAsyncEnumerable&lt;T&gt;</code>.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 26 — Lab (Layout 3)                                   -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Lab — IPrintable</div>
+        <div class="slide-rule"></div>
+        <ol>
+          <li>Define an interface <code class="inline">IPrintable</code> with one method: <code class="inline">void Print()</code></li>
+          <li>Create a <code class="inline">Book</code> class with <code class="inline">Title</code> and <code class="inline">Author</code> properties that implements <code class="inline">IPrintable</code> — <code class="inline">Print()</code> writes <code class="inline">"Book: {Title} by {Author}"</code></li>
+          <li>Create a <code class="inline">Movie</code> class with <code class="inline">Title</code> and <code class="inline">Year</code> properties that implements <code class="inline">IPrintable</code> — <code class="inline">Print()</code> writes <code class="inline">"Movie: {Title} ({Year})"</code></li>
+          <li>Create a <code class="inline">List&lt;IPrintable&gt;</code> containing several books and movies, loop over it, and call <code class="inline">Print()</code> on each item</li>
+        </ol>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 27 — Summary (Layout 3)                               -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Summary</div>
+        <div class="slide-rule"></div>
+        <ul>
+          <li>Polymorphism comes in two forms: compile-time (overloading) and runtime (overriding) — the runtime form is the more powerful design tool</li>
+          <li><code class="inline">is</code> pattern matching and the <code class="inline">as</code> operator provide safe type checking and casting without exceptions</li>
+          <li>An abstract class defines a partial contract — it can hold state and shared logic, but cannot be instantiated directly</li>
+          <li>An interface defines a pure contract — no state, no constructors, but a class can implement many at once</li>
+          <li>Choose abstract class for IS-A with shared state; choose interface for CAN-DO capabilities across unrelated types</li>
+          <li><code class="inline">IComparable&lt;T&gt;</code>, <code class="inline">IDisposable</code>, and <code class="inline">IEnumerable&lt;T&gt;</code> are three fundamental .NET interfaces you will encounter constantly</li>
+        </ul>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 28 — What's Next (Layout 3)                           -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">What's Next</div>
+        <div class="slide-rule"></div>
+        <p style="margin-bottom:1rem; color:var(--color-text-muted); font-size:0.95rem;">Next session: <strong>Session 07 — C# Language Features: Enums, Generics, Collections &amp; Delegates</strong></p>
+        <ul>
+          <li>Enums for strongly-typed named constants</li>
+          <li>Generic classes and methods — write once, work on any type</li>
+          <li><code class="inline">List&lt;T&gt;</code>, <code class="inline">Dictionary&lt;K,V&gt;</code>, <code class="inline">Queue&lt;T&gt;</code>, <code class="inline">Stack&lt;T&gt;</code></li>
+          <li>Delegates and lambda expressions — first-class functions in C#</li>
+        </ul>
+        <div class="callout info" style="margin-top:1.5rem;">
+          <div class="callout-label">Before next session</div>
+          Complete the lab and the assignment. Session 07 will build on interfaces when we introduce generics and typed collections.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 29 — Assignment (Layout 3)                            -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="content-slide">
+        <div class="slide-heading">Assignment</div>
+        <div class="slide-rule"></div>
+        <p style="font-size:0.95rem; margin-bottom:0.8rem;">Build a <strong>shape rendering system</strong> that exercises abstract classes, interfaces, and polymorphism.</p>
+        <ul style="font-size:0.97rem;">
+          <li>Define an interface <code class="inline">IDrawable</code> with a method <code class="inline">void Draw()</code></li>
+          <li>Define an abstract class <code class="inline">Shape</code> with an <code class="inline">abstract double Area()</code> method and a concrete <code class="inline">void Describe()</code> method that prints the class name and area</li>
+          <li>Create <code class="inline">Circle</code> and <code class="inline">Rectangle</code> that extend <code class="inline">Shape</code> and implement <code class="inline">IDrawable</code> — each <code class="inline">Draw()</code> prints a short ASCII representation</li>
+          <li>Store several shapes in a <code class="inline">Shape[]</code> and loop over them calling both <code class="inline">Describe()</code> and <code class="inline">Draw()</code></li>
+          <li>Add a <code class="inline">Triangle</code> class and verify that everything still compiles and runs without changing the loop</li>
+        </ul>
+        <div class="callout warning" style="margin-top:0.8rem;">
+          <div class="callout-label">Bonus</div>
+          Define a second interface <code class="inline">IResizable</code> with <code class="inline">void Scale(double factor)</code>. Implement it on <code class="inline">Circle</code> and <code class="inline">Rectangle</code>. Write a method that accepts <code class="inline">IEnumerable&lt;IResizable&gt;</code> and scales every element by a given factor.
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <!-- SLIDE 30 — Q&A                                              -->
+      <!-- ═══════════════════════════════════════════════════════════ -->
+      <section class="qa-slide">
+        <div class="qa-heading">Questions?</div>
+        <div class="qa-sub">Session 06 &nbsp;&middot;&nbsp; OOP II: Polymorphism, Abstraction &amp; Interfaces</div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ── Persistent Footer ── -->
+  <div class="slide-footer">
+    <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+    <span class="footer-slide-num" id="slide-num"></span>
+    <div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.06,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      plugins: [RevealHighlight, RevealNotes]
+    });
+
+    function updateFooter() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const footer = document.querySelector('.slide-footer');
+      const isTitle = currentSlide.classList.contains('title-slide');
+      footer.style.display = isTitle ? 'none' : 'flex';
+      if (!isTitle) {
+        const indices = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        document.getElementById('slide-num').textContent =
+          `${indices.h + 1} / ${total}`;
+      }
+    }
+    Reveal.on('ready', updateFooter);
+    Reveal.on('slidechanged', updateFooter);
+  </script>
+</body>
+</html>
