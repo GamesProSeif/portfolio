@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 07 — C# Language Features: Enums, Generics, Collections &amp; Delegates</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/atom-one-light.css">
+
+  <style>
+    :root {
+      --color-brand:        #B8694E;
+      --color-brand-dark:   #8F4A34;
+      --color-brand-light:  #F2E0D8;
+      --color-navy:         #1B2A3B;
+      --color-navy-mid:     #2E4057;
+      --color-bg:           #FFFFFF;
+      --color-surface:      #F8F4F1;
+      --color-surface-code: #F1EDE9;
+      --color-text:         #2A1F1A;
+      --color-text-muted:   #6B5248;
+      --color-success:      #2E6B4F;
+      --color-warning:      #8A5C00;
+      --color-error:        #8B1A1A;
+      --color-info:         #1B4B72;
+      --color-border:       #E0D5CF;
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 1.5rem;
+      --space-lg: 2.5rem;
+      --space-xl: 4rem;
+    }
+
+    /* ── Base ── */
+    .reveal {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    .reveal .slides section {
+      text-align: left;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    /* ── Typography ── */
+    .reveal h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+    }
+    .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-navy);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .reveal p, .reveal li {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+
+    /* ── Layout 1: Title Slide ── */
+    .title-slide {
+      background: var(--color-bg) !important;
+      padding: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .title-top-bar {
+      height: 6px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .title-bottom-bar {
+      height: 3px;
+      background: var(--color-brand);
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+    }
+    .title-content {
+      flex: 1;
+      padding: 2.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+    .title-logo {
+      position: absolute;
+      top: 2rem;
+      right: 3rem;
+      height: 48px;
+    }
+    .title-course-name {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .title-session-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--color-brand);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .title-rule {
+      width: 120px;
+      height: 2px;
+      background: var(--color-brand);
+      margin-bottom: 1.2rem;
+    }
+    .title-main {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: var(--color-navy);
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+    .title-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── Layout 2: Section Divider ── */
+    .section-divider {
+      display: flex !important;
+      padding: 0 !important;
+      height: 100% !important;
+    }
+    .section-left {
+      width: 55%;
+      background: var(--color-brand);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-right {
+      width: 45%;
+      background: var(--color-surface);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.8rem;
+    }
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: rgba(255,255,255,0.5);
+      margin-bottom: 1.2rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #FFFFFF;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
+    }
+    .section-right-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── Layout 3: Content Slide ── */
+    .content-slide {
+      border-top: 3px solid var(--color-brand);
+      padding: 2rem 3rem 3rem !important;
+      box-sizing: border-box;
+    }
+    .slide-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--color-navy);
+      margin-bottom: 0.5rem;
+    }
+    .slide-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .reveal ul {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+    .reveal ul li {
+      margin-bottom: 0.6rem;
+      font-size: 1.05rem;
+      line-height: 1.65;
+    }
+    .reveal ul li::marker {
+      color: var(--color-brand);
+    }
+    .reveal ol {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+    .reveal ol li {
+      margin-bottom: 0.6rem;
+      font-size: 1.02rem;
+      line-height: 1.65;
+      color: var(--color-text);
+    }
+    .reveal ol li::marker {
+      color: var(--color-brand);
+      font-weight: 600;
+    }
+
+    /* ── Layout 4: Two-Column ── */
+    .two-col {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+    .col-left {
+      flex: 0 0 44%;
+    }
+    .col-right {
+      flex: 1;
+    }
+    .code-panel {
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 1rem;
+    }
+
+    /* ── Layout 5: Full-Width Code Slide ── */
+    .file-path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      text-align: right;
+      margin-bottom: 0.5rem;
+    }
+    .code-callout {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--color-brand-dark);
+      margin-top: 0.8rem;
+    }
+
+    /* ── Layout 6: Callout / Definition Slide ── */
+    .callout-slide {
+      background: var(--color-brand) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .callout-slide-label {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .callout-slide-rule {
+      width: 80px;
+      height: 2px;
+      background: rgba(255,255,255,0.4);
+      margin: 0 auto 1.5rem;
+    }
+    .callout-slide-quote {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+      line-height: 1.5;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+    .callout-slide-attribution {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* ── Q&A Slide ── */
+    .qa-slide {
+      background: var(--color-surface) !important;
+      display: flex !important;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 4rem !important;
+    }
+    .qa-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 3rem;
+      color: var(--color-navy);
+    }
+    .qa-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Persistent Footer ── */
+    .slide-footer {
+      position: fixed;
+      bottom: 16px;
+      left: 24px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .slide-footer img {
+      height: 36px;
+    }
+    .footer-slide-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ── Tables ── */
+    .reveal table {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .reveal table th {
+      background: var(--color-navy);
+      color: #FFFFFF;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      text-align: left;
+    }
+    .reveal table td {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+    .reveal table tr:nth-child(even) td {
+      background: var(--color-surface);
+    }
+
+    /* ── Callout Boxes ── */
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 4px 4px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.8rem 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+    }
+    .callout-label {
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .callout.info    { border-color: var(--color-info);    background: #EBF3FA; color: var(--color-info); }
+    .callout.warning { border-color: var(--color-warning); background: #FBF4E3; color: var(--color-warning); }
+    .callout.error   { border-color: var(--color-error);   background: #FAE8E8; color: var(--color-error); }
+    .callout.success { border-color: var(--color-success); background: #E5F3EC; color: var(--color-success); }
+
+    /* ── Inline Code ── */
+    code.inline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88em;
+      background: var(--color-surface-code);
+      border: 1px solid var(--color-border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      color: var(--color-brand-dark);
+    }
+
+    /* ── Code sizing ── */
+    .reveal pre code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-sm pre code  { font-size: 0.95rem; }
+    .code-md pre code  { font-size: 0.85rem; }
+    .code-lg pre code  { font-size: 0.78rem; }
+
+    /* ── Placeholder ── */
+    .placeholder {
+      border: 2px dashed var(--color-brand);
+      background: var(--color-brand-light);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--color-brand-dark);
+    }
+    .placeholder-label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ─────────────────────────────────────────────
+         Slide 1 — Title
+    ───────────────────────────────────────────── -->
+    <section class="title-slide">
+      <div class="title-top-bar"></div>
+      <div class="title-content">
+        <img class="title-logo" src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+        <div class="title-course-name">Backend Development with .NET</div>
+        <div class="title-session-label">Session 07</div>
+        <div class="title-rule"></div>
+        <div class="title-main">C# Language Features<br>Enums, Generics, Collections &amp; Delegates</div>
+        <div class="title-meta">
+          Eng. Seif Mansour &nbsp;·&nbsp; Andalusia Academy<br>
+          Week 4 &nbsp;·&nbsp; 2.5 hours
+        </div>
+      </div>
+      <div class="title-bottom-bar"></div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         Slide 2 — Session Goals
+    ───────────────────────────────────────────── -->
+    <section class="content-slide">
+      <div class="slide-heading">Session Goals</div>
+      <div class="slide-rule"></div>
+      <ul>
+        <li>Use enums to represent fixed sets of named values</li>
+        <li>Write and use generic classes and methods with type constraints</li>
+        <li>Choose and use the correct collection type for a given problem</li>
+        <li>Write extension methods, delegates, and lambda expressions</li>
+        <li>Understand <code class="inline">async</code>/<code class="inline">await</code> and why every Web API method uses it</li>
+      </ul>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         Slide 3 — Agenda
+    ───────────────────────────────────────────── -->
+    <section class="content-slide">
+      <div class="slide-heading">Agenda</div>
+      <div class="slide-rule"></div>
+      <table>
+        <thead>
+          <tr><th>Time</th><th>Segment</th><th>Type</th><th>Duration</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0:00</td><td>Enums</td><td>Theory + Demo</td><td>20 min</td></tr>
+          <tr><td>0:20</td><td>Generics</td><td>Theory + Demo</td><td>25 min</td></tr>
+          <tr><td>0:45</td><td>Collections</td><td>Theory + Demo</td><td>25 min</td></tr>
+          <tr><td>1:10</td><td>Break</td><td>—</td><td>10 min</td></tr>
+          <tr><td>1:20</td><td>Extension methods</td><td>Theory + Demo</td><td>15 min</td></tr>
+          <tr><td>1:35</td><td>Delegates &amp; lambdas</td><td>Theory + Demo</td><td>25 min</td></tr>
+          <tr><td>2:00</td><td>async/await</td><td>Theory + Demo</td><td>20 min</td></tr>
+          <tr><td>2:20</td><td>Lab</td><td>Lab</td><td>10 min</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 1 — ENUMS
+    ═══════════════════════════════════════════ -->
+    <section class="section-divider">
+      <div class="section-left">
+        <div class="section-label">Section 1 of 5</div>
+        <div class="section-rule"></div>
+        <div class="section-title">Enums</div>
+        <div class="section-desc">Named sets of integer constants — replace magic numbers and magic strings with readable, type-safe values.</div>
+      </div>
+      <div class="section-right">
+        <div class="section-right-label">In this section</div>
+        <ul>
+          <li>Defining and using enums</li>
+          <li>Switch expressions on enums</li>
+          <li>Int and string conversions</li>
+          <li>Flags enums</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide: Defining an Enum -->
+    <section class="content-slide">
+      <div class="slide-heading">Defining an Enum</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <ul>
+            <li>An <strong>enum</strong> defines a named set of integer constants</li>
+            <li>Members are automatically numbered from 0 unless you override</li>
+            <li>Use enums instead of magic numbers or strings for fixed states</li>
+            <li>The compiler catches typos — invalid values won't compile</li>
+          </ul>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp">public enum TaskStatus
+{
+    Pending,       // = 0
+    InProgress,    // = 1
+    Completed,     // = 2
+    Cancelled      // = 3
+}
+
+TaskStatus status = TaskStatus.InProgress;
+
+if (status == TaskStatus.Completed)
+{
+    Console.WriteLine("Done!");
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Switch Expression on Enum -->
+    <section class="content-slide">
+      <div class="slide-heading">Switch Expression on an Enum</div>
+      <div class="slide-rule"></div>
+      <p>Pattern matching with <code class="inline">switch</code> expressions keeps enum-to-string mappings exhaustive and readable.</p>
+      <div class="code-sm" style="margin-top:1rem;">
+        <pre><code class="language-csharp" data-line-numbers="1,6">string label = status switch
+{
+    TaskStatus.Pending    => "Not started",
+    TaskStatus.InProgress => "In progress",
+    TaskStatus.Completed  => "Done",
+    TaskStatus.Cancelled  => "Cancelled",
+    _                     => "Unknown"
+};</code></pre>
+      </div>
+      <div class="callout info" style="margin-top:1rem;">
+        <div class="callout-label">Tip</div>
+        The compiler warns if you miss a case — this is one of the main benefits of enums over plain strings.
+      </div>
+    </section>
+
+    <!-- Slide: Enum Conversions -->
+    <section class="content-slide">
+      <div class="slide-heading">Enum Conversions</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <p style="margin-bottom:0.8rem;"><strong>To/from int:</strong></p>
+          <div class="code-sm">
+            <pre><code class="language-csharp">int value = (int)TaskStatus.InProgress;
+// value = 1
+
+TaskStatus s = (TaskStatus)2;
+// s = Completed</code></pre>
+          </div>
+        </div>
+        <div class="col-right">
+          <p style="margin-bottom:0.8rem;"><strong>To/from string:</strong></p>
+          <div class="code-sm">
+            <pre><code class="language-csharp">TaskStatus parsed =
+    Enum.Parse&lt;TaskStatus&gt;("Completed");
+
+bool ok = Enum.TryParse&lt;TaskStatus&gt;(
+    "Invalid",
+    out TaskStatus result);
+// ok = false — no exception thrown</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="callout warning" style="margin-top:1rem;">
+        <div class="callout-label">Warning</div>
+        <code class="inline">Enum.Parse</code> throws if the string does not match. Prefer <code class="inline">TryParse</code> when input comes from users or external systems.
+      </div>
+    </section>
+
+    <!-- Slide: Flags Enum -->
+    <section class="content-slide">
+      <div class="slide-heading">Flags Enum</div>
+      <div class="slide-rule"></div>
+      <p>Add <code class="inline">[Flags]</code> to combine multiple values with bitwise OR. Each member must be a distinct power of 2.</p>
+      <div class="code-md" style="margin-top:1rem;">
+        <pre><code class="language-csharp" data-line-numbers="1,5,6,7,11,12">[Flags]
+public enum Permissions
+{
+    None   = 0,
+    Read   = 1,
+    Write  = 2,
+    Delete = 4,
+    Admin  = Read | Write | Delete
+}
+
+Permissions userPerms = Permissions.Read | Permissions.Write;
+bool canWrite = userPerms.HasFlag(Permissions.Write);   // true</code></pre>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 2 — GENERICS
+    ═══════════════════════════════════════════ -->
+    <section class="section-divider">
+      <div class="section-left">
+        <div class="section-label">Section 2 of 5</div>
+        <div class="section-rule"></div>
+        <div class="section-title">Generics</div>
+        <div class="section-desc">Write type-safe code once — let the compiler apply it to any type without boxing or duplication.</div>
+      </div>
+      <div class="section-right">
+        <div class="section-right-label">In this section</div>
+        <ul>
+          <li>Why generics exist</li>
+          <li>Generic methods and classes</li>
+          <li>Type constraints</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide: The Problem Generics Solve -->
+    <section class="content-slide">
+      <div class="slide-heading">The Problem Generics Solve</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <p style="margin-bottom:0.6rem;"><strong>Without generics:</strong></p>
+          <div class="code-sm">
+            <pre><code class="language-csharp">static int[] DoubleInts(int[] items)
+    { ... }
+static string[] DoubleStrings(string[] items)
+    { ... }
+// one method per type — not scalable</code></pre>
+          </div>
+          <ul style="margin-top:1rem;">
+            <li>Code duplication</li>
+            <li>No compile-time type safety with <code class="inline">object</code></li>
+            <li>Boxing overhead for value types</li>
+          </ul>
+        </div>
+        <div class="col-right">
+          <p style="margin-bottom:0.6rem;"><strong>With generics:</strong></p>
+          <div class="code-sm">
+            <pre><code class="language-csharp">static T[] Duplicate&lt;T&gt;(T[] items)
+{
+    T[] result = new T[items.Length * 2];
+    items.CopyTo(result, 0);
+    items.CopyTo(result, items.Length);
+    return result;
+}
+
+int[] doubled =
+    Duplicate(new[] { 1, 2, 3 });
+string[] names =
+    Duplicate(new[] { "Alice", "Bob" });</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Generic Class -->
+    <section class="content-slide">
+      <div class="slide-heading">Generic Class</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <ul>
+            <li>The type parameter <code class="inline">T</code> is resolved at compile time</li>
+            <li><code class="inline">Box&lt;int&gt;</code> and <code class="inline">Box&lt;string&gt;</code> are distinct types</li>
+            <li>No casting or boxing — fully type-safe</li>
+          </ul>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp">public class Box&lt;T&gt;
+{
+    public T Value { get; private set; }
+
+    public Box(T value) =&gt; Value = value;
+
+    public override string ToString()
+        =&gt; $"Box&lt;{typeof(T).Name}&gt;({Value})";
+}
+
+var intBox = new Box&lt;int&gt;(42);
+var strBox = new Box&lt;string&gt;("hello");</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Type Constraints -->
+    <section class="content-slide">
+      <div class="slide-heading">Type Constraints</div>
+      <div class="slide-rule"></div>
+      <p>Constraints tell the compiler what capabilities <code class="inline">T</code> must have, so you can call methods on it safely.</p>
+      <div class="code-sm" style="margin-top:0.8rem;">
+        <pre><code class="language-csharp" data-line-numbers="2,7">// T must implement IComparable&lt;T&gt;
+static T Max&lt;T&gt;(T a, T b) where T : IComparable&lt;T&gt;
+{
+    return a.CompareTo(b) &gt; 0 ? a : b;
+}
+
+static T CreateInstance&lt;T&gt;() where T : class, new()
+{
+    return new T();
+}</code></pre>
+      </div>
+      <table style="margin-top:1rem;">
+        <thead><tr><th>Constraint</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">where T : class</code></td><td>T must be a reference type</td></tr>
+          <tr><td><code class="inline">where T : struct</code></td><td>T must be a value type</td></tr>
+          <tr><td><code class="inline">where T : new()</code></td><td>T must have a public parameterless constructor</td></tr>
+          <tr><td><code class="inline">where T : ISomeInterface</code></td><td>T must implement that interface</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 3 — COLLECTIONS
+    ═══════════════════════════════════════════ -->
+    <section class="section-divider">
+      <div class="section-left">
+        <div class="section-label">Section 3 of 5</div>
+        <div class="section-rule"></div>
+        <div class="section-title">Collections</div>
+        <div class="section-desc">Generic containers for dynamic data — choose the right one to get the right performance characteristics.</div>
+      </div>
+      <div class="section-right">
+        <div class="section-right-label">In this section</div>
+        <ul>
+          <li><code class="inline">List&lt;T&gt;</code></li>
+          <li><code class="inline">Dictionary&lt;TKey, TValue&gt;</code></li>
+          <li><code class="inline">HashSet&lt;T&gt;</code></li>
+          <li><code class="inline">IEnumerable&lt;T&gt;</code></li>
+          <li>Choosing the right type</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide: List<T> -->
+    <section class="content-slide">
+      <div class="slide-heading">List&lt;T&gt; — Ordered, Resizable</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <ul>
+            <li>Elements have a defined order</li>
+            <li>Access by index in O(1)</li>
+            <li>Append at the end in amortized O(1)</li>
+            <li>Insert/remove in the middle is O(n)</li>
+          </ul>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp">var fruits = new List&lt;string&gt;
+    { "apple", "banana" };
+
+fruits.Add("cherry");
+fruits.Insert(1, "avocado");
+fruits.Remove("banana");
+fruits.RemoveAt(0);
+
+Console.WriteLine(fruits.Count);
+Console.WriteLine(fruits.Contains("cherry"));
+Console.WriteLine(fruits[0]);
+
+fruits.Sort();</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Dictionary<TKey,TValue> -->
+    <section class="content-slide">
+      <div class="slide-heading">Dictionary&lt;TKey, TValue&gt; — Key-Value Lookup</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <ul>
+            <li>Lookup by key is O(1) on average</li>
+            <li>Keys must be unique</li>
+            <li>Use <code class="inline">TryGetValue</code> to avoid exceptions on missing keys</li>
+          </ul>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp">var scores = new Dictionary&lt;string, int&gt;
+{
+    { "Alice", 95 },
+    { "Bob", 82 }
+};
+
+scores["Carol"] = 91;
+
+scores.TryGetValue("Bob", out int bobScore);
+
+foreach (var (name, score) in scores)
+{
+    Console.WriteLine($"{name}: {score}");
+}</code></pre>
+        </div>
+      </div>
+      <div class="callout warning" style="margin-top:0.6rem;">
+        <div class="callout-label">Warning</div>
+        Accessing a missing key with <code class="inline">scores["Unknown"]</code> throws <code class="inline">KeyNotFoundException</code>. Always use <code class="inline">TryGetValue</code> or <code class="inline">ContainsKey</code> first.
+      </div>
+    </section>
+
+    <!-- Slide: HashSet<T> and IEnumerable<T> -->
+    <section class="content-slide">
+      <div class="slide-heading">HashSet&lt;T&gt; &amp; IEnumerable&lt;T&gt;</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <p style="margin-bottom:0.5rem;"><strong>HashSet&lt;T&gt;</strong> — unique membership</p>
+          <div class="code-sm">
+            <pre><code class="language-csharp">var tags = new HashSet&lt;string&gt;
+    { "csharp", "dotnet" };
+tags.Add("csharp"); // no duplicate added
+bool has = tags.Contains("dotnet"); // true</code></pre>
+          </div>
+        </div>
+        <div class="col-right">
+          <p style="margin-bottom:0.5rem;"><strong>IEnumerable&lt;T&gt;</strong> — accept any collection</p>
+          <div class="code-sm">
+            <pre><code class="language-csharp">static void PrintAll(
+    IEnumerable&lt;string&gt; items)
+{
+    foreach (var item in items)
+        Console.WriteLine(item);
+}
+
+// works with List, array, HashSet...
+PrintAll(new List&lt;string&gt; { "a", "b" });
+PrintAll(new string[] { "x", "y" });</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Choosing a Collection -->
+    <section class="content-slide">
+      <div class="slide-heading">Choosing the Right Collection</div>
+      <div class="slide-rule"></div>
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Use when</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code class="inline">List&lt;T&gt;</code></td><td>Ordered list; need index access or frequent add/remove</td></tr>
+          <tr><td><code class="inline">Dictionary&lt;K,V&gt;</code></td><td>Fast lookup by a unique key</td></tr>
+          <tr><td><code class="inline">HashSet&lt;T&gt;</code></td><td>Only care about membership; no duplicates allowed</td></tr>
+          <tr><td><code class="inline">IEnumerable&lt;T&gt;</code></td><td>Parameter type when you only need to iterate</td></tr>
+        </tbody>
+      </table>
+      <div class="callout info" style="margin-top:1rem;">
+        <div class="callout-label">Tip</div>
+        Prefer <code class="inline">IEnumerable&lt;T&gt;</code> as method parameter types — it keeps callers free to pass any collection type.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 4 — DELEGATES & LAMBDAS (includes extension methods)
+    ═══════════════════════════════════════════ -->
+    <section class="section-divider">
+      <div class="section-left">
+        <div class="section-label">Section 4 of 5</div>
+        <div class="section-rule"></div>
+        <div class="section-title">Extension Methods, Delegates &amp; Lambdas</div>
+        <div class="section-desc">Pass behaviour as data — the foundation of LINQ and functional-style C# programming.</div>
+      </div>
+      <div class="section-right">
+        <div class="section-right-label">In this section</div>
+        <ul>
+          <li>Extension methods</li>
+          <li>Delegates and built-in types</li>
+          <li>Lambda expressions</li>
+          <li>Delegates with collections (LINQ preview)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide: Extension Methods -->
+    <section class="content-slide">
+      <div class="slide-heading">Extension Methods</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <ul>
+            <li>Add methods to existing types without subclassing</li>
+            <li>Must live in a <code class="inline">static</code> class</li>
+            <li>First parameter uses <code class="inline">this TypeName name</code></li>
+            <li>Called like an instance method on that type</li>
+          </ul>
+          <div class="callout info" style="margin-top:1rem;">
+            <div class="callout-label">Did you know?</div>
+            Every LINQ method — <code class="inline">.Where()</code>, <code class="inline">.Select()</code>, <code class="inline">.FirstOrDefault()</code> — is an extension method on <code class="inline">IEnumerable&lt;T&gt;</code>.
+          </div>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp" data-line-numbers="3,9">public static class StringExtensions
+{
+    public static bool IsNullOrEmpty(this string value)
+        =&gt; string.IsNullOrEmpty(value);
+
+    public static string Truncate(
+        this string value, int maxLength)
+    {
+        if (value.Length &lt;= maxLength) return value;
+        return value[..maxLength] + "...";
+    }
+}
+
+string title = "This is a very long title";
+Console.WriteLine(title.Truncate(20));
+// "This is a very long..."</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: Delegates -->
+    <section class="content-slide">
+      <div class="slide-heading">Delegates</div>
+      <div class="slide-rule"></div>
+      <p>A <strong>delegate</strong> is a type that holds a reference to a method — it lets you pass behaviour as a parameter.</p>
+      <div class="code-sm" style="margin-top:0.8rem;">
+        <pre><code class="language-csharp" data-line-numbers="1,4,5,8,11">delegate int MathOperation(int a, int b);
+
+static int Add(int a, int b)      =&gt; a + b;
+static int Multiply(int a, int b) =&gt; a * b;
+
+MathOperation op = Add;
+Console.WriteLine(op(3, 4));   // 7
+
+op = Multiply;
+Console.WriteLine(op(3, 4));   // 12</code></pre>
+      </div>
+    </section>
+
+    <!-- Slide: Built-in Delegate Types -->
+    <section class="content-slide">
+      <div class="slide-heading">Built-in Delegate Types</div>
+      <div class="slide-rule"></div>
+      <p>Use these instead of declaring your own delegates for common signatures.</p>
+      <table style="margin-top:0.8rem;">
+        <thead>
+          <tr><th>Type</th><th>Signature</th><th>Use</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code class="inline">Action</code></td><td><code class="inline">void ()</code></td><td>No return value, no parameters</td></tr>
+          <tr><td><code class="inline">Action&lt;T&gt;</code></td><td><code class="inline">void (T)</code></td><td>No return value, one parameter</td></tr>
+          <tr><td><code class="inline">Func&lt;TResult&gt;</code></td><td><code class="inline">TResult ()</code></td><td>Returns a value, no parameters</td></tr>
+          <tr><td><code class="inline">Func&lt;T, TResult&gt;</code></td><td><code class="inline">TResult (T)</code></td><td>Returns a value, one parameter</td></tr>
+          <tr><td><code class="inline">Predicate&lt;T&gt;</code></td><td><code class="inline">bool (T)</code></td><td>Condition check on a value</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Slide: Lambda Expressions -->
+    <section class="content-slide">
+      <div class="slide-heading">Lambda Expressions</div>
+      <div class="slide-rule"></div>
+      <p>Anonymous methods written inline — the most common way to use delegates in practice.</p>
+      <div class="two-col" style="margin-top:0.8rem;">
+        <div class="col-left code-sm">
+          <pre><code class="language-csharp">Func&lt;int, int&gt; square =
+    x =&gt; x * x;
+
+Action&lt;string&gt; print =
+    msg =&gt; Console.WriteLine(msg);
+
+Predicate&lt;int&gt; isEven =
+    n =&gt; n % 2 == 0;
+
+Console.WriteLine(square(5));  // 25
+print("Hello");
+Console.WriteLine(isEven(4));  // true</code></pre>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp">var numbers = new List&lt;int&gt;
+    { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+var evens   = numbers.Where(n =&gt; n % 2 == 0);
+var squares = numbers.Select(n =&gt; n * n);
+int? first  = numbers.FirstOrDefault(n =&gt; n &gt; 5);
+
+var words = new List&lt;string&gt;
+    { "banana", "apple", "kiwi" };
+words.Sort((a, b) =&gt;
+    a.Length.CompareTo(b.Length));</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SECTION 5 — ASYNC/AWAIT
+    ═══════════════════════════════════════════ -->
+    <section class="section-divider">
+      <div class="section-left">
+        <div class="section-label">Section 5 of 5</div>
+        <div class="section-rule"></div>
+        <div class="section-title">async / await</div>
+        <div class="section-desc">Non-blocking I/O for Web APIs — release the thread while waiting, handle more requests with fewer resources.</div>
+      </div>
+      <div class="section-right">
+        <div class="section-right-label">In this section</div>
+        <ul>
+          <li>Why async matters in Web APIs</li>
+          <li><code class="inline">Task&lt;T&gt;</code> and the async/await pattern</li>
+          <li>Rules and common mistakes</li>
+          <li>Preview: async controller actions</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide: Why Async -->
+    <section class="content-slide">
+      <div class="slide-heading">Why async Matters in Web APIs</div>
+      <div class="slide-rule"></div>
+      <ul>
+        <li>Almost every Web API operation involves I/O — reading from a database, calling an external service, reading a file</li>
+        <li>With synchronous code the thread <strong>blocks and sits idle</strong> while waiting for I/O to complete</li>
+        <li>With async code the thread is <strong>released back to the thread pool</strong> during the wait — it can serve other requests</li>
+        <li>Result: the same server handles more concurrent requests with fewer threads</li>
+      </ul>
+      <div class="callout info" style="margin-top:1rem;">
+        <div class="callout-label">Key Idea</div>
+        Every controller action and service method in the course will be async. This is not optional in ASP.NET Core — it is the expected pattern.
+      </div>
+    </section>
+
+    <!-- Slide: Task<T> and await -->
+    <section class="content-slide">
+      <div class="slide-heading">Task&lt;T&gt; and await</div>
+      <div class="slide-rule"></div>
+      <div class="two-col">
+        <div class="col-left">
+          <ul>
+            <li><code class="inline">Task&lt;T&gt;</code> represents an operation that will complete in the future and return a value of type <code class="inline">T</code></li>
+            <li>A method that uses <code class="inline">await</code> must be marked <code class="inline">async</code></li>
+            <li><code class="inline">await</code> suspends the method without blocking the thread</li>
+            <li>Async methods return <code class="inline">Task</code> or <code class="inline">Task&lt;T&gt;</code></li>
+          </ul>
+        </div>
+        <div class="col-right code-sm">
+          <pre><code class="language-csharp" data-line-numbers="1,3,4">public async Task&lt;string&gt; FetchDataAsync()
+{
+    await Task.Delay(1000);   // simulates slow I/O
+    return "Data loaded";
+}
+
+// Calling it
+string result = await FetchDataAsync();
+Console.WriteLine(result);</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide: async/await Rules & Pitfalls -->
+    <section class="content-slide">
+      <div class="slide-heading">async/await — Rules &amp; Pitfalls</div>
+      <div class="slide-rule"></div>
+      <table>
+        <thead>
+          <tr><th>Rule</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Mark a method <code class="inline">async</code> if it uses <code class="inline">await</code></td><td>Compiler requirement</td></tr>
+          <tr><td>Return <code class="inline">Task</code> or <code class="inline">Task&lt;T&gt;</code>, not <code class="inline">void</code></td><td><code class="inline">async void</code> exceptions cannot be caught by callers</td></tr>
+          <tr><td>Never call <code class="inline">.Result</code> or <code class="inline">.Wait()</code></td><td>Blocks the thread; causes deadlocks in ASP.NET Core</td></tr>
+          <tr><td>Name async methods with <code class="inline">Async</code> suffix</td><td>Convention signals callers to use <code class="inline">await</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Slide: Async Controller Preview -->
+    <section class="content-slide">
+      <div class="file-path-label">Controllers/TasksController.cs</div>
+      <div class="slide-heading">Async Controller Action (Preview)</div>
+      <div class="slide-rule"></div>
+      <p>This is the pattern every controller in the course will follow starting in Session 08.</p>
+      <div class="code-md" style="margin-top:0.8rem;">
+        <pre><code class="language-csharp" data-line-numbers="2,4,5,6">[HttpGet("{id}")]
+public async Task&lt;IActionResult&gt; GetTask(int id)
+{
+    var task = await _taskService.GetByIdAsync(id);
+    if (task == null) return NotFound();
+    return Ok(task);
+}</code></pre>
+      </div>
+      <div class="callout success" style="margin-top:0.8rem;">
+        <div class="callout-label">Pattern</div>
+        <code class="inline">async Task&lt;IActionResult&gt;</code> is the standard return type for controller actions that perform I/O.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         LAB
+    ═══════════════════════════════════════════ -->
+    <section class="content-slide">
+      <div class="slide-heading">Lab</div>
+      <div class="slide-rule"></div>
+      <p style="margin-bottom:0.8rem;">Using the course's Task Management domain:</p>
+      <ol>
+        <li>Define a <code class="inline">TaskStatus</code> enum with values: <code class="inline">Pending</code>, <code class="inline">InProgress</code>, <code class="inline">Completed</code>, <code class="inline">Cancelled</code>.</li>
+        <li>Create a generic class <code class="inline">Repository&lt;T&gt;</code> with a private <code class="inline">List&lt;T&gt;</code>, methods <code class="inline">Add(T item)</code>, <code class="inline">GetAll()</code> returning <code class="inline">IEnumerable&lt;T&gt;</code>, and a <code class="inline">Count</code> property.</li>
+        <li>Add an extension method <code class="inline">FilterByPredicate&lt;T&gt;</code> on <code class="inline">IEnumerable&lt;T&gt;</code> that returns all items matching a <code class="inline">Predicate&lt;T&gt;</code>.</li>
+        <li>Write a <code class="inline">Func&lt;TaskItem, string&gt;</code> that formats a task as a one-line summary. Apply it with <code class="inline">Select</code> to a list and print all results.</li>
+      </ol>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         Summary
+    ───────────────────────────────────────────── -->
+    <section class="content-slide">
+      <div class="slide-heading">Summary</div>
+      <div class="slide-rule"></div>
+      <ul>
+        <li>Enums replace magic numbers and strings with named, type-safe constants — use <code class="inline">[Flags]</code> for bitmask values</li>
+        <li>Generics let you write one implementation that works for any type; constraints narrow what <code class="inline">T</code> can be</li>
+        <li>Use <code class="inline">List&lt;T&gt;</code> for ordered data, <code class="inline">Dictionary</code> for key lookup, <code class="inline">HashSet</code> for membership, <code class="inline">IEnumerable&lt;T&gt;</code> as method parameters</li>
+        <li>Extension methods add behaviour to existing types without modifying them — they power LINQ</li>
+        <li>Delegates and lambdas let you pass behaviour as data; built-in types <code class="inline">Func</code>, <code class="inline">Action</code>, <code class="inline">Predicate</code> cover most needs</li>
+        <li>Every Web API method should be <code class="inline">async</code> and return <code class="inline">Task&lt;T&gt;</code> — never block with <code class="inline">.Result</code> or <code class="inline">.Wait()</code></li>
+      </ul>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         What's Next
+    ───────────────────────────────────────────── -->
+    <section class="content-slide">
+      <div class="slide-heading">What's Next</div>
+      <div class="slide-rule"></div>
+      <ul>
+        <li><strong>Session 08 — First .NET Web API &amp; Project Architecture</strong></li>
+        <li>We will create a real ASP.NET Core Web API project from scratch</li>
+        <li>Controllers, routing, and the project structure you'll use for the rest of the course</li>
+        <li>Every action method will be <code class="inline">async Task&lt;IActionResult&gt;</code> — exactly what you learned today</li>
+      </ul>
+      <div class="callout info" style="margin-top:1.2rem;">
+        <div class="callout-label">Before Next Session</div>
+        Make sure .NET SDK 8 is installed and Visual Studio / VS Code is set up — you will need it from Session 08 onward.
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         Assignment
+    ───────────────────────────────────────────── -->
+    <section class="content-slide">
+      <div class="slide-heading">Assignment</div>
+      <div class="slide-rule"></div>
+      <p style="margin-bottom:0.6rem;">Build a <strong>small in-memory task tracker</strong> that applies the features from this session:</p>
+      <ul>
+        <li>Define a <code class="inline">Priority</code> enum: <code class="inline">Low</code>, <code class="inline">Medium</code>, <code class="inline">High</code>, <code class="inline">Critical</code></li>
+        <li>Create a generic <code class="inline">Repository&lt;T&gt;</code> that stores items in a <code class="inline">List&lt;T&gt;</code> and exposes <code class="inline">Add</code>, <code class="inline">GetAll</code>, and <code class="inline">FindAll(Predicate&lt;T&gt;)</code></li>
+        <li>Add at least two extension methods on <code class="inline">IEnumerable&lt;TaskItem&gt;</code> — for example, filtering by status or sorting by priority</li>
+        <li>Use a <code class="inline">Func&lt;TaskItem, string&gt;</code> with <code class="inline">Select</code> to produce a formatted summary line for each task and print the results</li>
+        <li>Wrap at least one operation in an <code class="inline">async</code> method that simulates a delay with <code class="inline">Task.Delay</code> and is called with <code class="inline">await</code></li>
+      </ul>
+      <div class="callout success" style="margin-top:0.8rem;">
+        <div class="callout-label">Bonus</div>
+        Add a <code class="inline">[Flags]</code> enum <code class="inline">Tag</code> (e.g., <code class="inline">Bug</code>, <code class="inline">Feature</code>, <code class="inline">Urgent</code>) and let each task hold combined tags. Implement a filter that returns tasks matching any of a given set of tags using <code class="inline">HasFlag</code>.
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────────
+         Q&A
+    ───────────────────────────────────────────── -->
+    <section class="qa-slide">
+      <div class="qa-heading">Questions?</div>
+      <div class="qa-sub">Session 07 — C# Language Features: Enums, Generics, Collections &amp; Delegates</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Persistent Footer -->
+<div class="slide-footer">
+  <img src="/andalusia_academy_logo.jpg" alt="Andalusia Academy">
+  <span class="footer-slide-num" id="slide-num"></span>
+  <div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: false,
+    progress: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.06,
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    plugins: [RevealHighlight, RevealNotes]
+  });
+
+  function updateFooter() {
+    const currentSlide = Reveal.getCurrentSlide();
+    const footer = document.querySelector('.slide-footer');
+    const isTitle = currentSlide.classList.contains('title-slide');
+    footer.style.display = isTitle ? 'none' : 'flex';
+    if (!isTitle) {
+      const indices = Reveal.getIndices();
+      const total = Reveal.getTotalSlides();
+      document.getElementById('slide-num').textContent =
+        `${indices.h + 1} / ${total}`;
+    }
+  }
+  Reveal.on('ready', updateFooter);
+  Reveal.on('slidechanged', updateFooter);
+</script>
+</body>
+</html>
