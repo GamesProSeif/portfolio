@@ -9,6 +9,11 @@ export default {
 	],
 	theme: {
     	extend: {
+    		fontFamily: {
+    			sans: ['var(--font-sans)', 'sans-serif'],
+    			display: ['var(--font-display)', 'sans-serif'],
+    			mono: ['var(--font-mono)', 'monospace']
+    		},
     		colors: {
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
@@ -58,6 +63,7 @@ export default {
     		},
     		animation: {
     			'scroll-left': 'scroll-left 50s linear infinite',
+    			'scroll-right': 'scroll-right 55s linear infinite',
     			'accordion-down': 'accordion-down 0.2s ease-out',
     			'accordion-up': 'accordion-up 0.2s ease-out'
     		},
@@ -68,6 +74,14 @@ export default {
     				},
     				to: {
     					transform: 'translateX(-50%)'
+    				}
+    			},
+    			'scroll-right': {
+    				from: {
+    					transform: 'translateX(-50%)'
+    				},
+    				to: {
+    					transform: 'translateX(0)'
     				}
     			},
     			'accordion-down': {

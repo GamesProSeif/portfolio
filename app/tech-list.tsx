@@ -44,15 +44,20 @@ const techList = [
 	{ text: "Numpy", icon: NumpyIcon },
 ];
 
-export default function TechList() {
-	const infiniteTechList = [...techList, ...techList];
+const half = Math.ceil(techList.length / 2);
+const rowA = techList.slice(0, half);
+const rowB = techList.slice(half);
 
+export default function TechList() {
 	return (
-		<div className="relative overflow-x-hidden group/tech-list py-8">
-			<div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-20"></div>
-			<div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-20"></div>
-			<div className="flex items-center gap-12 md:gap-20 w-max animate-scroll-left group-hover/tech-list:paused">
-				{ infiniteTechList.map((item, i) => (
+		<div className="relative overflow-x-hidden group/tech-list py-10 space-y-5 mask-fade-edges">
+			<div className="flex items-center gap-4 w-max animate-scroll-left group-hover/tech-list:paused">
+				{[...rowA, ...rowA].map((item, i) => (
+					<TechItem item={item} key={i} />
+				))}
+			</div>
+			<div className="flex items-center gap-4 w-max animate-scroll-right group-hover/tech-list:paused">
+				{[...rowB, ...rowB].map((item, i) => (
 					<TechItem item={item} key={i} />
 				))}
 			</div>
@@ -62,9 +67,12 @@ export default function TechList() {
 
 function TechItem({ item }: { item: typeof techList[number]}) {
 	return (
-		<div className="flex items-center gap-2 group/tech-item">
-			<item.icon className="h-8 w-8 group-hover/tech-item:scale-110 transition-transform" fill="currentColor" />
-			<p className="text-lg font-medium">{ item.text }</p>
+		<div className="group/tech-item flex items-center gap-3 border bg-card px-5 py-3 transition-colors hover:border-primary/60">
+			<item.icon
+				className="h-6 w-6 transition-all group-hover/tech-item:scale-110 group-hover/tech-item:text-primary"
+				fill="currentColor"
+			/>
+			<p className="font-mono text-sm whitespace-nowrap">{ item.text }</p>
 		</div>
 	);
 }

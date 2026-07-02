@@ -1,7 +1,7 @@
-"use client";
-
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { AppWindow, Atom, Bot, Cog, Database } from "lucide-react";
+import SectionHeading from "@/components/section-heading";
+import Reveal from "@/components/reveal";
+import { cn } from "@/lib/utils";
 
 const services = [
 	{
@@ -14,15 +14,6 @@ const services = [
 			"Predictive analytics & forecasting",
 			"AI-powered automation",
 			"Fraud detection & anomaly detection"
-		]
-	},
-	{
-		title: "AI & Automation",
-		icon: Bot,
-		items: [
-			"Chatbot & NLP applications",
-			"AI-driven recommendation systems",
-			"Intelligent workflow automation"
 		]
 	},
 	{
@@ -47,6 +38,15 @@ const services = [
 		]
 	},
 	{
+		title: "AI & Automation",
+		icon: Bot,
+		items: [
+			"Chatbot & NLP applications",
+			"AI-driven recommendation systems",
+			"Intelligent workflow automation"
+		]
+	},
+	{
 		title: "DevOps & Deployment",
 		icon: Cog,
 		items: [
@@ -60,28 +60,38 @@ const services = [
 export default function Services() {
 	return (
 		<>
-			<h3 className="text-3xl md:text-4xl font-semibold md:mb-6">
-				What I do?
-			</h3>
-			<Accordion type="single" collapsible className="w-full mt-4 space-y-4">
+			<SectionHeading index="01" kicker="Capabilities" title="What I do" />
+			<div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-6">
 				{ services.map((service, i) => (
-					<AccordionItem key={i} value={`item-${i}`} className="bg-muted/20 rounded-md border px-4">
-						<AccordionTrigger className="hover:no-underline">
-							<div className="flex items-center gap-3 text-lg truncate">
-								<service.icon className="text-primary" />
-								{ service.title }
+					<Reveal
+						key={i}
+						delay={(i % 3) * 100}
+						className={cn(i < 2 ? "md:col-span-3" : "md:col-span-2")}
+					>
+						<div className="group relative h-full border bg-card p-7 transition-all duration-300 hover:-translate-y-1 hover:border-primary/60 hover:shadow-[0_12px_40px_-12px_hsl(var(--primary)/0.35)]">
+							<div className="flex items-start justify-between">
+								<div className="flex h-12 w-12 items-center justify-center border bg-background text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+									<service.icon className="h-6 w-6" />
+								</div>
+								<span className="font-mono text-sm text-muted-foreground/60">
+									0{i + 1}
+								</span>
 							</div>
-						</AccordionTrigger>
-						<AccordionContent>
-							<ul className="text-muted-foreground list-disc pl-6 space-y-2 font-medium">
+							<h4 className="mt-6 font-display text-2xl font-semibold">
+								{ service.title }
+							</h4>
+							<ul className="mt-4 space-y-2 text-muted-foreground">
 								{ service.items.map((item, j) => (
-									<li key={j}>{ item }</li>
+									<li key={j} className="flex gap-2.5 text-sm leading-relaxed">
+										<span className="select-none font-mono text-primary">+</span>
+										{ item }
+									</li>
 								))}
 							</ul>
-						</AccordionContent>
-					</AccordionItem>
+						</div>
+					</Reveal>
 				))}
-			</Accordion>
+			</div>
 		</>
 	);
 }

@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import SectionHeading from "@/components/section-heading";
+import Reveal from "@/components/reveal";
 import siteConfig from "@/site-config.json";
-import { Check, LoaderCircle } from "lucide-react";
+import { ArrowUpRight, Check, LoaderCircle, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Contact() {
@@ -49,69 +51,97 @@ export default function Contact() {
 		}
 	}
 
+	const inputStyles = "rounded-none border-input bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-primary md:text-lg";
+
 	return (
 		<>
-			<p className="text-primary text-base md:text-lg mb-2">Let&apos;s talk</p>
-			<h3 id="contact" className="text-4xl md:text-5xl font-medium mb-6">
-				Contact
-			</h3>
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-				<div className="text-muted-foreground">
-					<p className="mb-4">Have a question or a project in mind? Feel free to reach out.</p>
-					<div className="flex items-center gap-2">
-						<span>Location:</span>
-						<div className="text-black dark:text-white">{ siteConfig.location }</div>
-					</div>
-				</div>
-				<form className="space-y-6" onSubmit={e => { e.preventDefault(); onSubmit() }}>
-					<Input
-						name="name"
-						placeholder="Name"
-						className="rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary md:text-lg py-6"
-						required
-						value={name}
-						onChange={e => setName(e.target.value)}
-						autoComplete="given-name"
-					/>
-					<Input
-						name="email"
-						placeholder="Email"
-						type="email"
-						className="rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary md:text-lg py-6"
-						required
-						value={email}
-						onChange={e => setEmail(e.target.value)}
-						autoComplete="email"
-					/>
-					<Textarea
-						name="message"
-						placeholder="Message"
-						className="rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-primary md:text-lg"
-						rows={3}
-						required
-						value={message}
-						onChange={e => setMessage(e.target.value)}
-					/>
-					<Button
-						type="submit"
-						className="w-full text-lg h-14"
-						variant="outline"
-						disabled={isSubmitting || submitted}
-					>{ isSubmitting ? <LoaderCircle className="animate-spin" /> : "Submit" }</Button>
+			<SectionHeading index="03" kicker="Let's talk" title="Contact" id="contact" />
+			<div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2">
+				<Reveal>
+					<p className="text-lg md:text-xl text-muted-foreground text-pretty">
+						Have a question or a project in mind? Feel free to reach out
+						&mdash; I&apos;m always open to discussing new ideas.
+					</p>
+					<a
+						href={`mailto:${siteConfig.mail}`}
+						className="group mt-8 inline-flex items-center gap-2 border-b-2 border-primary pb-1 font-display text-xl md:text-2xl font-semibold transition-colors hover:text-primary"
+					>
+						{siteConfig.mail}
+						<ArrowUpRight className="h-5 w-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+					</a>
+					<p className="mt-8 flex items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-muted-foreground">
+						<MapPin className="h-4 w-4 text-primary" />
+						{ siteConfig.location }
+					</p>
+				</Reveal>
+				<Reveal delay={120}>
+					<form className="space-y-5" onSubmit={e => { e.preventDefault(); onSubmit() }}>
+						<div className="space-y-2">
+							<label htmlFor="contact-name" className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+								Name
+							</label>
+							<Input
+								id="contact-name"
+								name="name"
+								placeholder="Your name"
+								className={`${inputStyles} py-6`}
+								required
+								value={name}
+								onChange={e => setName(e.target.value)}
+								autoComplete="given-name"
+							/>
+						</div>
+						<div className="space-y-2">
+							<label htmlFor="contact-email" className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+								Email
+							</label>
+							<Input
+								id="contact-email"
+								name="email"
+								placeholder="you@example.com"
+								type="email"
+								className={`${inputStyles} py-6`}
+								required
+								value={email}
+								onChange={e => setEmail(e.target.value)}
+								autoComplete="email"
+							/>
+						</div>
+						<div className="space-y-2">
+							<label htmlFor="contact-message" className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground">
+								Message
+							</label>
+							<Textarea
+								id="contact-message"
+								name="message"
+								placeholder="Tell me about your project..."
+								className={inputStyles}
+								rows={4}
+								required
+								value={message}
+								onChange={e => setMessage(e.target.value)}
+							/>
+						</div>
+						<Button
+							type="submit"
+							className="w-full text-lg h-14 rounded-none transition-all hover:shadow-[0_0_32px_hsl(var(--primary)/0.45)]"
+							disabled={isSubmitting || submitted}
+						>{ isSubmitting ? <LoaderCircle className="animate-spin" /> : "Send message" }</Button>
 
-					{ submitted &&
-						<p className="flex items-center justify-center gap-2">
-							<Check />
-							Your message has been sent!
-						</p>
-					}
-					{
-						error &&
-						<p className="flex items-center justify-center gap-2">
-							An unknown error has occurred while processing your message.
-						</p>
-					}
-				</form>
+						{ submitted &&
+							<p className="flex items-center justify-center gap-2 text-primary">
+								<Check />
+								Your message has been sent!
+							</p>
+						}
+						{
+							error &&
+							<p className="flex items-center justify-center gap-2 text-destructive">
+								An unknown error has occurred while processing your message.
+							</p>
+						}
+					</form>
+				</Reveal>
 			</div>
 		</>
 	);
